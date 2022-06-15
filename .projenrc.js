@@ -1,12 +1,19 @@
 const { typescript } = require('projen');
+const { NpmAccess } = require('projen/lib/javascript');
+
+const projectName = '@gemeentenijmegen/nijmegen-projen';
+
 const project = new typescript.TypeScriptProject({
   defaultReleaseBranch: 'main',
-  name: 'nijmegen-projen',
-  deps: [
-    'projen',
-  ],
-  // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
-  // devDeps: [],             /* Build dependencies for this module. */
-  // packageName: undefined,  /* The "name" in package.json. */
+  name: projectName,
+  defaultReleaseBranch: 'main',
+  license: 'EUPL-1.2',
+  release: true,
+  releaseToNpm: true,
+  npmAccess: NpmAccess.PUBLIC,
+  deps: ['projen'],
+  peerDeps: ['projen'], // Make sure the consuming library will provide a projen version.
+  packageName: projectName,
 });
+
 project.synth();

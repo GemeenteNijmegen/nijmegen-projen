@@ -1,5 +1,5 @@
 {
-  "name": "nijmegen-projen",
+  "name": "@gemeentenijmegen/nijmegen-projen",
   "scripts": {
     "build": "npx projen build",
     "bump": "npx projen bump",
@@ -39,11 +39,17 @@
     "ts-jest": "^27",
     "typescript": "^4.7.3"
   },
+  "peerDependencies": {
+    "projen": "^0.58.12"
+  },
   "dependencies": {
     "projen": "^0.58.12"
   },
   "main": "lib/index.js",
-  "license": "Apache-2.0",
+  "license": "EUPL-1.2",
+  "publishConfig": {
+    "access": "public"
+  },
   "version": "0.0.0",
   "jest": {
     "testMatch": [

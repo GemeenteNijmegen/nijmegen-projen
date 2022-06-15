@@ -1,75 +1,44 @@
 import { awscdk } from 'projen';
 import { JobPermission } from 'projen/lib/github/workflows-model';
-import combine from './combine';
 
 
-export interface GemeenteNijmegenCdkAppOptions extends
-  awscdk.AwsCdkTypeScriptAppOptions {
+export interface GemeenteNijmegenCdkAppCommonOptions {
   /**
-   * Enable cfn-lint in the github build workflow
-   */
+     * Enable cfn-lint in the github build workflow
+     */
   enableCfnLintOnGithub?: boolean;
 
   /**
-   * Enable CloudFormation template diff comments on PRs
-   */
+     * Enable CloudFormation template diff comments on PRs
+     */
   enableCfnDiffWorkflow?: boolean;
 }
 
-/**
- * GemeenteNijmegenCdkApp projen project type for Gemeente Nijmegen CDK apps
- */
+export interface GemeenteNijmegenCdkAppOptions extends
+  awscdk.AwsCdkTypeScriptAppOptions,
+  GemeenteNijmegenCdkAppCommonOptions {
+
+}
+
+function _combine<T>(a: T[] | undefined, ...b: T[]) {
+  var old = a;
+  if (!old) {
+    old = [];
+  }
+  return old.concat(b);
+}
+
 export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
 
   constructor(options: GemeenteNijmegenCdkAppOptions) {
 
-    /**
-     * Add lint script to projen scripts only if
-     * there are no scripts or the lint script is not set
-     */
+    // Add lint script to projen scripts
     options = {
       ...options,
       scripts: {
         lint: 'cfn-lint cdk.out/**/*.template.json -i W3005 W2001',
         ...options.scripts,
       },
-    };
-
-    /**
-     * Set default license
-     */
-    options = {
-      license: 'EUPL-1.2',
-      ...options,
-    };
-
-    /**
-     * Set default release settings
-     */
-    options = {
-      release: true,
-      // defaultReleaseBranch: 'production', // Cannot set this one as it is required in awscdk project type
-      majorVersion: 0,
-      depsUpgradeOptions: {
-        workflowOptions: {
-          branches: ['acceptance'],
-        },
-      },
-      ...options,
-    };
-
-    /**
-     * Set default gitignore
-     */
-    options = {
-      ...options,
-      gitignore: combine(options.gitignore,
-        'test-reports/junit.xml',
-        'test/__snapshots__/*',
-        '.env',
-        '.vscode',
-        '.DS_Store',
-      ),
     };
 
     /**
@@ -87,8 +56,8 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
       };
       options = {
         ...options,
-        workflowBootstrapSteps: combine(options.workflowBootstrapSteps, setupCfnLint),
-        postBuildSteps: combine(options.postBuildSteps, cfnLint),
+        workflowBootstrapSteps: _combine(options.workflowBootstrapSteps, setupCfnLint),
+        postBuildSteps: _combine(options.postBuildSteps, cfnLint),
       };
     }
 
@@ -102,7 +71,7 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
       };
       options = {
         ...options,
-        postBuildSteps: combine(options.postBuildSteps, storeArtifacts),
+        postBuildSteps: _combine(options.postBuildSteps, storeArtifacts),
       };
     }
 
