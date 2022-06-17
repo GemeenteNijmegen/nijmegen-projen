@@ -2,12 +2,12 @@ const { cdk } = require('projen');
 const { NpmAccess } = require('projen/lib/javascript');
 
 const organizationName = '@gemeentenijmegen';
-const projectName = 'nijmegen-projen';
+const projectName = 'modules-projen';
 const packageName = `${organizationName}/${projectName}`;
 
 const project = new cdk.JsiiProject({
   author: organizationName,
-  repository: 'https://github.com/GemeenteNijmegen/nijmegen-projen.git',
+  repository: 'https://github.com/GemeenteNijmegen/modules-projen.git',
   defaultReleaseBranch: 'main',
   name: projectName,
   license: 'EUPL-1.2',
