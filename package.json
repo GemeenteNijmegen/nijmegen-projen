@@ -1,8 +1,8 @@
 {
-  "name": "@gemeentenijmegen/nijmegen-projen",
+  "name": "@gemeentenijmegen/modules-projen",
   "repository": {
     "type": "git",
-    "url": "https://github.com/GemeenteNijmegen/nijmegen-projen.git"
+    "url": "https://github.com/GemeenteNijmegen/modules-projen.git"
   },
   "scripts": {
     "build": "npx projen build",
