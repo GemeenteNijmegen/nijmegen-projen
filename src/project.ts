@@ -13,6 +13,7 @@ export interface GemeenteNijmegenCdkAppOptions extends
    * Enable CloudFormation template diff comments on PRs
    */
   readonly enableCfnDiffWorkflow?: boolean;
+
 }
 
 /**
@@ -91,13 +92,27 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
       };
     }
 
+
     /**
      * Setup for the cloud formation diff workflow step
      */
     if (options.enableCfnDiffWorkflow) {
+
+      // Add cfn-diff label to upgrade deps PRs
+      options = {
+        ...options,
+        depsUpgradeOptions: {
+          ...options.depsUpgradeOptions,
+          workflowOptions: {
+            ...options.depsUpgradeOptions?.workflowOptions,
+            labels: combine(options.depsUpgradeOptions?.workflowOptions?.labels, 'cfn-diff'),
+          },
+        },
+      };
+
       const storeArtifacts = {
         name: 'Save CloudFormation templates',
-        run: 'mkdir -p dist && cp cdk.out/* dist/',
+        run: 'mkdir -p dist && tar -czvf ./dist/cdk.out.tar.gz ./cdk.out',
       };
       options = {
         ...options,
@@ -118,7 +133,6 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
       this.enableCfnDiffWorkflow();
     }
 
-
   }
 
   /**
@@ -138,6 +152,7 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
         contents: JobPermission.READ,
         pullRequests: JobPermission.WRITE,
       },
+      if: "${{ github.event.label.name == 'cfn-diff' }}",
       runsOn: ['ubuntu-latest'],
       steps: [
         {

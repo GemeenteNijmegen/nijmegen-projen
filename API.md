@@ -169,6 +169,7 @@ const gemeenteNijmegenCdkAppOptions: GemeenteNijmegenCdkAppOptions = { ... }
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.lambdaExtensionAutoDiscover">lambdaExtensionAutoDiscover</a></code> | <code>boolean</code> | Automatically adds an `awscdk.LambdaExtension` for each `.lambda-extension.ts` entrypoint in your source tree. If this is disabled, you can manually add an `awscdk.AutoDiscover` component to your project. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.lambdaOptions">lambdaOptions</a></code> | <code>projen.awscdk.LambdaFunctionCommonOptions</code> | Common options for all AWS Lambda functions. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.enableCfnDiffWorkflow">enableCfnDiffWorkflow</a></code> | <code>boolean</code> | Enable CloudFormation template diff comments on PRs. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.enableCfnDiffWorkflowLabel">enableCfnDiffWorkflowLabel</a></code> | <code>string</code> | Specific PR label on which diff comments are added. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.enableCfnLintOnGithub">enableCfnLintOnGithub</a></code> | <code>boolean</code> | Enable cfn-lint in the github build workflow. |
 
 ---
@@ -2325,6 +2326,18 @@ public readonly enableCfnDiffWorkflow: boolean;
 - *Type:* boolean
 
 Enable CloudFormation template diff comments on PRs.
+
+---
+
+##### `enableCfnDiffWorkflowLabel`<sup>Optional</sup> <a name="enableCfnDiffWorkflowLabel" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.enableCfnDiffWorkflowLabel"></a>
+
+```typescript
+public readonly enableCfnDiffWorkflowLabel: string;
+```
+
+- *Type:* string
+
+Specific PR label on which diff comments are added.
 
 ---
 
