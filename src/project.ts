@@ -154,7 +154,7 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
         contents: JobPermission.READ,
         pullRequests: JobPermission.WRITE,
       },
-      if: "${{ contains( github.event.pull_request.labels, '" + cfnDiffLabel + "' ) }}",
+      if: "${{ contains( github.event.pull_request.labels.*.name, '" + cfnDiffLabel + "' ) }}",
       runsOn: ['ubuntu-latest'],
       steps: [
         {
