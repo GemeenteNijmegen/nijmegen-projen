@@ -2,6 +2,8 @@ import { awscdk } from 'projen';
 import { JobPermission } from 'projen/lib/github/workflows-model';
 import combine from './combine';
 
+const cfnDiffLabel: string = 'cfn-diff';
+
 export interface GemeenteNijmegenCdkAppOptions extends
   awscdk.AwsCdkTypeScriptAppOptions {
   /**
@@ -105,7 +107,7 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
           ...options.depsUpgradeOptions,
           workflowOptions: {
             ...options.depsUpgradeOptions?.workflowOptions,
-            labels: combine(options.depsUpgradeOptions?.workflowOptions?.labels, 'cfn-diff'),
+            labels: combine(options.depsUpgradeOptions?.workflowOptions?.labels, cfnDiffLabel),
           },
         },
       };
@@ -152,7 +154,7 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
         contents: JobPermission.READ,
         pullRequests: JobPermission.WRITE,
       },
-      if: "${{ github.event.label.name == 'cfn-diff' }}",
+      if: "${{ contains( github.event.pull_request.labels, '" + cfnDiffLabel + "' ) }}",
       runsOn: ['ubuntu-latest'],
       steps: [
         {
