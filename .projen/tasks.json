@@ -255,25 +255,25 @@
           "exec": "yarn upgrade npm-check-updates"
         },
         {
-          "exec": "npm-check-updates --dep dev --upgrade --target=minor"
+          "exec": "npm-check-updates --dep dev --upgrade --target=minor --reject='@types/jest'"
         },
         {
-          "exec": "npm-check-updates --dep optional --upgrade --target=minor"
+          "exec": "npm-check-updates --dep optional --upgrade --target=minor --reject='@types/jest'"
         },
         {
-          "exec": "npm-check-updates --dep peer --upgrade --target=minor"
+          "exec": "npm-check-updates --dep peer --upgrade --target=minor --reject='@types/jest'"
         },
         {
-          "exec": "npm-check-updates --dep prod --upgrade --target=minor"
+          "exec": "npm-check-updates --dep prod --upgrade --target=minor --reject='@types/jest'"
         },
         {
-          "exec": "npm-check-updates --dep bundle --upgrade --target=minor"
+          "exec": "npm-check-updates --dep bundle --upgrade --target=minor --reject='@types/jest'"
         },
         {
           "exec": "yarn install --check-files"
         },
         {
-          "exec": "yarn upgrade"
+          "exec": "yarn upgrade @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-import-resolver-node eslint-import-resolver-typescript eslint-plugin-import eslint jest jest-junit jsii jsii-diff jsii-docgen jsii-pacmak json-schema npm-check-updates projen standard-version ts-jest typescript projen projen"
         },
         {
           "exec": "npx projen"
