@@ -1,6 +1,7 @@
 import { awscdk } from 'projen';
 import { JobPermission } from 'projen/lib/github/workflows-model';
 import combine from './combine';
+import { EmergencyProcedure } from './emergeny';
 
 const cfnDiffLabel: string = 'cfn-diff';
 
@@ -18,6 +19,12 @@ export interface GemeenteNijmegenCdkAppOptions extends
    */
   readonly enableCfnDiffWorkflow?: boolean;
 
+  /**
+   * Enable an additional workflow that allows branch protection bypass
+   * and will inform the team trough slack.
+   * @default true
+   */
+  readonly enableEmergencyProcedure?: boolean;
 }
 
 /**
@@ -26,6 +33,10 @@ export interface GemeenteNijmegenCdkAppOptions extends
 export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
 
   constructor(options: GemeenteNijmegenCdkAppOptions) {
+
+    const enableCfnLintOnGithub = options.enableCfnLintOnGithub ?? true;
+    const enableCfnDiffWorkflow = options.enableCfnDiffWorkflow ?? false;
+    const enableEmergencyProcedure = options.enableEmergencyProcedure ?? true;
 
     /**
      * Add lint script to projen scripts only if
@@ -80,7 +91,7 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
     /**
      * Setup cfn lint for usage in github workflows
      */
-    if (!options.enableCfnLintOnGithub == false) {
+    if (enableCfnLintOnGithub) {
       const setupCfnLint = {
         name: 'Setup cfn-lint',
         uses: 'scottbrenner/cfn-lint-action@v2',
@@ -100,7 +111,7 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
     /**
      * Setup for the cloud formation diff workflow step
      */
-    if (options.enableCfnDiffWorkflow) {
+    if (enableCfnDiffWorkflow) {
 
       // Add cfn-diff label to upgrade deps PRs
       options = {
@@ -132,8 +143,15 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
     /**
      * Further modifications to the project after construction
      */
-    if (options.enableCfnDiffWorkflow) {
+    if (enableCfnDiffWorkflow) {
       this.enableCfnDiffWorkflow();
+    }
+
+    /**
+     * Enable the emergency procedure when needed
+     */
+    if (enableEmergencyProcedure) {
+      new EmergencyProcedure(this);
     }
 
   }

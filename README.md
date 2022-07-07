@@ -33,10 +33,11 @@ There are a number of relevant properties that are provided by projen
 
 
 The project type in this npm package provides some additional configuration options:
-| Property              | Default | Explanation                                                                                 |
-| --------------------- | ------- | ------------------------------------------------------------------------------------------- |
-| enableCfnLintOnGithub | true    | Enable step in the Github build workflow that runs cfn-lint                                 |
-| enableCfnDiffWorkflow | false   | Enable job in the Github build workflow that checks for changes in CloudFormation templates |
+| Property                 | Default | Explanation                                                                                 |
+| ------------------------ | ------- | ------------------------------------------------------------------------------------------- |
+| enableCfnLintOnGithub    | true    | Enable step in the Github build workflow that runs cfn-lint                                 |
+| enableCfnDiffWorkflow    | false   | Enable job in the Github build workflow that checks for changes in CloudFormation templates |
+| enableEmergencyProcedure | true    | Adds the emergency procedure workflow to Github workflows                                   |
 
 
 ## Upgrade dependencies

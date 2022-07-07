@@ -170,6 +170,7 @@ const gemeenteNijmegenCdkAppOptions: GemeenteNijmegenCdkAppOptions = { ... }
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.lambdaOptions">lambdaOptions</a></code> | <code>projen.awscdk.LambdaFunctionCommonOptions</code> | Common options for all AWS Lambda functions. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.enableCfnDiffWorkflow">enableCfnDiffWorkflow</a></code> | <code>boolean</code> | Enable CloudFormation template diff comments on PRs. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.enableCfnLintOnGithub">enableCfnLintOnGithub</a></code> | <code>boolean</code> | Enable cfn-lint in the github build workflow. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.enableEmergencyProcedure">enableEmergencyProcedure</a></code> | <code>boolean</code> | Enable an additional workflow that allows branch protection bypass and will inform the team trough slack. |
 
 ---
 
@@ -2323,6 +2324,7 @@ public readonly enableCfnDiffWorkflow: boolean;
 ```
 
 - *Type:* boolean
+- *Default:* false
 
 Enable CloudFormation template diff comments on PRs.
 
@@ -2335,8 +2337,22 @@ public readonly enableCfnLintOnGithub: boolean;
 ```
 
 - *Type:* boolean
+- *Default:* true
 
 Enable cfn-lint in the github build workflow.
+
+---
+
+##### `enableEmergencyProcedure`<sup>Optional</sup> <a name="enableEmergencyProcedure" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.enableEmergencyProcedure"></a>
+
+```typescript
+public readonly enableEmergencyProcedure: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Enable an additional workflow that allows branch protection bypass and will inform the team trough slack.
 
 ---
 
