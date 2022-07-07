@@ -8,11 +8,13 @@ export interface GemeenteNijmegenCdkAppOptions extends
   awscdk.AwsCdkTypeScriptAppOptions {
   /**
    * Enable cfn-lint in the github build workflow
+   * @default true
    */
   readonly enableCfnLintOnGithub?: boolean;
 
   /**
    * Enable CloudFormation template diff comments on PRs
+   * @default false
    */
   readonly enableCfnDiffWorkflow?: boolean;
 
@@ -54,6 +56,7 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
       majorVersion: 0,
       depsUpgradeOptions: {
         workflowOptions: {
+          labels: ['cfn-diff'],
           branches: ['acceptance'],
         },
       },
@@ -77,8 +80,7 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
     /**
      * Setup cfn lint for usage in github workflows
      */
-    if (options.enableCfnLintOnGithub) {
-      console.info('Setting up Github workflow to include CloudFormation lint...');
+    if (!options.enableCfnLintOnGithub == false) {
       const setupCfnLint = {
         name: 'Setup cfn-lint',
         uses: 'scottbrenner/cfn-lint-action@v2',
@@ -126,7 +128,6 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
      * Construct the actual projen project
      */
     super(options);
-
 
     /**
      * Further modifications to the project after construction
