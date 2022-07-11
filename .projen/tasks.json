@@ -134,7 +134,7 @@
       "name": "extract",
       "steps": [
         {
-          "exec": "cd dist/js && tar -xzvf modules-projen@*"
+          "exec": "cd dist/js && rm -rf package && tar -xzvf modules-projen@*"
         }
       ]
     },
