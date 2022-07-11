@@ -130,6 +130,14 @@
         }
       ]
     },
+    "extract": {
+      "name": "extract",
+      "steps": [
+        {
+          "exec": "cd dist/js && rm -rf package && tar -xzvf modules-projen@*"
+        }
+      ]
+    },
     "package": {
       "name": "package",
       "description": "Creates the distribution package",

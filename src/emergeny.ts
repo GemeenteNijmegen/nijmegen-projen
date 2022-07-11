@@ -37,8 +37,15 @@ export class EmergencyProcedure extends Component {
 
     this.workflow = new GithubWorkflow(github, 'emergency');
 
+    /**
+     * Martijn's solution used pullRequest and specifically on the production branche
+     * However projen does not allow this as an configuration option. Therefore we'll
+     * let the workflow trigger on labeling of the PR requirering an emergency merge.
+     */
     this.workflow.on({
-      pullRequest: {},
+      pullRequest: {
+        types: ['labeled'],
+      },
       workflowDispatch: {},
     });
 

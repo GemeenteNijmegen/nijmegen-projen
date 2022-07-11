@@ -23,6 +23,9 @@ const project = new cdk.JsiiProject({
   depsUpgradeOptions: {
     exclude: ['@types/jest'],
   },
+  scripts: {
+    extract: 'cd dist/js && rm -rf package && tar -xzvf modules-projen@*',
+  },
 });
 
 project.synth();

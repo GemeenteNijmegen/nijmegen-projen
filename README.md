@@ -6,6 +6,14 @@ The project type `GemeenteNijmegenCdkApp` provides a number of default configura
 - Cfn-lint Github wrokflow
 - Defautl configuration values
 
+## Github secrets
+This project type relies on Github secrets to be set in order for all its Github workflows to work.
+| Environment variable | Explanation                                                                            |
+| -------------------- | -------------------------------------------------------------------------------------- |
+| GITHUB_PROJEN_TOKEN  | [Projen Github personal access token](https://projen.io/github.html#github-api-access) |
+| SLACK_WEBHOOK_URL    | This is the url used for the emergency workflow to publish to slack                    |
+
+
 ## Using this project type
 
 ### For new projects
