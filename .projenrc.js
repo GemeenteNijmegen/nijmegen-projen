@@ -24,7 +24,7 @@ const project = new cdk.JsiiProject({
     exclude: ['@types/jest'],
   },
   scripts: {
-    extract: 'cd dist/js && tar -xzvf modules-projen@*',
+    extract: 'cd dist/js && rm -rf package && tar -xzvf modules-projen@*',
   },
 });
 
