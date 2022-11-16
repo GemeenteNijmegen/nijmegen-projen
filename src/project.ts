@@ -75,6 +75,21 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
     };
 
     /**
+     * Set default github options (Adds docs: as acceptable prefix for PR linting)
+     */
+     options = {
+      githubOptions: {
+        pullRequestLintOptions: {
+          semanticTitleOptions: {
+            types: ['fix', 'feat', 'chore', 'docs'],
+          },
+        },
+      },
+      ...options,
+    };
+
+
+    /**
      * Set default gitignore
      */
     options = {
