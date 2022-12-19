@@ -40,18 +40,24 @@ There are a number of relevant properties that are provided by projen
 
 
 The project type in this npm package provides some additional configuration options:
-| Property                 | Default | Explanation                                                                                 |
-| ------------------------ | ------- | ------------------------------------------------------------------------------------------- |
-| enableCfnLintOnGithub    | true    | Enable step in the Github build workflow that runs cfn-lint                                 |
-| enableCfnDiffWorkflow    | false   | Enable job in the Github build workflow that checks for changes in CloudFormation templates |
-| enableEmergencyProcedure | true    | Adds the emergency procedure workflow to Github workflows                                   |
+| Property                    | Default | Explanation                                                                                 |
+| --------------------------- | ------- | ------------------------------------------------------------------------------------------- |
+| enableCfnLintOnGithub       | true    | Enable step in the Github build workflow that runs cfn-lint                                 |
+| enableCfnDiffWorkflow       | false   | Enable job in the Github build workflow that checks for changes in CloudFormation templates |
+| enableEmergencyProcedure    | true    | Adds the emergency procedure workflow to Github workflows                                   |
+| enableAutoMergeDependencies | true    | Adds the auto-merge workflow for PR's to acceptance (from upgrade workflow)                 |
 
 
 ## Upgrade dependencies
 De upgrade dependencies task en Github workflow zijn standaard enabled. Deze task zal de laatste versies van de dependencies zoeken (volgens [semantic versionioning](https://semver.org/lang/nl/)) en upgraden in de `package.json`. 
 
 Dit project type zet de default branch voor het uitvoeren van de workflow op `acceptance`.
-De Github workflow voert de upgrade dependencies taak uit en maakt een PR naar `acceptance` en geeft het PR een label `cfn-diff`.
+De Github workflow voert de upgrade dependencies taak uit en maakt een PR naar `acceptance` en geeft het PR een label `cfn-diff` en `auto-merge`.
+
+### Automerge workflow
+De automerge workflow gaat af als een PR `acceptance` als base heeft en het label `auto-merge` heeft. Deze probeert het PR te mergen met de auto-merge
+feature van Github. Hiervoor moet in het Github-project automerge aan staan. **NB**: Zorg dat branch protection aan staat voor acceptance, met de eis dat aan
+alle voorwaarden voldaan is. Anders kan de auto-merge worden uitgevoerd voordat de build succesvol is.
 
 ### CDK upgrade
 De upgrade dependencies taak in projen is inclusief de CDK versie. Hiervoor wordt de minimum versie in de `.projenrc.js` van een project ingesteeld. 

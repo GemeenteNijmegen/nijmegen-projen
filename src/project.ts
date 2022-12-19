@@ -2,8 +2,10 @@ import { awscdk } from 'projen';
 import { JobPermission } from 'projen/lib/github/workflows-model';
 import combine from './combine';
 import { EmergencyProcedure } from './emergeny';
+import { addMergeJob } from './mergejob';
 
 const cfnDiffLabel: string = 'cfn-diff';
+const acceptanceBranchName = 'acceptance';
 
 export interface GemeenteNijmegenCdkAppOptions extends
   awscdk.AwsCdkTypeScriptAppOptions {
@@ -25,6 +27,14 @@ export interface GemeenteNijmegenCdkAppOptions extends
    * @default true
    */
   readonly enableEmergencyProcedure?: boolean;
+  /**
+   * Enable an additional workflow that auto-merges PR's with the 'auto-merge'
+   * label. NB: Auto-merge must be on in github settings, and branch protection
+   * with checks enabled is required to prevent merges of unsuccesful jobs.
+   *
+   * @default true
+   */
+  readonly enableAutoMergeDependencies?: boolean;
 }
 
 /**
@@ -37,6 +47,7 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
     const enableCfnLintOnGithub = options.enableCfnLintOnGithub ?? true;
     const enableCfnDiffWorkflow = options.enableCfnDiffWorkflow ?? false;
     const enableEmergencyProcedure = options.enableEmergencyProcedure ?? true;
+    const enableAutoMergeDependencies = options.enableAutoMergeDependencies ?? true;
 
     /**
      * Add lint script to projen scripts only if
@@ -61,14 +72,18 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
     /**
      * Set default release settings
      */
+    const upgradeLabels = ['cfn-diff'];
+    if (enableAutoMergeDependencies) {
+      upgradeLabels.push('auto-merge');
+    }
     options = {
       release: true,
       // defaultReleaseBranch: 'production', // Cannot set this one as it is required in awscdk project type
       majorVersion: 0,
       depsUpgradeOptions: {
         workflowOptions: {
-          labels: ['cfn-diff'],
-          branches: ['acceptance'],
+          labels: upgradeLabels,
+          branches: [acceptanceBranchName],
         },
       },
       ...options,
@@ -167,6 +182,13 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
      */
     if (enableEmergencyProcedure) {
       new EmergencyProcedure(this);
+    }
+
+    /**
+     * Enable auto-merging dependency updates
+     */
+    if ( enableAutoMergeDependencies) {
+      addMergeJob(this, acceptanceBranchName);
     }
 
   }

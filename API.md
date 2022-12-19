@@ -168,6 +168,7 @@ const gemeenteNijmegenCdkAppOptions: GemeenteNijmegenCdkAppOptions = { ... }
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.lambdaAutoDiscover">lambdaAutoDiscover</a></code> | <code>boolean</code> | Automatically adds an `awscdk.LambdaFunction` for each `.lambda.ts` handler in your source tree. If this is disabled, you can manually add an `awscdk.AutoDiscover` component to your project. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.lambdaExtensionAutoDiscover">lambdaExtensionAutoDiscover</a></code> | <code>boolean</code> | Automatically adds an `awscdk.LambdaExtension` for each `.lambda-extension.ts` entrypoint in your source tree. If this is disabled, you can manually add an `awscdk.AutoDiscover` component to your project. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.lambdaOptions">lambdaOptions</a></code> | <code>projen.awscdk.LambdaFunctionCommonOptions</code> | Common options for all AWS Lambda functions. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.enableAutoMergeDependencies">enableAutoMergeDependencies</a></code> | <code>boolean</code> | Enable an additional workflow that auto-merges PR's with the 'auto-merge' label. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.enableCfnDiffWorkflow">enableCfnDiffWorkflow</a></code> | <code>boolean</code> | Enable CloudFormation template diff comments on PRs. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.enableCfnLintOnGithub">enableCfnLintOnGithub</a></code> | <code>boolean</code> | Enable cfn-lint in the github build workflow. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.enableEmergencyProcedure">enableEmergencyProcedure</a></code> | <code>boolean</code> | Enable an additional workflow that allows branch protection bypass and will inform the team trough slack. |
@@ -2314,6 +2315,22 @@ public readonly lambdaOptions: LambdaFunctionCommonOptions;
 - *Default:* default options
 
 Common options for all AWS Lambda functions.
+
+---
+
+##### `enableAutoMergeDependencies`<sup>Optional</sup> <a name="enableAutoMergeDependencies" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.enableAutoMergeDependencies"></a>
+
+```typescript
+public readonly enableAutoMergeDependencies: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Enable an additional workflow that auto-merges PR's with the 'auto-merge' label.
+
+NB: Auto-merge must be on in github settings, and branch protection
+with checks enabled is required to prevent merges of unsuccesful jobs.
 
 ---
 
