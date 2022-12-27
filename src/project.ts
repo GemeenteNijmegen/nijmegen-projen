@@ -3,6 +3,7 @@ import { JobPermission } from 'projen/lib/github/workflows-model';
 import combine from './combine';
 import { EmergencyProcedure } from './emergeny';
 import { addMergeJob } from './mergejob';
+import { addRepositoryValidationJob, RepositoryValidationJobProps } from './validation';
 
 const cfnDiffLabel: string = 'cfn-diff';
 const acceptanceBranchName = 'acceptance';
@@ -35,6 +36,18 @@ export interface GemeenteNijmegenCdkAppOptions extends
    * @default true
    */
   readonly enableAutoMergeDependencies?: boolean;
+
+  /**
+   * Enable an additional workflow that checks if the Github repository is
+   * configured according to the desired configuration for Gemeente Nijmegen.
+   * This includes emergency workflow, correct secrets, branch protection etc.
+   */
+  readonly enableRepositoryValidation?: boolean;
+
+  /**
+   * Properties for configuring the repsitory validation workflow.
+   */
+  readonly repositoryValidationOptions?: RepositoryValidationJobProps;
 }
 
 /**
@@ -48,6 +61,7 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
     const enableCfnDiffWorkflow = options.enableCfnDiffWorkflow ?? false;
     const enableEmergencyProcedure = options.enableEmergencyProcedure ?? true;
     const enableAutoMergeDependencies = options.enableAutoMergeDependencies ?? true;
+    const enableRepositoryValidation = options.enableRepositoryValidation ?? true;
 
     /**
      * Add lint script to projen scripts only if
@@ -187,8 +201,22 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
     /**
      * Enable auto-merging dependency updates
      */
-    if ( enableAutoMergeDependencies) {
+    if (enableAutoMergeDependencies) {
       addMergeJob(this, acceptanceBranchName);
+    }
+
+    /**
+     * Enable auto-merging dependency updates
+     */
+    if (enableRepositoryValidation) {
+      const repositoryValidationOptions = {
+        publishToNpm: false,
+        checkAcceptanceBranch: true,
+        emergencyWorkflow: true,
+        upgradeBranch: acceptanceBranchName,
+        ...options.repositoryValidationOptions
+      }
+      addRepositoryValidationJob(this, repositoryValidationOptions);
     }
 
   }
