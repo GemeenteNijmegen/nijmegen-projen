@@ -18,6 +18,7 @@ const gemeenteNijmegenCdkAppOptions: GemeenteNijmegenCdkAppOptions = { ... }
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.name">name</a></code> | <code>string</code> | This is the name of your project. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.commitGenerated">commitGenerated</a></code> | <code>boolean</code> | Whether to commit the managed files by default. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.logging">logging</a></code> | <code>projen.LoggerOptions</code> | Configure logging options such as verbosity. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.outdir">outdir</a></code> | <code>string</code> | The root directory of the project. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.parent">parent</a></code> | <code>projen.Project</code> | The parent project, if this project is part of a bigger project. |
@@ -46,7 +47,7 @@ const gemeenteNijmegenCdkAppOptions: GemeenteNijmegenCdkAppOptions = { ... }
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.allowLibraryDependencies">allowLibraryDependencies</a></code> | <code>boolean</code> | Allow the project to include `peerDependencies` and `bundledDependencies`. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.authorEmail">authorEmail</a></code> | <code>string</code> | Author's e-mail. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.authorName">authorName</a></code> | <code>string</code> | Author's name. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.authorOrganization">authorOrganization</a></code> | <code>boolean</code> | Author's Organization. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.authorOrganization">authorOrganization</a></code> | <code>boolean</code> | Is the author an organization. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.authorUrl">authorUrl</a></code> | <code>string</code> | Author's URL / Website. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.autoDetectBin">autoDetectBin</a></code> | <code>boolean</code> | Automatically add all executables under the `bin` directory to your `package.json` file under the `bin` section. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.bin">bin</a></code> | <code>{[ key: string ]: string}</code> | Binary programs vended with your module. |
@@ -79,6 +80,7 @@ const gemeenteNijmegenCdkAppOptions: GemeenteNijmegenCdkAppOptions = { ... }
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.stability">stability</a></code> | <code>string</code> | Package's Stability. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.jsiiReleaseVersion">jsiiReleaseVersion</a></code> | <code>string</code> | Version requirement of `publib` which is used to publish modules to npm. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.majorVersion">majorVersion</a></code> | <code>number</code> | Major version to release from the default branch. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.minMajorVersion">minMajorVersion</a></code> | <code>number</code> | Minimal Major version to release. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.npmDistTag">npmDistTag</a></code> | <code>string</code> | The npmDistTag to use when publishing from the default branch. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.postBuildSteps">postBuildSteps</a></code> | <code>projen.github.workflows.JobStep[]</code> | Steps to execute after build as part of the release workflow. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.prerelease">prerelease</a></code> | <code>string</code> | Bump versions from the default branch as pre-releases (e.g. "beta", "alpha", "pre"). |
@@ -102,7 +104,7 @@ const gemeenteNijmegenCdkAppOptions: GemeenteNijmegenCdkAppOptions = { ... }
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.buildWorkflow">buildWorkflow</a></code> | <code>boolean</code> | Define a GitHub workflow for building PRs. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.buildWorkflowTriggers">buildWorkflowTriggers</a></code> | <code>projen.github.workflows.Triggers</code> | Build workflow triggers. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.bundlerOptions">bundlerOptions</a></code> | <code>projen.javascript.BundlerOptions</code> | Options for `Bundler`. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.codeCov">codeCov</a></code> | <code>boolean</code> | Define a GitHub workflow step for sending code coverage metrics to https://codecov.io/ Uses codecov/codecov-action@v1 A secret is required for private repos. Configured with @codeCovTokenSecret. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.codeCov">codeCov</a></code> | <code>boolean</code> | Define a GitHub workflow step for sending code coverage metrics to https://codecov.io/ Uses codecov/codecov-action@v3 A secret is required for private repos. Configured with @codeCovTokenSecret. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.codeCovTokenSecret">codeCovTokenSecret</a></code> | <code>string</code> | Define the secret name for a specified https://codecov.io/ token A secret is required to send coverage for private repositories. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.copyrightOwner">copyrightOwner</a></code> | <code>string</code> | License copyright owner. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.copyrightPeriod">copyrightPeriod</a></code> | <code>string</code> | The copyright years to put in the LICENSE file. |
@@ -172,6 +174,8 @@ const gemeenteNijmegenCdkAppOptions: GemeenteNijmegenCdkAppOptions = { ... }
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.enableCfnDiffWorkflow">enableCfnDiffWorkflow</a></code> | <code>boolean</code> | Enable CloudFormation template diff comments on PRs. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.enableCfnLintOnGithub">enableCfnLintOnGithub</a></code> | <code>boolean</code> | Enable cfn-lint in the github build workflow. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.enableEmergencyProcedure">enableEmergencyProcedure</a></code> | <code>boolean</code> | Enable an additional workflow that allows branch protection bypass and will inform the team trough slack. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.enableRepositoryValidation">enableRepositoryValidation</a></code> | <code>boolean</code> | Enable an additional workflow that checks if the Github repository is configured according to the desired configuration for Gemeente Nijmegen. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.repositoryValidationOptions">repositoryValidationOptions</a></code> | <code><a href="#@gemeentenijmegen/modules-projen.RepositoryValidationOptions">RepositoryValidationOptions</a></code> | Properties for configuring the repsitory validation workflow. |
 
 ---
 
@@ -185,6 +189,19 @@ public readonly name: string;
 - *Default:* $BASEDIR
 
 This is the name of your project.
+
+---
+
+##### `commitGenerated`<sup>Optional</sup> <a name="commitGenerated" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.commitGenerated"></a>
+
+```typescript
+public readonly commitGenerated: boolean;
+```
+
+- *Type:* boolean
+- *Default:* true
+
+Whether to commit the managed files by default.
 
 ---
 
@@ -600,7 +617,7 @@ public readonly authorOrganization: boolean;
 
 - *Type:* boolean
 
-Author's Organization.
+Is the author an organization.
 
 ---
 
@@ -1092,6 +1109,24 @@ If not specified, we bump the global latest version.
 
 ---
 
+##### `minMajorVersion`<sup>Optional</sup> <a name="minMajorVersion" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.minMajorVersion"></a>
+
+```typescript
+public readonly minMajorVersion: number;
+```
+
+- *Type:* number
+- *Default:* No minimum version is being enforced
+
+Minimal Major version to release.
+
+This can be useful to set to 1, as breaking changes before the 1.x major
+release are not incrementing the major version number.
+
+Can not be set together with `majorVersion`.
+
+---
+
 ##### `npmDistTag`<sup>Optional</sup> <a name="npmDistTag" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.npmDistTag"></a>
 
 ```typescript
@@ -1248,7 +1283,7 @@ public readonly releaseTagPrefix: string;
 ```
 
 - *Type:* string
-- *Default:* no prefix
+- *Default:* "v"
 
 Automatically add the given prefix to release tags. Useful if you are releasing on multiple branches with overlapping version numbers.
 
@@ -1426,7 +1461,7 @@ public readonly codeCov: boolean;
 - *Type:* boolean
 - *Default:* false
 
-Define a GitHub workflow step for sending code coverage metrics to https://codecov.io/ Uses codecov/codecov-action@v1 A secret is required for private repos. Configured with @codeCovTokenSecret.
+Define a GitHub workflow step for sending code coverage metrics to https://codecov.io/ Uses codecov/codecov-action@v3 A secret is required for private repos. Configured with @codeCovTokenSecret.
 
 ---
 
@@ -2373,6 +2408,93 @@ Enable an additional workflow that allows branch protection bypass and will info
 
 ---
 
+##### `enableRepositoryValidation`<sup>Optional</sup> <a name="enableRepositoryValidation" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.enableRepositoryValidation"></a>
+
+```typescript
+public readonly enableRepositoryValidation: boolean;
+```
+
+- *Type:* boolean
+
+Enable an additional workflow that checks if the Github repository is configured according to the desired configuration for Gemeente Nijmegen.
+
+This includes emergency workflow, correct secrets, branch protection etc.
+
+---
+
+##### `repositoryValidationOptions`<sup>Optional</sup> <a name="repositoryValidationOptions" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.repositoryValidationOptions"></a>
+
+```typescript
+public readonly repositoryValidationOptions: RepositoryValidationOptions;
+```
+
+- *Type:* <a href="#@gemeentenijmegen/modules-projen.RepositoryValidationOptions">RepositoryValidationOptions</a>
+
+Properties for configuring the repsitory validation workflow.
+
+---
+
+### RepositoryValidationOptions <a name="RepositoryValidationOptions" id="@gemeentenijmegen/modules-projen.RepositoryValidationOptions"></a>
+
+#### Initializer <a name="Initializer" id="@gemeentenijmegen/modules-projen.RepositoryValidationOptions.Initializer"></a>
+
+```typescript
+import { RepositoryValidationOptions } from '@gemeentenijmegen/modules-projen'
+
+const repositoryValidationOptions: RepositoryValidationOptions = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@gemeentenijmegen/modules-projen.RepositoryValidationOptions.property.checkAcceptanceBranch">checkAcceptanceBranch</a></code> | <code>boolean</code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.RepositoryValidationOptions.property.emergencyWorkflow">emergencyWorkflow</a></code> | <code>boolean</code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.RepositoryValidationOptions.property.publishToNpm">publishToNpm</a></code> | <code>boolean</code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.RepositoryValidationOptions.property.upgradeBranch">upgradeBranch</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `checkAcceptanceBranch`<sup>Required</sup> <a name="checkAcceptanceBranch" id="@gemeentenijmegen/modules-projen.RepositoryValidationOptions.property.checkAcceptanceBranch"></a>
+
+```typescript
+public readonly checkAcceptanceBranch: boolean;
+```
+
+- *Type:* boolean
+
+---
+
+##### `emergencyWorkflow`<sup>Required</sup> <a name="emergencyWorkflow" id="@gemeentenijmegen/modules-projen.RepositoryValidationOptions.property.emergencyWorkflow"></a>
+
+```typescript
+public readonly emergencyWorkflow: boolean;
+```
+
+- *Type:* boolean
+
+---
+
+##### `publishToNpm`<sup>Required</sup> <a name="publishToNpm" id="@gemeentenijmegen/modules-projen.RepositoryValidationOptions.property.publishToNpm"></a>
+
+```typescript
+public readonly publishToNpm: boolean;
+```
+
+- *Type:* boolean
+
+---
+
+##### `upgradeBranch`<sup>Optional</sup> <a name="upgradeBranch" id="@gemeentenijmegen/modules-projen.RepositoryValidationOptions.property.upgradeBranch"></a>
+
+```typescript
+public readonly upgradeBranch: string;
+```
+
+- *Type:* string
+
+---
+
 ## Classes <a name="Classes" id="Classes"></a>
 
 ### GemeenteNijmegenCdkApp <a name="GemeenteNijmegenCdkApp" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp"></a>
@@ -2960,6 +3082,7 @@ A job to build the base branch and execute a diff on the build cdk.out and base 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.buildTask">buildTask</a></code> | <code>projen.Task</code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.commitGenerated">commitGenerated</a></code> | <code>boolean</code> | Whether to commit the managed files by default. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.compileTask">compileTask</a></code> | <code>projen.Task</code> | *No description.* |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.components">components</a></code> | <code>projen.Component[]</code> | Returns all the components within this project. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.deps">deps</a></code> | <code>projen.Dependencies</code> | Project dependencies. |
@@ -3032,6 +3155,18 @@ public readonly buildTask: Task;
 ```
 
 - *Type:* projen.Task
+
+---
+
+##### `commitGenerated`<sup>Required</sup> <a name="commitGenerated" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.commitGenerated"></a>
+
+```typescript
+public readonly commitGenerated: boolean;
+```
+
+- *Type:* boolean
+
+Whether to commit the managed files by default.
 
 ---
 

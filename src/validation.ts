@@ -1,15 +1,9 @@
 import { Project } from 'projen';
 import { GitHub, GithubWorkflow } from 'projen/lib/github';
 import { Job, JobPermission } from 'projen/lib/github/workflows-model';
+import { RepositoryValidationOptions } from './project';
 
-export interface RepositoryValidationJobProps {
-  publishToNpm: boolean;
-  checkAcceptanceBranch: boolean;
-  emergencyWorkflow: boolean;
-  upgradeBranch?: string;
-}
-
-export function addRepositoryValidationJob(project: Project, props: RepositoryValidationJobProps) {
+export function addRepositoryValidationJob(project: Project, props: RepositoryValidationOptions) {
   const validationJob: Job = {
     runsOn: ['ubuntu-latest'],
     permissions: {
@@ -31,9 +25,9 @@ export function addRepositoryValidationJob(project: Project, props: RepositoryVa
         name: 'Run validation checks',
         run: 'node ./node_modules/@gemeentenijmegen/modules-projen/lib',
         env: {
-          CHECK_PUBLISH_TO_NPM: props.publishToNpm.toString(),
-          CHECK_ACCEPTANCE_BRANCH: props.checkAcceptanceBranch.toString(),
-          CHECK_EMERGENCY_WORKFLOW: props.emergencyWorkflow.toString(),
+          CHECK_PUBLISH_TO_NPM: props.publishToNpm ? props.publishToNpm.toString() : 'true',
+          CHECK_ACCEPTANCE_BRANCH: props.checkAcceptanceBranch ? props.checkAcceptanceBranch.toString() : 'true',
+          CHECK_EMERGENCY_WORKFLOW: props.emergencyWorkflow ? props.emergencyWorkflow.toString() : 'true',
           CHECK_UPGRADE_WORKFLOW_BRANCH: props.upgradeBranch ?? '',
         },
       },
@@ -51,7 +45,7 @@ export function addRepositoryValidationJob(project: Project, props: RepositoryVa
   workflow.on({
     workflowDispatch: {},
     schedule: [{
-      cron: '59 23 * * *'
+      cron: '59 23 * * *',
     }],
   });
 

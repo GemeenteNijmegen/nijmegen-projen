@@ -17,7 +17,7 @@ const project = new cdk.JsiiProject({
   devDeps: [
     '@types/jest@28.1.1', // Pin and exclude as jsii complains about dependencies otherwise...
   ],
-  deps: ['projen'],
+  //deps: ['projen'],
   peerDeps: ['projen'], // Make sure the consuming library will provide a projen version.
   packageName: packageName,
   depsUpgradeOptions: {

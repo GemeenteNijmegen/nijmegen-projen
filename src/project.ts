@@ -3,7 +3,7 @@ import { JobPermission } from 'projen/lib/github/workflows-model';
 import combine from './combine';
 import { EmergencyProcedure } from './emergeny';
 import { addMergeJob } from './mergejob';
-import { addRepositoryValidationJob, RepositoryValidationJobProps } from './validation';
+import { addRepositoryValidationJob } from './validation';
 
 const cfnDiffLabel: string = 'cfn-diff';
 const acceptanceBranchName = 'acceptance';
@@ -47,7 +47,30 @@ export interface GemeenteNijmegenCdkAppOptions extends
   /**
    * Properties for configuring the repsitory validation workflow.
    */
-  readonly repositoryValidationOptions?: RepositoryValidationJobProps;
+  readonly repositoryValidationOptions?: RepositoryValidationOptions;
+}
+
+/**
+ * Repository validation workflow configuration options.
+ */
+export interface RepositoryValidationOptions {
+  /**
+   * Check if the NPM_TOKEN secret is configured.
+   */
+  readonly publishToNpm?: boolean;
+  /**
+   * Check if acceptance branch requires the correct checks.
+   */
+  readonly checkAcceptanceBranch?: boolean;
+  /**
+   * Check if the emergency worflow is deployed and if the
+   * webhook url secret is set.
+   */
+  readonly emergencyWorkflow?: boolean;
+  /**
+   * Checks if the upgrade workflow is set for this branch.
+   */
+  readonly upgradeBranch?: string;
 }
 
 /**
@@ -206,7 +229,7 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
     }
 
     /**
-     * Enable auto-merging dependency updates
+     * Enable repo configuration validation workflow
      */
     if (enableRepositoryValidation) {
       const repositoryValidationOptions = {
@@ -214,8 +237,8 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
         checkAcceptanceBranch: true,
         emergencyWorkflow: true,
         upgradeBranch: acceptanceBranchName,
-        ...options.repositoryValidationOptions
-      }
+        ...options.repositoryValidationOptions,
+      };
       addRepositoryValidationJob(this, repositoryValidationOptions);
     }
 
