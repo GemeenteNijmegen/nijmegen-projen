@@ -27,12 +27,12 @@ export function addRepositoryValidationJob(project: Project, props: RepositoryVa
         with: {
           repository: '${{ github.event.pull_request.head.repo.full_name }}',
           ref: '${{ github.event.pull_request.head.ref }}',
-        }
+        },
       },
       {
         // Required for access to validate-repo.js file from this project
-        name: 'Install dependencies', 
-        run: 'yarn install --check-files'
+        name: 'Install dependencies',
+        run: 'yarn install --check-files',
       },
       {
         name: 'Run validation checks',
