@@ -54,38 +54,53 @@ class ValidateRepository {
     return workflows;
   }
 
-  getWorkflowSecrets() {
-    const workflowSecrets = this.execCommand(`gh api /repos/{owner}/{repo}/actions/secrets --jq '.secrets.[].name'`, false);
-    return workflowSecrets;
+  getBranchProtection(branch){
+    const branchProtection = this.execCommand(`gh api /repos/{owner}/{repo}/branches/${branch}/protection`, true);
+    return branchProtection;
   }
 
-  checkBranch(branches, branchName, requiredStatusChecks) {
+  checkBranch(branches, branchName, requiredStatusChecks, requiredPrReview, ) {
 
     const branch = branches.find(b => b.name == branchName);
 
     if (!branch) {
-      this.foundProblem(`Repository does not contain a branch named ${branchName}`);
+      this.foundProblem(`Repository does not contain a branch named '${branchName}'`);
       return;
     }
 
     if (!branch.protected) {
-      this.foundProblem(`Branch ${branchName} is not protected`);
+      this.foundProblem(`Branch '${branchName}' is not protected`);
       return;
     }
 
     const requiredCheckNames = branch.protection?.required_status_checks?.contexts ?? [];
+    const repositoryHasChecks = requiredCheckNames.length > 0;
 
-    if (!requiredCheckNames && requiredStatusChecks.length > 0) {
-      this.foundProblem(`Branch protection of ${branchName} is enabled but no status checks are defined`);
-      return;
+    if (!repositoryHasChecks && requiredStatusChecks) {
+      this.foundProblem(`Branch protection of '${branchName}' is enabled but no status checks are defined`);
     }
 
-    if (requiredStatusChecks) {
+    if (repositoryHasChecks && requiredStatusChecks) {
       requiredStatusChecks.forEach(checkName => {
         if (!requiredCheckNames?.includes(checkName)) {
-          this.foundProblem(`Branch protection of ${branchName} does not require ${checkName} to pass`);
+          this.foundProblem(`Branch protection of '${branchName}' does not require '${checkName}' to pass`);
         }
       });
+    }
+
+    if(requiredPrReview){
+      
+      const protection = this.getBranchProtection(branchName);
+      const enforce_admins = protection.enforce_admins.enabled;
+      const required_pull_request_reviews = protection.required_pull_request_reviews?.required_approving_review_count;
+
+      if(!enforce_admins){
+        this.foundProblem(`Branch protection of '${branchName}' can be bypassed by administrators`);
+      }
+
+      if(!required_pull_request_reviews || required_pull_request_reviews < 10){
+        this.foundProblem(`Branch protection of '${branchName}' does not require pull request reviews`);
+      }
     }
 
   }
@@ -96,6 +111,14 @@ class ValidateRepository {
         this.foundProblem(`Repository does not have ${itemName} ${item}`);
       }
     });
+  }
+
+  checkEnvironment(variablesToBePresent, itemName){
+    variablesToBePresent.forEach(envVar => {
+      if(!process.env[envVar]){
+        this.foundProblem(`Repository does not have ${itemName} ${envVar}`);
+      }
+    })
   }
 
   /**
@@ -113,15 +136,11 @@ class ValidateRepository {
     const info = this.getRepositoryInformation();
     const branches = this.getBranches();
     const workflows = this.getWorkflows();
-    const secrets = this.getWorkflowSecrets();
 
     /**
      * Determine the configuration to validate
      */
     const branchesToBePresent = [info.defaultBranch];
-    if (checkAcceptanceBranch) {
-      branchesToBePresent.push('acceptance');
-    }
 
     const workflowsToBePresent = [
       PROJEN_RELEASE_WORKFLOW,
@@ -146,18 +165,22 @@ class ValidateRepository {
     /**
      * Perform validation
      */
-    branchesToBePresent.forEach(b => this.checkBranch(branches, b, [PROJEN_BUILD_WORKFLOW, PROJEN_PR_TITLE_WORKFLOW_TITLE]))
+    branchesToBePresent.forEach(b => this.checkBranch(branches, b, [PROJEN_BUILD_WORKFLOW, PROJEN_PR_TITLE_WORKFLOW_TITLE], true));
+    if (checkAcceptanceBranch) {
+      // Acceptance does not require checks to pass or PRs to be reviewed
+      this.checkBranch(branches, 'acceptance', undefined, false);
+    }
     this.checkList(workflows, workflowsToBePresent, 'workflow');
-    this.checkList(secrets, secretsToBePresent, 'secret');
+    this.checkEnvironment(secretsToBePresent, 'secret');
 
     return this.logProblems();
   }
 
 }
 
-const checkPublishToNpm = process.env.CHECK_PUBLISH_TO_NPM == 'true' ? true : false;
-const checkAcceptanceBranch = process.env.CHECK_ACCEPTANCE_BRANCH == 'true' ? true : false;
-const checkEmergencyWorkflow = process.env.CHECK_EMERGENCY_WORKFLOW == 'true' ? true : false;
+const checkPublishToNpm = process.env.CHECK_PUBLISH_TO_NPM == 'true';
+const checkAcceptanceBranch = process.env.CHECK_ACCEPTANCE_BRANCH == 'true';
+const checkEmergencyWorkflow = process.env.CHECK_EMERGENCY_WORKFLOW == 'true';
 const upgradeWorkflowBranch = process.env.CHECK_UPGRADE_WORKFLOW_BRANCH;
 
 const nrOfProblems = new ValidateRepository().check(

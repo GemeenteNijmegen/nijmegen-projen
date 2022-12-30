@@ -22,13 +22,27 @@ export function addRepositoryValidationJob(project: Project, props: RepositoryVa
     },
     steps: [
       {
+        name: 'Checkout',
+        uses: 'actions/checkout@v3',
+        with: {
+          repository: '${{ github.event.pull_request.head.repo.full_name }}',
+          ref: '${{ github.event.pull_request.head.ref }}',
+        }
+      },
+      {
+        // Required for access to validate-repo.js file from this project
+        name: 'Install dependencies', 
+        run: 'yarn install --check-files'
+      },
+      {
         name: 'Run validation checks',
-        run: 'node ./node_modules/@gemeentenijmegen/modules-projen/lib',
+        run: 'node ./node_modules/@gemeentenijmegen/modules-projen/lib/validate-repo.js',
         env: {
           CHECK_PUBLISH_TO_NPM: props.publishToNpm ? props.publishToNpm.toString() : 'true',
           CHECK_ACCEPTANCE_BRANCH: props.checkAcceptanceBranch ? props.checkAcceptanceBranch.toString() : 'true',
           CHECK_EMERGENCY_WORKFLOW: props.emergencyWorkflow ? props.emergencyWorkflow.toString() : 'true',
           CHECK_UPGRADE_WORKFLOW_BRANCH: props.upgradeBranch ?? '',
+          GH_TOKEN: '${{ github.token }}',
         },
       },
     ],
@@ -49,5 +63,5 @@ export function addRepositoryValidationJob(project: Project, props: RepositoryVa
     }],
   });
 
-  workflow.addJobs({ automerge: validationJob });
+  workflow.addJobs({ validation: validationJob });
 }
