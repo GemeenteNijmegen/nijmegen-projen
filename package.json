@@ -1,5 +1,5 @@
 {
-  "name": "@gemeentenijmegen/modules-projen",
+  "name": "@gemeentenijmegen/projen-project-type",
   "repository": {
     "type": "git",
     "url": "https://github.com/GemeenteNijmegen/modules-projen.git"
