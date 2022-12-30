@@ -2,7 +2,7 @@ const { cdk } = require('projen');
 const { NpmAccess } = require('projen/lib/javascript');
 
 const organizationName = '@gemeentenijmegen';
-const projectName = 'modules-projen';
+const projectName = 'projen-project-type';
 const packageName = `${organizationName}/${projectName}`;
 
 const project = new cdk.JsiiProject({
