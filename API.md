@@ -2436,6 +2436,8 @@ Properties for configuring the repsitory validation workflow.
 
 ### RepositoryValidationOptions <a name="RepositoryValidationOptions" id="@gemeentenijmegen/modules-projen.RepositoryValidationOptions"></a>
 
+Repository validation workflow configuration options.
+
 #### Initializer <a name="Initializer" id="@gemeentenijmegen/modules-projen.RepositoryValidationOptions.Initializer"></a>
 
 ```typescript
@@ -2448,14 +2450,14 @@ const repositoryValidationOptions: RepositoryValidationOptions = { ... }
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#@gemeentenijmegen/modules-projen.RepositoryValidationOptions.property.checkAcceptanceBranch">checkAcceptanceBranch</a></code> | <code>boolean</code> | *No description.* |
-| <code><a href="#@gemeentenijmegen/modules-projen.RepositoryValidationOptions.property.emergencyWorkflow">emergencyWorkflow</a></code> | <code>boolean</code> | *No description.* |
-| <code><a href="#@gemeentenijmegen/modules-projen.RepositoryValidationOptions.property.publishToNpm">publishToNpm</a></code> | <code>boolean</code> | *No description.* |
-| <code><a href="#@gemeentenijmegen/modules-projen.RepositoryValidationOptions.property.upgradeBranch">upgradeBranch</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.RepositoryValidationOptions.property.checkAcceptanceBranch">checkAcceptanceBranch</a></code> | <code>boolean</code> | Check if acceptance branch requires the correct checks. |
+| <code><a href="#@gemeentenijmegen/modules-projen.RepositoryValidationOptions.property.emergencyWorkflow">emergencyWorkflow</a></code> | <code>boolean</code> | Check if the emergency worflow is deployed and if the webhook url secret is set. |
+| <code><a href="#@gemeentenijmegen/modules-projen.RepositoryValidationOptions.property.publishToNpm">publishToNpm</a></code> | <code>boolean</code> | Check if the NPM_TOKEN secret is configured. |
+| <code><a href="#@gemeentenijmegen/modules-projen.RepositoryValidationOptions.property.upgradeBranch">upgradeBranch</a></code> | <code>string</code> | Checks if the upgrade workflow is set for this branch. |
 
 ---
 
-##### `checkAcceptanceBranch`<sup>Required</sup> <a name="checkAcceptanceBranch" id="@gemeentenijmegen/modules-projen.RepositoryValidationOptions.property.checkAcceptanceBranch"></a>
+##### `checkAcceptanceBranch`<sup>Optional</sup> <a name="checkAcceptanceBranch" id="@gemeentenijmegen/modules-projen.RepositoryValidationOptions.property.checkAcceptanceBranch"></a>
 
 ```typescript
 public readonly checkAcceptanceBranch: boolean;
@@ -2463,9 +2465,11 @@ public readonly checkAcceptanceBranch: boolean;
 
 - *Type:* boolean
 
+Check if acceptance branch requires the correct checks.
+
 ---
 
-##### `emergencyWorkflow`<sup>Required</sup> <a name="emergencyWorkflow" id="@gemeentenijmegen/modules-projen.RepositoryValidationOptions.property.emergencyWorkflow"></a>
+##### `emergencyWorkflow`<sup>Optional</sup> <a name="emergencyWorkflow" id="@gemeentenijmegen/modules-projen.RepositoryValidationOptions.property.emergencyWorkflow"></a>
 
 ```typescript
 public readonly emergencyWorkflow: boolean;
@@ -2473,15 +2477,19 @@ public readonly emergencyWorkflow: boolean;
 
 - *Type:* boolean
 
+Check if the emergency worflow is deployed and if the webhook url secret is set.
+
 ---
 
-##### `publishToNpm`<sup>Required</sup> <a name="publishToNpm" id="@gemeentenijmegen/modules-projen.RepositoryValidationOptions.property.publishToNpm"></a>
+##### `publishToNpm`<sup>Optional</sup> <a name="publishToNpm" id="@gemeentenijmegen/modules-projen.RepositoryValidationOptions.property.publishToNpm"></a>
 
 ```typescript
 public readonly publishToNpm: boolean;
 ```
 
 - *Type:* boolean
+
+Check if the NPM_TOKEN secret is configured.
 
 ---
 
@@ -2492,6 +2500,8 @@ public readonly upgradeBranch: string;
 ```
 
 - *Type:* string
+
+Checks if the upgrade workflow is set for this branch.
 
 ---
 
