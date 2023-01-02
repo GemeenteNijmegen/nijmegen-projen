@@ -36,7 +36,7 @@ export function addRepositoryValidationJob(project: Project, props: RepositoryVa
       },
       {
         name: 'Run validation checks',
-        run: 'node ./node_modules/@gemeentenijmegen/modules-projen/lib/validate-repo.js',
+        run: 'node ./node_modules/@gemeentenijmegen/projen-project-type/lib/validate-repo.js',
         env: {
           CHECK_PUBLISH_TO_NPM: props.publishToNpm ? props.publishToNpm.toString() : 'true',
           CHECK_ACCEPTANCE_BRANCH: props.checkAcceptanceBranch ? props.checkAcceptanceBranch.toString() : 'true',
