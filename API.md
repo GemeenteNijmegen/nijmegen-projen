@@ -10914,6 +10914,8 @@ this task should synthesize the project files.
 
 ### GemeenteNijmegenCdkLib <a name="GemeenteNijmegenCdkLib" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLib"></a>
 
+A GemeenteNijmegen projen project type for AwsCdkConstructLibraries bundled and published as an NPM package.
+
 #### Initializers <a name="Initializers" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLib.Initializer"></a>
 
 ```typescript
@@ -12338,6 +12340,8 @@ this task should synthesize the project files.
 
 ### GemeenteNijmegenJsii <a name="GemeenteNijmegenJsii" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsii"></a>
 
+A GemeenteNijmegen projen project type for Jsii projects bundled and published as an NPM package.
+
 #### Initializers <a name="Initializers" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsii.Initializer"></a>
 
 ```typescript
@@ -13688,6 +13692,8 @@ this task should synthesize the project files.
 ---
 
 ### GemeenteNijmegenTsPackage <a name="GemeenteNijmegenTsPackage" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackage"></a>
+
+A GemeenteNijmegen projen porject type for typescript projects bundled and published as an NPM package.
 
 #### Initializers <a name="Initializers" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackage.Initializer"></a>
 

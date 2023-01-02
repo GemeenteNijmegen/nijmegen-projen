@@ -1,5 +1,6 @@
-export * from './cdk-app';
-export * from './cdk-lib';
-export * from './jsii';
-export * from './ts-package';
-export * from './shared';
+export * from './project-cdk-app';
+export * from './project-cdk-lib';
+export * from './project-jsii-lib';
+export * from './project-ts-lib';
+export { GemeenteNijmegenOptions } from './shared';
+export { RepositoryValidationOptions } from './validation';

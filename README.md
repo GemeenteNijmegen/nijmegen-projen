@@ -22,9 +22,9 @@ npx projen new --from @gemeentenijmegen/projen-project-type {type}
 ```
 The following project types can be used:
 - `cdk-app` standard CDK project
-- `cdk-lib` standard CDK construct library
-- `jsii` a JSII application (published to NPM by default)
-- `ts-package` a typescript project (published to NPM by default)
+- `cdk-lib` standard CDK construct library (published to NPM by default)
+- `jsii-lib` a JSII application (published to NPM by default)
+- `ts-lib` a typescript project (published to NPM by default)
 
 ### For existing projects
 For instructions on how to start using the project type in existing projects there is the [setup guide](./SETUP.md). 
@@ -48,7 +48,6 @@ The project type in this npm package provides some additional configuration opti
 | Property                    | Default | Explanation                                                                                 |
 | --------------------------- | ------- | ------------------------------------------------------------------------------------------- |
 | enableCfnLintOnGithub       | true    | Enable step in the Github build workflow that runs cfn-lint                                 |
-| enableCfnDiffWorkflow       | false   | Enable job in the Github build workflow that checks for changes in CloudFormation templates |
 | enableEmergencyProcedure    | true    | Adds the emergency procedure workflow to Github workflows                                   |
 | enableAutoMergeDependencies | true    | Adds the auto-merge workflow for PR's to acceptance (from upgrade workflow)                 |
 
@@ -74,8 +73,3 @@ Dit betekent dat:
 
 ### Projen upgrade
 De projen versie wordt ook geupgrade in de upgrade dependencies task.
-
-
-## CloudFormation diff
-- Deze workflow kan worden enabled in de `.projenrc.js` met de property `enableCfnDiffWorkflow: true`.
-- Draait alleen op PRs met het label `cfn-diff`.

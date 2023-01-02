@@ -9,6 +9,12 @@ import {
 export interface GemeenteNijmegenTsPackageOptions extends
   TypeScriptProjectOptions, GemeenteNijmegenOptions {}
 
+/**
+ * A GemeenteNijmegen projen porject type for typescript projects
+ * bundled and published as an NPM package.
+ *
+ * @pjid ts-lib
+ */
 export class GemeenteNijmegenTsPackage extends TypeScriptProject {
 
   constructor(options: GemeenteNijmegenTsPackageOptions) {

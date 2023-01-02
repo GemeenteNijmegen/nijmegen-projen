@@ -5,7 +5,7 @@ import { TypeScriptProjectOptions } from 'projen/lib/typescript';
 import combine from './combine';
 import { EmergencyProcedure } from './emergeny';
 import { addMergeJob } from './mergejob';
-import { addRepositoryValidationJob } from './validation';
+import { addRepositoryValidationJob, RepositoryValidationOptions } from './validation';
 
 const acceptanceBranchName = 'acceptance';
 
@@ -38,30 +38,6 @@ export interface GemeenteNijmegenOptions {
    */
   readonly repositoryValidationOptions?: RepositoryValidationOptions;
 }
-
-/**
- * Repository validation workflow configuration options.
- */
-export interface RepositoryValidationOptions {
-  /**
-   * Check if the NPM_TOKEN secret is configured.
-   */
-  readonly publishToNpm?: boolean;
-  /**
-   * Check if acceptance branch requires the correct checks.
-   */
-  readonly checkAcceptanceBranch?: boolean;
-  /**
-   * Check if the emergency worflow is deployed and if the
-   * webhook url secret is set.
-   */
-  readonly emergencyWorkflow?: boolean;
-  /**
-   * Checks if the upgrade workflow is set for this branch.
-   */
-  readonly upgradeBranch?: string;
-}
-
 
 export function setDefaultValues(
   options: NodeProjectOptions,

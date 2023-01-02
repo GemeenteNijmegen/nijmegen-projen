@@ -2,9 +2,9 @@
 How to install this custom projen project type in an existing cdk app project.
 
 ## 1. Install this package
-1. Include dependency to '@gemeentenijmegen/modules-projen' in `.projenrc.js` deps.
+1. Include dependency to '@gemeentenijmegen/projen-project-type' in `.projenrc.js` deps.
 2. Import project: 
-    - `const { GemeenteNijmegenCdkApp } = require('@gemeentenijmegen/modules-projen');`
+    - `const { GemeenteNijmegenCdkApp } = require('@gemeentenijmegen/projen-project-type');`
 3. Change project to GemeenteNijmegenCdkApp: 
     - `const project = new GemeenteNijmegenCdkApp({`
 

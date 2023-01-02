@@ -12,6 +12,8 @@ export interface GemeenteNijmegenCdkAppOptions extends AwsCdkTypeScriptAppOption
 
 /**
  * GemeenteNijmegenCdkApp projen project type for Gemeente Nijmegen CDK apps
+ *
+ * @pjid cdk-app
  */
 export class GemeenteNijmegenCdkApp extends AwsCdkTypeScriptApp {
 

@@ -1,7 +1,29 @@
 import { Project } from 'projen';
 import { GitHub, GithubWorkflow } from 'projen/lib/github';
 import { Job, JobPermission } from 'projen/lib/github/workflows-model';
-import { RepositoryValidationOptions } from './project';
+
+/**
+ * Repository validation workflow configuration options.
+ */
+export interface RepositoryValidationOptions {
+  /**
+   * Check if the NPM_TOKEN secret is configured.
+   */
+  readonly publishToNpm?: boolean;
+  /**
+   * Check if acceptance branch requires the correct checks.
+   */
+  readonly checkAcceptanceBranch?: boolean;
+  /**
+   * Check if the emergency worflow is deployed and if the
+   * webhook url secret is set.
+   */
+  readonly emergencyWorkflow?: boolean;
+  /**
+   * Checks if the upgrade workflow is set for this branch.
+   */
+  readonly upgradeBranch?: string;
+}
 
 export function addRepositoryValidationJob(project: Project, props: RepositoryValidationOptions) {
   const validationJob: Job = {

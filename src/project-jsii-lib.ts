@@ -1,12 +1,18 @@
-import { AwsCdkConstructLibrary, AwsCdkConstructLibraryOptions } from 'projen/lib/awscdk';
+import { JsiiProject, JsiiProjectOptions } from 'projen/lib/cdk';
 import { GemeenteNijmegenOptions, setDefaultValues, setDefaultValuesNpmPublish, setupSharedConfiguration } from './shared';
 
-export interface GemeenteNijmegenCdkLibOptions extends
-  AwsCdkConstructLibraryOptions, GemeenteNijmegenOptions {}
+export interface GemeenteNijmegenJsiiOptions extends
+  JsiiProjectOptions, GemeenteNijmegenOptions {}
 
-export class GemeenteNijmegenCdkLib extends AwsCdkConstructLibrary {
+/**
+ * A GemeenteNijmegen projen project type for Jsii projects
+ * bundled and published as an NPM package.
+ *
+ * @pjid jsii-lib
+ */
+export class GemeenteNijmegenJsii extends JsiiProject {
 
-  constructor(options: GemeenteNijmegenCdkLibOptions) {
+  constructor(options: GemeenteNijmegenJsiiOptions) {
 
     setDefaultValues(options, options); // Well this looks wierd...
     setDefaultValuesNpmPublish(options, options);
