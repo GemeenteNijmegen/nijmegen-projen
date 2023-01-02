@@ -9,6 +9,7 @@ const project = new cdk.JsiiProject({
   author: organizationName,
   repository: 'https://github.com/GemeenteNijmegen/modules-projen.git',
   defaultReleaseBranch: 'main',
+  majorVersion: 1,
   name: projectName,
   license: 'EUPL-1.2',
   release: true,
