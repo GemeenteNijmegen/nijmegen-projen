@@ -1,9 +1,9 @@
 import { TypeScriptProject, TypeScriptProjectOptions } from 'projen/lib/typescript';
-import { 
-  GemeenteNijmegenOptions, 
-  setDefaultValues, 
-  setDefaultValuesNpmPublish, 
-  setupSharedConfiguration 
+import {
+  GemeenteNijmegenOptions,
+  setDefaultValues,
+  setDefaultValuesNpmPublish,
+  setupSharedConfiguration,
 } from './shared';
 
 export interface GemeenteNijmegenTsPackageOptions extends

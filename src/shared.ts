@@ -125,14 +125,14 @@ export function setDefaultValues(
   };
 }
 
-type NpmPackageOptions = 
-  TypeScriptProjectOptions 
-  | AwsCdkConstructLibraryOptions 
+type NpmPackageOptions =
+  TypeScriptProjectOptions
+  | AwsCdkConstructLibraryOptions
   | JsiiProjectOptions;
 
 export function setDefaultValuesNpmPublish(
-  options: NpmPackageOptions, 
-  ourOptions: GemeenteNijmegenOptions
+  options: NpmPackageOptions,
+  ourOptions: GemeenteNijmegenOptions,
 ) {
   // Set defaults for publishing to npm.js
   options = {
