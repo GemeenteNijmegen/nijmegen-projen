@@ -140,8 +140,6 @@ class ValidateRepository {
     /**
      * Determine the configuration to validate
      */
-    const branchesToBePresent = [info.defaultBranch];
-
     const workflowsToBePresent = [
       PROJEN_RELEASE_WORKFLOW,
       PROJEN_BUILD_WORKFLOW,
@@ -165,7 +163,7 @@ class ValidateRepository {
     /**
      * Perform validation
      */
-    branchesToBePresent.forEach(b => this.checkBranch(branches, b, [PROJEN_BUILD_WORKFLOW, PROJEN_PR_TITLE_WORKFLOW_TITLE], true));
+    this.checkBranch(branches, info.defaultBranch, [PROJEN_BUILD_WORKFLOW, PROJEN_PR_TITLE_WORKFLOW_TITLE], true);
     if (checkAcceptanceBranch) {
       // Acceptance does not require checks to pass or PRs to be reviewed
       this.checkBranch(branches, 'acceptance', undefined, false);
