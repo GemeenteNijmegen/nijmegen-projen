@@ -18,8 +18,13 @@ This project type relies on Github secrets to be set in order for all its Github
 
 ### For new projects
 ```bash
-npx projen new --from @gemeentenijmegen/modules-projen
+npx projen new --from @gemeentenijmegen/projen-project-type {type}
 ```
+The following project types can be used:
+- `cdk-app` standard CDK project
+- `cdk-lib` standard CDK construct library
+- `jsii` a JSII application (published to NPM by default)
+- `ts-package` a typescript project (published to NPM by default)
 
 ### For existing projects
 For instructions on how to start using the project type in existing projects there is the [setup guide](./SETUP.md). 
