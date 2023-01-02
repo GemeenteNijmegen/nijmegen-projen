@@ -3,6 +3,7 @@ import { JobPermission } from 'projen/lib/github/workflows-model';
 import combine from './combine';
 import { EmergencyProcedure } from './emergeny';
 import { addMergeJob } from './mergejob';
+import { addRepositoryValidationJob } from './validation';
 
 const cfnDiffLabel: string = 'cfn-diff';
 const acceptanceBranchName = 'acceptance';
@@ -35,6 +36,41 @@ export interface GemeenteNijmegenCdkAppOptions extends
    * @default true
    */
   readonly enableAutoMergeDependencies?: boolean;
+
+  /**
+   * Enable an additional workflow that checks if the Github repository is
+   * configured according to the desired configuration for Gemeente Nijmegen.
+   * This includes emergency workflow, correct secrets, branch protection etc.
+   */
+  readonly enableRepositoryValidation?: boolean;
+
+  /**
+   * Properties for configuring the repsitory validation workflow.
+   */
+  readonly repositoryValidationOptions?: RepositoryValidationOptions;
+}
+
+/**
+ * Repository validation workflow configuration options.
+ */
+export interface RepositoryValidationOptions {
+  /**
+   * Check if the NPM_TOKEN secret is configured.
+   */
+  readonly publishToNpm?: boolean;
+  /**
+   * Check if acceptance branch requires the correct checks.
+   */
+  readonly checkAcceptanceBranch?: boolean;
+  /**
+   * Check if the emergency worflow is deployed and if the
+   * webhook url secret is set.
+   */
+  readonly emergencyWorkflow?: boolean;
+  /**
+   * Checks if the upgrade workflow is set for this branch.
+   */
+  readonly upgradeBranch?: string;
 }
 
 /**
@@ -48,6 +84,7 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
     const enableCfnDiffWorkflow = options.enableCfnDiffWorkflow ?? false;
     const enableEmergencyProcedure = options.enableEmergencyProcedure ?? true;
     const enableAutoMergeDependencies = options.enableAutoMergeDependencies ?? true;
+    const enableRepositoryValidation = options.enableRepositoryValidation ?? true;
 
     /**
      * Add lint script to projen scripts only if
@@ -187,8 +224,22 @@ export class GemeenteNijmegenCdkApp extends awscdk.AwsCdkTypeScriptApp {
     /**
      * Enable auto-merging dependency updates
      */
-    if ( enableAutoMergeDependencies) {
+    if (enableAutoMergeDependencies) {
       addMergeJob(this, acceptanceBranchName);
+    }
+
+    /**
+     * Enable repo configuration validation workflow
+     */
+    if (enableRepositoryValidation) {
+      const repositoryValidationOptions = {
+        publishToNpm: false,
+        checkAcceptanceBranch: true,
+        emergencyWorkflow: true,
+        upgradeBranch: acceptanceBranchName,
+        ...options.repositoryValidationOptions,
+      };
+      addRepositoryValidationJob(this, repositoryValidationOptions);
     }
 
   }

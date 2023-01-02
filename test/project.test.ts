@@ -17,4 +17,38 @@ describe('NijmegenProject', () => {
     const snapshot = synthSnapshot(project);
     expect(snapshot).not.toHaveProperty('.github/workflows/auto-merge.yml');
   });
+
+  test('Contains validation workflow by default', () => {
+    const project = new GemeenteNijmegenCdkApp({ cdkVersion: '2.51.0', defaultReleaseBranch: 'main', name: 'test project' });
+
+    const snapshot = synthSnapshot(project);
+    expect(snapshot['.github/workflows/repository-validation.yml']).not.toBeUndefined();
+  });
+
+  test('Does not contain validation workflow when configured', () => {
+    const project = new GemeenteNijmegenCdkApp({ cdkVersion: '2.51.0', defaultReleaseBranch: 'main', name: 'test project', enableRepositoryValidation: false });
+
+    const snapshot = synthSnapshot(project);
+    expect(snapshot['.github/workflows/repository-validation.yml']).toBeUndefined();
+  });
+
+  test('Repository validation workflow options', () => {
+    const project = new GemeenteNijmegenCdkApp({
+      cdkVersion: '2.51.0',
+      defaultReleaseBranch: 'main',
+      name: 'test project',
+      enableRepositoryValidation: false,
+      repositoryValidationOptions: {
+        publishToNpm: true,
+        checkAcceptanceBranch: true,
+        emergencyWorkflow: true,
+        upgradeBranch: 'main',
+      },
+    });
+
+    const snapshot = synthSnapshot(project);
+    expect(snapshot['.github/workflows/repository-validation.yml']).toBeUndefined();
+  });
+
+
 });
