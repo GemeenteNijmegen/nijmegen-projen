@@ -14,8 +14,8 @@ export class GemeenteNijmegenJsii extends JsiiProject {
 
   constructor(options: GemeenteNijmegenJsiiOptions) {
 
-    setDefaultValues(options, options); // Well this looks wierd...
-    setDefaultValuesNpmPublish(options, options);
+    options = setDefaultValues(options);
+    options = setDefaultValuesNpmPublish(options);
 
     /**
      * Construct the actual projen project

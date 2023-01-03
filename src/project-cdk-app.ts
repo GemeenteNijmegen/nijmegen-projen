@@ -21,7 +21,7 @@ export class GemeenteNijmegenCdkApp extends AwsCdkTypeScriptApp {
 
     const enableCfnLintOnGithub = options.enableCfnLintOnGithub ?? true;
 
-    setDefaultValues(options, options); // Well this looks wierd...
+    options = setDefaultValues(options);
 
     /**
      * Add lint script to projen scripts only if
