@@ -2,7 +2,7 @@ import { NodeProject, NodeProjectOptions, NpmAccess } from 'projen/lib/javascrip
 import combine from './combine';
 import { EmergencyProcedure } from './emergeny';
 import { addMergeJob } from './mergejob';
-import { addRepositoryValidationJob, RepositoryValidationOptions } from './validation';
+import { addRepositoryValidationJob } from './validation';
 
 const acceptanceBranchName = 'acceptance';
 
@@ -30,14 +30,10 @@ export interface GemeenteNijmegenOptions {
    */
   readonly enableRepositoryValidation?: boolean;
 
-  /**
-   * Properties for configuring the repsitory validation workflow.
-   */
-  readonly repositoryValidationOptions?: RepositoryValidationOptions;
 }
 
 //type NpmPackageOptions = TypeScriptProjectOptions | AwsCdkConstructLibraryOptions | JsiiProjectOptions;
-type CombinedProjectOptions = NodeProjectOptions & GemeenteNijmegenOptions
+export type CombinedProjectOptions = NodeProjectOptions & GemeenteNijmegenOptions
 
 export function setDefaultValues<T extends CombinedProjectOptions>(options: T) : T {
 
@@ -110,10 +106,6 @@ export function setDefaultValuesNpmPublish<T extends CombinedProjectOptions>(opt
     release: true,
     releaseToNpm: true,
     npmAccess: NpmAccess.PUBLIC,
-    repositoryValidationOptions: {
-      publishToNpm: true,
-      ...options.repositoryValidationOptions,
-    },
     ...options,
   };
   return options;
@@ -121,7 +113,7 @@ export function setDefaultValuesNpmPublish<T extends CombinedProjectOptions>(opt
 
 export function setupSharedConfiguration(
   project: NodeProject,
-  options: GemeenteNijmegenOptions,
+  options: CombinedProjectOptions,
 ) {
 
   const enableEmergencyProcedure = options.enableEmergencyProcedure ?? true;
@@ -146,13 +138,6 @@ export function setupSharedConfiguration(
    * Enable repo configuration validation workflow
    */
   if (enableRepositoryValidation) {
-    const repositoryValidationOptions = {
-      publishToNpm: false,
-      checkAcceptanceBranch: true,
-      emergencyWorkflow: true,
-      upgradeBranch: acceptanceBranchName,
-      ...options.repositoryValidationOptions,
-    };
-    addRepositoryValidationJob(project, repositoryValidationOptions);
+    addRepositoryValidationJob(project, options);
   }
 }

@@ -173,7 +173,6 @@ const gemeenteNijmegenCdkAppOptions: GemeenteNijmegenCdkAppOptions = { ... }
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkAppOptions.property.enableAutoMergeDependencies">enableAutoMergeDependencies</a></code> | <code>boolean</code> | Enable an additional workflow that auto-merges PR's with the 'auto-merge' label. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkAppOptions.property.enableEmergencyProcedure">enableEmergencyProcedure</a></code> | <code>boolean</code> | Enable an additional workflow that allows branch protection bypass and will inform the team trough slack. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkAppOptions.property.enableRepositoryValidation">enableRepositoryValidation</a></code> | <code>boolean</code> | Enable an additional workflow that checks if the Github repository is configured according to the desired configuration for Gemeente Nijmegen. |
-| <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkAppOptions.property.repositoryValidationOptions">repositoryValidationOptions</a></code> | <code><a href="#@gemeentenijmegen/projen-project-type.RepositoryValidationOptions">RepositoryValidationOptions</a></code> | Properties for configuring the repsitory validation workflow. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkAppOptions.property.enableCfnLintOnGithub">enableCfnLintOnGithub</a></code> | <code>boolean</code> | Enable cfn-lint in the github build workflow. |
 
 ---
@@ -2395,18 +2394,6 @@ This includes emergency workflow, correct secrets, branch protection etc.
 
 ---
 
-##### `repositoryValidationOptions`<sup>Optional</sup> <a name="repositoryValidationOptions" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkAppOptions.property.repositoryValidationOptions"></a>
-
-```typescript
-public readonly repositoryValidationOptions: RepositoryValidationOptions;
-```
-
-- *Type:* <a href="#@gemeentenijmegen/projen-project-type.RepositoryValidationOptions">RepositoryValidationOptions</a>
-
-Properties for configuring the repsitory validation workflow.
-
----
-
 ##### `enableCfnLintOnGithub`<sup>Optional</sup> <a name="enableCfnLintOnGithub" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkAppOptions.property.enableCfnLintOnGithub"></a>
 
 ```typescript
@@ -2598,7 +2585,6 @@ const gemeenteNijmegenCdkLibOptions: GemeenteNijmegenCdkLibOptions = { ... }
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLibOptions.property.enableAutoMergeDependencies">enableAutoMergeDependencies</a></code> | <code>boolean</code> | Enable an additional workflow that auto-merges PR's with the 'auto-merge' label. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLibOptions.property.enableEmergencyProcedure">enableEmergencyProcedure</a></code> | <code>boolean</code> | Enable an additional workflow that allows branch protection bypass and will inform the team trough slack. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLibOptions.property.enableRepositoryValidation">enableRepositoryValidation</a></code> | <code>boolean</code> | Enable an additional workflow that checks if the Github repository is configured according to the desired configuration for Gemeente Nijmegen. |
-| <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLibOptions.property.repositoryValidationOptions">repositoryValidationOptions</a></code> | <code><a href="#@gemeentenijmegen/projen-project-type.RepositoryValidationOptions">RepositoryValidationOptions</a></code> | Properties for configuring the repsitory validation workflow. |
 
 ---
 
@@ -4934,18 +4920,6 @@ This includes emergency workflow, correct secrets, branch protection etc.
 
 ---
 
-##### `repositoryValidationOptions`<sup>Optional</sup> <a name="repositoryValidationOptions" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLibOptions.property.repositoryValidationOptions"></a>
-
-```typescript
-public readonly repositoryValidationOptions: RepositoryValidationOptions;
-```
-
-- *Type:* <a href="#@gemeentenijmegen/projen-project-type.RepositoryValidationOptions">RepositoryValidationOptions</a>
-
-Properties for configuring the repsitory validation workflow.
-
----
-
 ### GemeenteNijmegenJsiiOptions <a name="GemeenteNijmegenJsiiOptions" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsiiOptions"></a>
 
 #### Initializer <a name="Initializer" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsiiOptions.Initializer"></a>
@@ -5110,7 +5084,6 @@ const gemeenteNijmegenJsiiOptions: GemeenteNijmegenJsiiOptions = { ... }
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsiiOptions.property.enableAutoMergeDependencies">enableAutoMergeDependencies</a></code> | <code>boolean</code> | Enable an additional workflow that auto-merges PR's with the 'auto-merge' label. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsiiOptions.property.enableEmergencyProcedure">enableEmergencyProcedure</a></code> | <code>boolean</code> | Enable an additional workflow that allows branch protection bypass and will inform the team trough slack. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsiiOptions.property.enableRepositoryValidation">enableRepositoryValidation</a></code> | <code>boolean</code> | Enable an additional workflow that checks if the Github repository is configured according to the desired configuration for Gemeente Nijmegen. |
-| <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsiiOptions.property.repositoryValidationOptions">repositoryValidationOptions</a></code> | <code><a href="#@gemeentenijmegen/projen-project-type.RepositoryValidationOptions">RepositoryValidationOptions</a></code> | Properties for configuring the repsitory validation workflow. |
 
 ---
 
@@ -7233,18 +7206,6 @@ This includes emergency workflow, correct secrets, branch protection etc.
 
 ---
 
-##### `repositoryValidationOptions`<sup>Optional</sup> <a name="repositoryValidationOptions" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsiiOptions.property.repositoryValidationOptions"></a>
-
-```typescript
-public readonly repositoryValidationOptions: RepositoryValidationOptions;
-```
-
-- *Type:* <a href="#@gemeentenijmegen/projen-project-type.RepositoryValidationOptions">RepositoryValidationOptions</a>
-
-Properties for configuring the repsitory validation workflow.
-
----
-
 ### GemeenteNijmegenOptions <a name="GemeenteNijmegenOptions" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenOptions"></a>
 
 #### Initializer <a name="Initializer" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenOptions.Initializer"></a>
@@ -7262,7 +7223,6 @@ const gemeenteNijmegenOptions: GemeenteNijmegenOptions = { ... }
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenOptions.property.enableAutoMergeDependencies">enableAutoMergeDependencies</a></code> | <code>boolean</code> | Enable an additional workflow that auto-merges PR's with the 'auto-merge' label. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenOptions.property.enableEmergencyProcedure">enableEmergencyProcedure</a></code> | <code>boolean</code> | Enable an additional workflow that allows branch protection bypass and will inform the team trough slack. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenOptions.property.enableRepositoryValidation">enableRepositoryValidation</a></code> | <code>boolean</code> | Enable an additional workflow that checks if the Github repository is configured according to the desired configuration for Gemeente Nijmegen. |
-| <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenOptions.property.repositoryValidationOptions">repositoryValidationOptions</a></code> | <code><a href="#@gemeentenijmegen/projen-project-type.RepositoryValidationOptions">RepositoryValidationOptions</a></code> | Properties for configuring the repsitory validation workflow. |
 
 ---
 
@@ -7306,18 +7266,6 @@ public readonly enableRepositoryValidation: boolean;
 Enable an additional workflow that checks if the Github repository is configured according to the desired configuration for Gemeente Nijmegen.
 
 This includes emergency workflow, correct secrets, branch protection etc.
-
----
-
-##### `repositoryValidationOptions`<sup>Optional</sup> <a name="repositoryValidationOptions" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenOptions.property.repositoryValidationOptions"></a>
-
-```typescript
-public readonly repositoryValidationOptions: RepositoryValidationOptions;
-```
-
-- *Type:* <a href="#@gemeentenijmegen/projen-project-type.RepositoryValidationOptions">RepositoryValidationOptions</a>
-
-Properties for configuring the repsitory validation workflow.
 
 ---
 
@@ -7470,7 +7418,6 @@ const gemeenteNijmegenTsPackageOptions: GemeenteNijmegenTsPackageOptions = { ...
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackageOptions.property.enableAutoMergeDependencies">enableAutoMergeDependencies</a></code> | <code>boolean</code> | Enable an additional workflow that auto-merges PR's with the 'auto-merge' label. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackageOptions.property.enableEmergencyProcedure">enableEmergencyProcedure</a></code> | <code>boolean</code> | Enable an additional workflow that allows branch protection bypass and will inform the team trough slack. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackageOptions.property.enableRepositoryValidation">enableRepositoryValidation</a></code> | <code>boolean</code> | Enable an additional workflow that checks if the Github repository is configured according to the desired configuration for Gemeente Nijmegen. |
-| <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackageOptions.property.repositoryValidationOptions">repositoryValidationOptions</a></code> | <code><a href="#@gemeentenijmegen/projen-project-type.RepositoryValidationOptions">RepositoryValidationOptions</a></code> | Properties for configuring the repsitory validation workflow. |
 
 ---
 
@@ -9391,89 +9338,6 @@ public readonly enableRepositoryValidation: boolean;
 Enable an additional workflow that checks if the Github repository is configured according to the desired configuration for Gemeente Nijmegen.
 
 This includes emergency workflow, correct secrets, branch protection etc.
-
----
-
-##### `repositoryValidationOptions`<sup>Optional</sup> <a name="repositoryValidationOptions" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackageOptions.property.repositoryValidationOptions"></a>
-
-```typescript
-public readonly repositoryValidationOptions: RepositoryValidationOptions;
-```
-
-- *Type:* <a href="#@gemeentenijmegen/projen-project-type.RepositoryValidationOptions">RepositoryValidationOptions</a>
-
-Properties for configuring the repsitory validation workflow.
-
----
-
-### RepositoryValidationOptions <a name="RepositoryValidationOptions" id="@gemeentenijmegen/projen-project-type.RepositoryValidationOptions"></a>
-
-Repository validation workflow configuration options.
-
-#### Initializer <a name="Initializer" id="@gemeentenijmegen/projen-project-type.RepositoryValidationOptions.Initializer"></a>
-
-```typescript
-import { RepositoryValidationOptions } from '@gemeentenijmegen/projen-project-type'
-
-const repositoryValidationOptions: RepositoryValidationOptions = { ... }
-```
-
-#### Properties <a name="Properties" id="Properties"></a>
-
-| **Name** | **Type** | **Description** |
-| --- | --- | --- |
-| <code><a href="#@gemeentenijmegen/projen-project-type.RepositoryValidationOptions.property.checkAcceptanceBranch">checkAcceptanceBranch</a></code> | <code>boolean</code> | Check if acceptance branch requires the correct checks. |
-| <code><a href="#@gemeentenijmegen/projen-project-type.RepositoryValidationOptions.property.emergencyWorkflow">emergencyWorkflow</a></code> | <code>boolean</code> | Check if the emergency worflow is deployed and if the webhook url secret is set. |
-| <code><a href="#@gemeentenijmegen/projen-project-type.RepositoryValidationOptions.property.publishToNpm">publishToNpm</a></code> | <code>boolean</code> | Check if the NPM_TOKEN secret is configured. |
-| <code><a href="#@gemeentenijmegen/projen-project-type.RepositoryValidationOptions.property.upgradeBranch">upgradeBranch</a></code> | <code>string</code> | Checks if the upgrade workflow is set for this branch. |
-
----
-
-##### `checkAcceptanceBranch`<sup>Optional</sup> <a name="checkAcceptanceBranch" id="@gemeentenijmegen/projen-project-type.RepositoryValidationOptions.property.checkAcceptanceBranch"></a>
-
-```typescript
-public readonly checkAcceptanceBranch: boolean;
-```
-
-- *Type:* boolean
-
-Check if acceptance branch requires the correct checks.
-
----
-
-##### `emergencyWorkflow`<sup>Optional</sup> <a name="emergencyWorkflow" id="@gemeentenijmegen/projen-project-type.RepositoryValidationOptions.property.emergencyWorkflow"></a>
-
-```typescript
-public readonly emergencyWorkflow: boolean;
-```
-
-- *Type:* boolean
-
-Check if the emergency worflow is deployed and if the webhook url secret is set.
-
----
-
-##### `publishToNpm`<sup>Optional</sup> <a name="publishToNpm" id="@gemeentenijmegen/projen-project-type.RepositoryValidationOptions.property.publishToNpm"></a>
-
-```typescript
-public readonly publishToNpm: boolean;
-```
-
-- *Type:* boolean
-
-Check if the NPM_TOKEN secret is configured.
-
----
-
-##### `upgradeBranch`<sup>Optional</sup> <a name="upgradeBranch" id="@gemeentenijmegen/projen-project-type.RepositoryValidationOptions.property.upgradeBranch"></a>
-
-```typescript
-public readonly upgradeBranch: string;
-```
-
-- *Type:* string
-
-Checks if the upgrade workflow is set for this branch.
 
 ---
 

@@ -48,6 +48,16 @@ describe('NijmegenProject Defaults', () => {
 
 describe('NijmegenProject NPM', () => {
 
+  test('cdk-app project does not publish to NPM', () => {
+    const project = new GemeenteNijmegenCdkApp({
+      cdkVersion: '2.1.0',
+      defaultReleaseBranch: 'main',
+      name: 'test project',
+    });
+    const snapshot = synthSnapshot(project);
+    expect(snapshot['.github/workflows/release.yml']).not.toContain('Publish to npm');
+  });
+
   test('cdk-lib project publish to NPM', () => {
     const project = new GemeenteNijmegenCdkLib({
       cdkVersion: '2.1.0',
@@ -59,7 +69,6 @@ describe('NijmegenProject NPM', () => {
     });
     const snapshot = synthSnapshot(project);
     expect(snapshot['.github/workflows/release.yml']).toContain('Publish to npm');
-    expect(snapshot['.github/workflows/repository-validation.yml']).toContain('CHECK_PUBLISH_TO_NPM: "true"');
   });
 
   test('ts-lib project publish to NPM', () => {
@@ -69,7 +78,6 @@ describe('NijmegenProject NPM', () => {
     });
     const snapshot = synthSnapshot(project);
     expect(snapshot['.github/workflows/release.yml']).toContain('Publish to npm');
-    expect(snapshot['.github/workflows/repository-validation.yml']).toContain('CHECK_PUBLISH_TO_NPM: "true"');
   });
 
   test('jsii project publish to NPM', () => {
@@ -82,12 +90,11 @@ describe('NijmegenProject NPM', () => {
     });
     const snapshot = synthSnapshot(project);
     expect(snapshot['.github/workflows/release.yml']).toContain('Publish to npm');
-    expect(snapshot['.github/workflows/repository-validation.yml']).toContain('CHECK_PUBLISH_TO_NPM: "true"');
   });
 
 });
 
-describe('NijmegenProject Workflows', () => {
+describe('NijmegenProject auto-merge workflow', () => {
   test('Contains automerge workflow by default', () => {
     const project = new GemeenteNijmegenCdkApp({ cdkVersion: '2.51.0', defaultReleaseBranch: 'main', name: 'test project' });
 
@@ -104,37 +111,57 @@ describe('NijmegenProject Workflows', () => {
     expect(snapshot).not.toHaveProperty('.github/workflows/auto-merge.yml');
   });
 
+});
+
+describe('NijmegenProject repo conf validation workflow', () => {
+  const validationScript = '.github/workflows/validate-repository.js';
+  const buildWorkflow = '.github/workflows/build.yml';
+
   test('Contains validation workflow by default', () => {
     const project = new GemeenteNijmegenCdkApp({ cdkVersion: '2.51.0', defaultReleaseBranch: 'main', name: 'test project' });
 
     const snapshot = synthSnapshot(project);
-    expect(snapshot['.github/workflows/repository-validation.yml']).not.toBeUndefined();
+    expect(snapshot[buildWorkflow]).toContain('Check repository configuration');
+    expect(snapshot[validationScript]).toBeDefined();
+    expect(snapshot[validationScript]).toContain('PROJEN_GITHUB_TOKEN');
+
+    // No publishin to NPM
+    expect(snapshot[validationScript]).not.toContain('NPM_TOKEN');
+    expect(snapshot[validationScript]).not.toContain('SLACK_WEBHOOK_URL');
+
   });
 
   test('Does not contain validation workflow when configured', () => {
-    const project = new GemeenteNijmegenCdkApp({ cdkVersion: '2.51.0', defaultReleaseBranch: 'main', name: 'test project', enableRepositoryValidation: false });
-
-    const snapshot = synthSnapshot(project);
-    expect(snapshot['.github/workflows/repository-validation.yml']).toBeUndefined();
-  });
-
-  test('Repository validation workflow options', () => {
     const project = new GemeenteNijmegenCdkApp({
       cdkVersion: '2.51.0',
       defaultReleaseBranch: 'main',
       name: 'test project',
       enableRepositoryValidation: false,
-      repositoryValidationOptions: {
-        publishToNpm: true,
-        checkAcceptanceBranch: true,
-        emergencyWorkflow: true,
-        upgradeBranch: 'main',
-      },
+    });
+    const snapshot = synthSnapshot(project);
+    expect(snapshot[buildWorkflow]).not.toContain('Check repository configuration');
+    expect(snapshot[validationScript]).toBeUndefined();
+  });
+
+  test('Repository validation workflow options', () => {
+    const project = new GemeenteNijmegenCdkLib({
+      cdkVersion: '2.51.0',
+      defaultReleaseBranch: 'main',
+      name: 'test project',
+      releaseToNpm: false,
+      author: 'test',
+      authorAddress: 'test@example.com',
+      repositoryUrl: 'github.com',
+      enableAutoMergeDependencies: false,
+      enableEmergencyProcedure: false,
+      enableRepositoryValidation: true,
     });
 
     const snapshot = synthSnapshot(project);
-    expect(snapshot['.github/workflows/repository-validation.yml']).toBeUndefined();
+    expect(snapshot[buildWorkflow]).toContain('Check repository configuration');
+    expect(snapshot[validationScript]).not.toContain('NPM_TOKEN');
+    expect(snapshot[validationScript]).not.toContain('SLACK_WEBHOOK_URL');
+    expect(snapshot[validationScript]).not.toContain('emergency.yml');
   });
-
 
 });
