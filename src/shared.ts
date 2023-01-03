@@ -1,7 +1,4 @@
-import { AwsCdkConstructLibraryOptions } from 'projen/lib/awscdk';
-import { JsiiProjectOptions } from 'projen/lib/cdk';
 import { NodeProject, NodeProjectOptions, NpmAccess } from 'projen/lib/javascript';
-import { TypeScriptProjectOptions } from 'projen/lib/typescript';
 import combine from './combine';
 import { EmergencyProcedure } from './emergeny';
 import { addMergeJob } from './mergejob';
@@ -39,10 +36,12 @@ export interface GemeenteNijmegenOptions {
   readonly repositoryValidationOptions?: RepositoryValidationOptions;
 }
 
-export function setDefaultValues(
-  options: NodeProjectOptions,
-  gemeenteNijmegenOptions: GemeenteNijmegenOptions,
-) {
+//type NpmPackageOptions = TypeScriptProjectOptions | AwsCdkConstructLibraryOptions | JsiiProjectOptions;
+type CombinedProjectOptions = NodeProjectOptions & GemeenteNijmegenOptions
+
+export function setDefaultValues<T extends CombinedProjectOptions>(options: T) : T {
+
+  const enableAutoMergeDependencies = options.enableAutoMergeDependencies ?? true;
 
   /**
    * Set default license
@@ -56,7 +55,7 @@ export function setDefaultValues(
    * Default release options
    */
   const upgradeLabels: string[] = [];
-  if (gemeenteNijmegenOptions.enableAutoMergeDependencies) {
+  if (enableAutoMergeDependencies) {
     upgradeLabels.push('auto-merge');
   }
   options = {
@@ -99,34 +98,25 @@ export function setDefaultValues(
       '.DS_Store',
     ),
   };
+
+  return options;
 }
 
-type NpmPackageOptions =
-  TypeScriptProjectOptions
-  | AwsCdkConstructLibraryOptions
-  | JsiiProjectOptions;
 
-export function setDefaultValuesNpmPublish(
-  options: NpmPackageOptions,
-  ourOptions: GemeenteNijmegenOptions,
-) {
+export function setDefaultValuesNpmPublish<T extends CombinedProjectOptions>(options: T) : T {
   // Set defaults for publishing to npm.js
   options = {
     repository: 'https://github.com/GemeenteNijmegen',
     release: true,
     releaseToNpm: true,
     npmAccess: NpmAccess.PUBLIC,
-    ...options,
-  };
-
-  // Set defaults for validation with npm publish
-  ourOptions = {
     repositoryValidationOptions: {
       publishToNpm: true,
-      ...ourOptions.repositoryValidationOptions,
+      ...options.repositoryValidationOptions,
     },
-    ...ourOptions,
+    ...options,
   };
+  return options;
 }
 
 export function setupSharedConfiguration(

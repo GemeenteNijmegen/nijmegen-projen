@@ -19,8 +19,8 @@ export class GemeenteNijmegenTsPackage extends TypeScriptProject {
 
   constructor(options: GemeenteNijmegenTsPackageOptions) {
 
-    setDefaultValues(options, options); // Well this looks wierd...
-    setDefaultValuesNpmPublish(options, options);
+    options = setDefaultValues(options);
+    options = setDefaultValuesNpmPublish(options);
 
     /**
      * Construct the actual projen project
