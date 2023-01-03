@@ -1,6 +1,10 @@
 import { synthSnapshot } from 'projen/lib/util/synth';
 import { GemeenteNijmegenCdkApp } from '../src';
 
+beforeAll(() => {
+  process.env.DO_NOT_GENERATE_FILES_IN_TEST = 'true';
+});
+
 describe('NijmegenProject', () => {
   test('Contains automerge workflow by default', () => {
     const project = new GemeenteNijmegenCdkApp({ cdkVersion: '2.51.0', defaultReleaseBranch: 'main', name: 'test project' });
