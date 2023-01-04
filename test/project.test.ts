@@ -114,42 +114,92 @@ describe('NijmegenProject auto-merge workflow', () => {
 });
 
 describe('NijmegenProject repo conf validation workflow', () => {
-  const buildWorkflow = '.github/workflows/build.yml';
 
-  test('Contains validation workflow by default', () => {
-    const project = new GemeenteNijmegenCdkApp({ cdkVersion: '2.51.0', defaultReleaseBranch: 'main', name: 'test project' });
 
-    const snapshot = synthSnapshot(project);
-    expect(snapshot[buildWorkflow]).toContain('Check repository configuration');
+  // Log all warn messages
+  let logs: string[] = [];
+  beforeEach(() => {
+    logs = [];
+    console.warn = (...data: any[]) => {
+      if (data && data.length > 0 && data[0]) {
+        logs.push(data[0].toString());
+      }
+      console.log(data);
+    };
   });
 
-  test('Does not contain validation workflow when configured', () => {
+  test('Contains no validation logging on defaults', () => {
     const project = new GemeenteNijmegenCdkApp({
       cdkVersion: '2.51.0',
       defaultReleaseBranch: 'main',
       name: 'test project',
-      enableRepositoryValidation: false,
     });
-    const snapshot = synthSnapshot(project);
-    expect(snapshot[buildWorkflow]).not.toContain('Check repository configuration');
+
+    synthSnapshot(project);
+    expect(logs).not.toContain('❗️ Emergency workflow is not enabled, is this intentional?');
+    expect(logs).not.toContain('❗️ Auto-merging of dependencies is not enabled, is this intentional?');
+    expect(logs).not.toContain('❗️ Emergency workflow is not enabled, is this intentional?');
   });
 
-  test('Repository validation workflow options', () => {
-    const project = new GemeenteNijmegenCdkLib({
+  test('Contains validation logging on overwritten defaults', () => {
+    const project = new GemeenteNijmegenCdkApp({
       cdkVersion: '2.51.0',
       defaultReleaseBranch: 'main',
       name: 'test project',
-      releaseToNpm: false,
-      author: 'test',
-      authorAddress: 'test@example.com',
-      repositoryUrl: 'github.com',
       enableAutoMergeDependencies: false,
       enableEmergencyProcedure: false,
-      enableRepositoryValidation: true,
+      depsUpgrade: false,
     });
 
-    const snapshot = synthSnapshot(project);
-    expect(snapshot[buildWorkflow]).toContain('Check repository configuration');
+    synthSnapshot(project);
+    expect(logs).toContain('❗️ Emergency workflow is not enabled, is this intentional?');
+    expect(logs).toContain('❗️ Auto-merging of dependencies is not enabled, is this intentional?');
+    expect(logs).toContain('❗️ Emergency workflow is not enabled, is this intentional?');
+  });
+
+
+  test('Contains no validation logging on defaults', () => {
+    const project = new GemeenteNijmegenTsPackage({
+      defaultReleaseBranch: 'main',
+      name: 'test project',
+    });
+
+    synthSnapshot(project);
+    expect(logs).not.toContain('❗️ No publishing to NPM is configured, is this intentional?');
+    expect(logs).not.toContain('❗️ Emergency workflow is not enabled, is this intentional?');
+    expect(logs).not.toContain('❗️ Auto-merging of dependencies is not enabled, is this intentional?');
+    expect(logs).not.toContain('❗️ Emergency workflow is not enabled, is this intentional?');
+  });
+
+  test('Contains validation logging on overwritten defaults', () => {
+    const project = new GemeenteNijmegenTsPackage({
+      defaultReleaseBranch: 'main',
+      name: 'test project',
+      enableAutoMergeDependencies: false,
+      enableEmergencyProcedure: false,
+      releaseToNpm: false,
+      depsUpgrade: false,
+    });
+
+    synthSnapshot(project);
+    expect(logs).toContain('❗️ No publishing to NPM is configured, is this intentional?');
+    expect(logs).toContain('❗️ Emergency workflow is not enabled, is this intentional?');
+    expect(logs).toContain('❗️ Auto-merging of dependencies is not enabled, is this intentional?');
+    expect(logs).toContain('❗️ Emergency workflow is not enabled, is this intentional?');
+  });
+
+  test('Contains no validation logging on disabled validation', () => {
+    const project = new GemeenteNijmegenTsPackage({
+      defaultReleaseBranch: 'main',
+      name: 'test project',
+      enableRepositoryValidation: false,
+    });
+
+    synthSnapshot(project);
+    expect(logs).not.toContain('❗️ No publishing to NPM is configured, is this intentional?');
+    expect(logs).not.toContain('❗️ Emergency workflow is not enabled, is this intentional?');
+    expect(logs).not.toContain('❗️ Auto-merging of dependencies is not enabled, is this intentional?');
+    expect(logs).not.toContain('❗️ Emergency workflow is not enabled, is this intentional?');
   });
 
 });

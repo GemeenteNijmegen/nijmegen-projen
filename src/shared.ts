@@ -138,6 +138,6 @@ export function setupSharedConfiguration(
    * Enable repo configuration validation workflow
    */
   if (enableRepositoryValidation) {
-    addRepositoryValidationJob(options);
+    addRepositoryValidationJob(project, options);
   }
 }
