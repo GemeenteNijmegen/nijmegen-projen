@@ -114,7 +114,6 @@ describe('NijmegenProject auto-merge workflow', () => {
 });
 
 describe('NijmegenProject repo conf validation workflow', () => {
-  const validationScript = '.github/workflows/validate-repository.js';
   const buildWorkflow = '.github/workflows/build.yml';
 
   test('Contains validation workflow by default', () => {
@@ -122,13 +121,6 @@ describe('NijmegenProject repo conf validation workflow', () => {
 
     const snapshot = synthSnapshot(project);
     expect(snapshot[buildWorkflow]).toContain('Check repository configuration');
-    expect(snapshot[validationScript]).toBeDefined();
-    expect(snapshot[validationScript]).toContain('PROJEN_GITHUB_TOKEN');
-
-    // No publishin to NPM
-    expect(snapshot[validationScript]).not.toContain('NPM_TOKEN');
-    expect(snapshot[validationScript]).not.toContain('SLACK_WEBHOOK_URL');
-
   });
 
   test('Does not contain validation workflow when configured', () => {
@@ -140,7 +132,6 @@ describe('NijmegenProject repo conf validation workflow', () => {
     });
     const snapshot = synthSnapshot(project);
     expect(snapshot[buildWorkflow]).not.toContain('Check repository configuration');
-    expect(snapshot[validationScript]).toBeUndefined();
   });
 
   test('Repository validation workflow options', () => {
@@ -159,9 +150,6 @@ describe('NijmegenProject repo conf validation workflow', () => {
 
     const snapshot = synthSnapshot(project);
     expect(snapshot[buildWorkflow]).toContain('Check repository configuration');
-    expect(snapshot[validationScript]).not.toContain('NPM_TOKEN');
-    expect(snapshot[validationScript]).not.toContain('SLACK_WEBHOOK_URL');
-    expect(snapshot[validationScript]).not.toContain('emergency.yml');
   });
 
 });
