@@ -1,5 +1,5 @@
 import { AwsCdkConstructLibrary, AwsCdkConstructLibraryOptions } from 'projen/lib/awscdk';
-import { GemeenteNijmegenOptions, setDefaultValues, setDefaultValuesNpmPublish, setupSharedConfiguration } from './shared';
+import { GemeenteNijmegenOptions, setDefaultValues, setDefaultValuesNpmPublish, setupDefaultCdkOptions, setupSharedConfiguration } from './shared';
 
 export interface GemeenteNijmegenCdkLibOptions extends
   AwsCdkConstructLibraryOptions, GemeenteNijmegenOptions {}
@@ -15,6 +15,7 @@ export class GemeenteNijmegenCdkLib extends AwsCdkConstructLibrary {
   constructor(options: GemeenteNijmegenCdkLibOptions) {
 
     options = setDefaultValues(options);
+    options = setupDefaultCdkOptions(options);
     options = setDefaultValuesNpmPublish(options);
 
     /**

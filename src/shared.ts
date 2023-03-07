@@ -1,3 +1,4 @@
+import { LambdaRuntime } from 'projen/lib/awscdk';
 import { NodeProject, NodeProjectOptions, NpmAccess } from 'projen/lib/javascript';
 import combine from './combine';
 import { EmergencyProcedure } from './emergeny';
@@ -140,4 +141,20 @@ export function setupSharedConfiguration(
   if (enableRepositoryValidation) {
     addRepositoryValidationJob(project, options);
   }
+}
+
+
+export function setupDefaultCdkOptions<T extends CombinedProjectOptions>(options: T) : T {
+
+  /**
+   * Set default node runtime version to 18.X
+   */
+  options = {
+    lambdaOptions: {
+      runtime: LambdaRuntime.NODEJS_18_X,
+    },
+    ...options,
+  };
+
+  return options;
 }
