@@ -1,6 +1,6 @@
 import { AwsCdkTypeScriptApp, AwsCdkTypeScriptAppOptions } from 'projen/lib/awscdk';
 import combine from './combine';
-import { GemeenteNijmegenOptions, setDefaultValues, setupSharedConfiguration } from './shared';
+import { GemeenteNijmegenOptions, setDefaultValues, setupDefaultCdkOptions, setupSharedConfiguration } from './shared';
 
 export interface GemeenteNijmegenCdkAppOptions extends AwsCdkTypeScriptAppOptions, GemeenteNijmegenOptions {
   /**
@@ -17,11 +17,14 @@ export interface GemeenteNijmegenCdkAppOptions extends AwsCdkTypeScriptAppOption
  */
 export class GemeenteNijmegenCdkApp extends AwsCdkTypeScriptApp {
 
+  private readonly options: GemeenteNijmegenCdkAppOptions;
+
   constructor(options: GemeenteNijmegenCdkAppOptions) {
 
     const enableCfnLintOnGithub = options.enableCfnLintOnGithub ?? true;
 
     options = setDefaultValues(options);
+    options = setupDefaultCdkOptions(options);
 
     /**
      * Add lint script to projen scripts only if
@@ -77,6 +80,11 @@ export class GemeenteNijmegenCdkApp extends AwsCdkTypeScriptApp {
      */
     setupSharedConfiguration(this, options);
 
+    this.options = options;
+  }
+
+  public configuredOptions() {
+    return this.options;
   }
 
 }

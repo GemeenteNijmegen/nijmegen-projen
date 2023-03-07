@@ -9452,6 +9452,7 @@ new GemeenteNijmegenCdkApp(options: GemeenteNijmegenCdkAppOptions)
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkApp.renderWorkflowSetup">renderWorkflowSetup</a></code> | Returns the set of workflow steps which should be executed to bootstrap a workflow. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkApp.setScript">setScript</a></code> | Replaces the contents of an npm package.json script. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkApp.addCdkDependency">addCdkDependency</a></code> | Adds an AWS CDK module dependencies. |
+| <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkApp.configuredOptions">configuredOptions</a></code> | *No description.* |
 
 ---
 
@@ -9964,6 +9965,12 @@ Adds an AWS CDK module dependencies.
 The list of modules to depend on.
 
 ---
+
+##### `configuredOptions` <a name="configuredOptions" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkApp.configuredOptions"></a>
+
+```typescript
+public configuredOptions(): GemeenteNijmegenCdkAppOptions
+```
 
 
 #### Properties <a name="Properties" id="Properties"></a>
@@ -10886,6 +10893,7 @@ new GemeenteNijmegenCdkLib(options: GemeenteNijmegenCdkLibOptions)
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLib.setScript">setScript</a></code> | Replaces the contents of an npm package.json script. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLib.addCdkDependencies">addCdkDependencies</a></code> | Adds dependencies to AWS CDK modules. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLib.addCdkTestDependencies">addCdkTestDependencies</a></code> | Adds AWS CDK modules as dev dependencies. |
+| <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLib.configuredOptions">configuredOptions</a></code> | *No description.* |
 
 ---
 
@@ -11416,6 +11424,12 @@ Adds AWS CDK modules as dev dependencies.
 names of cdk modules (e.g. `@aws-cdk/aws-lambda`).
 
 ---
+
+##### `configuredOptions` <a name="configuredOptions" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLib.configuredOptions"></a>
+
+```typescript
+public configuredOptions(): GemeenteNijmegenCdkLibOptions
+```
 
 
 #### Properties <a name="Properties" id="Properties"></a>
@@ -12310,6 +12324,7 @@ new GemeenteNijmegenJsii(options: GemeenteNijmegenJsiiOptions)
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsii.removeScript">removeScript</a></code> | Removes the npm script (always successful). |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsii.renderWorkflowSetup">renderWorkflowSetup</a></code> | Returns the set of workflow steps which should be executed to bootstrap a workflow. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsii.setScript">setScript</a></code> | Replaces the contents of an npm package.json script. |
+| <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsii.configuredOptions">configuredOptions</a></code> | *No description.* |
 
 ---
 
@@ -12806,6 +12821,12 @@ The script name.
 The command to execute.
 
 ---
+
+##### `configuredOptions` <a name="configuredOptions" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsii.configuredOptions"></a>
+
+```typescript
+public configuredOptions(): GemeenteNijmegenJsiiOptions
+```
 
 
 #### Properties <a name="Properties" id="Properties"></a>
@@ -13663,6 +13684,7 @@ new GemeenteNijmegenTsPackage(options: GemeenteNijmegenTsPackageOptions)
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackage.removeScript">removeScript</a></code> | Removes the npm script (always successful). |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackage.renderWorkflowSetup">renderWorkflowSetup</a></code> | Returns the set of workflow steps which should be executed to bootstrap a workflow. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackage.setScript">setScript</a></code> | Replaces the contents of an npm package.json script. |
+| <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackage.configuredOptions">configuredOptions</a></code> | *No description.* |
 
 ---
 
@@ -14159,6 +14181,12 @@ The script name.
 The command to execute.
 
 ---
+
+##### `configuredOptions` <a name="configuredOptions" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackage.configuredOptions"></a>
+
+```typescript
+public configuredOptions(): GemeenteNijmegenTsPackageOptions
+```
 
 
 #### Properties <a name="Properties" id="Properties"></a>
