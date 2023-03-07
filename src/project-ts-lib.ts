@@ -17,6 +17,8 @@ export interface GemeenteNijmegenTsPackageOptions extends
  */
 export class GemeenteNijmegenTsPackage extends TypeScriptProject {
 
+  private readonly options: GemeenteNijmegenTsPackageOptions;
+
   constructor(options: GemeenteNijmegenTsPackageOptions) {
 
     options = setDefaultValues(options);
@@ -34,6 +36,11 @@ export class GemeenteNijmegenTsPackage extends TypeScriptProject {
      */
     setupSharedConfiguration(this, options);
 
+    this.options = options;
+  }
+
+  public configuredOptions() {
+    return this.options;
   }
 
 }

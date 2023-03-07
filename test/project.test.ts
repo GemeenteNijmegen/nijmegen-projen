@@ -1,3 +1,4 @@
+import { LambdaRuntime } from 'projen/lib/awscdk';
 import { synthSnapshot } from 'projen/lib/util/synth';
 import { GemeenteNijmegenCdkApp, GemeenteNijmegenCdkLib, GemeenteNijmegenJsii, GemeenteNijmegenTsPackage } from '../src';
 
@@ -109,6 +110,21 @@ describe('NijmegenProject auto-merge workflow', () => {
 
     const snapshot = synthSnapshot(project);
     expect(snapshot).not.toHaveProperty('.github/workflows/auto-merge.yml');
+  });
+
+});
+
+
+describe('Default lambda runtime for CDK app and lib', () => {
+
+  test('CDK app has default lambda runtime', () => {
+    const project = new GemeenteNijmegenCdkApp({ cdkVersion: '2.51.0', defaultReleaseBranch: 'main', name: 'test project', enableAutoMergeDependencies: false });
+    expect(project.configuredOptions().lambdaOptions?.runtime).toBe(LambdaRuntime.NODEJS_18_X);
+  });
+
+  test('CDK lib has default lambda runtime', () => {
+    const project = new GemeenteNijmegenCdkLib({ cdkVersion: '2.51.0', defaultReleaseBranch: 'main', name: 'test project', author: 'test', authorAddress: '', repositoryUrl: '' });
+    expect(project.configuredOptions().lambdaOptions?.runtime).toBe(LambdaRuntime.NODEJS_18_X);
   });
 
 });

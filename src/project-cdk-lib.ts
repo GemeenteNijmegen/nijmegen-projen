@@ -12,6 +12,8 @@ export interface GemeenteNijmegenCdkLibOptions extends
  */
 export class GemeenteNijmegenCdkLib extends AwsCdkConstructLibrary {
 
+  private readonly options: GemeenteNijmegenCdkLibOptions;
+
   constructor(options: GemeenteNijmegenCdkLibOptions) {
 
     options = setDefaultValues(options);
@@ -30,6 +32,11 @@ export class GemeenteNijmegenCdkLib extends AwsCdkConstructLibrary {
      */
     setupSharedConfiguration(this, options);
 
+    this.options = options;
+  }
+
+  public configuredOptions() {
+    return this.options;
   }
 
 }

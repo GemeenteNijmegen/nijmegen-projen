@@ -17,6 +17,8 @@ export interface GemeenteNijmegenCdkAppOptions extends AwsCdkTypeScriptAppOption
  */
 export class GemeenteNijmegenCdkApp extends AwsCdkTypeScriptApp {
 
+  private readonly options: GemeenteNijmegenCdkAppOptions;
+
   constructor(options: GemeenteNijmegenCdkAppOptions) {
 
     const enableCfnLintOnGithub = options.enableCfnLintOnGithub ?? true;
@@ -78,6 +80,11 @@ export class GemeenteNijmegenCdkApp extends AwsCdkTypeScriptApp {
      */
     setupSharedConfiguration(this, options);
 
+    this.options = options;
+  }
+
+  public configuredOptions() {
+    return this.options;
   }
 
 }

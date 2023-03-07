@@ -12,6 +12,8 @@ export interface GemeenteNijmegenJsiiOptions extends
  */
 export class GemeenteNijmegenJsii extends JsiiProject {
 
+  private readonly options: GemeenteNijmegenJsiiOptions;
+
   constructor(options: GemeenteNijmegenJsiiOptions) {
 
     options = setDefaultValues(options);
@@ -29,6 +31,11 @@ export class GemeenteNijmegenJsii extends JsiiProject {
      */
     setupSharedConfiguration(this, options);
 
+    this.options = options;
+  }
+
+  public configuredOptions() {
+    return this.options;
   }
 
 }
