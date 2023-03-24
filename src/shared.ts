@@ -73,6 +73,7 @@ export function setDefaultValues<T extends CombinedProjectOptions>(options: T) :
    */
   options = {
     githubOptions: {
+      mergify: false,
       pullRequestLintOptions: {
         semanticTitleOptions: {
           types: ['fix', 'feat', 'chore', 'docs'],
