@@ -1,3 +1,79 @@
+# GemeenteNijmegen projen project type
+This repository contains an NPM package that can be used to create a new Projen AWS CDK App project.
+
+The project type `GemeenteNijmegenCdkApp` provides a number of default configurations and provides features used within our organization. There are:
+- Comments with CloudFormation template diffs on PRs
+- Cfn-lint Github wrokflow
+- Defautl configuration values
+
+## Github secrets
+This project type relies on Github secrets to be set in order for all its Github workflows to work.
+| Environment variable | Explanation                                                                            |
+| -------------------- | -------------------------------------------------------------------------------------- |
+| GITHUB_PROJEN_TOKEN  | [Projen Github personal access token](https://projen.io/github.html#github-api-access) |
+| SLACK_WEBHOOK_URL    | This is the url used for the emergency workflow to publish to slack                    |
+
+
+## Using this project type
+
+### For new projects
+```bash
+npx projen new --from @gemeentenijmegen/projen-project-type {type}
+```
+The following project types can be used:
+- `cdk-app` standard CDK project
+- `cdk-lib` standard CDK construct library (published to NPM by default)
+- `jsii-lib` a JSII application (published to NPM by default)
+- `ts-lib` a typescript project (published to NPM by default)
+
+### For existing projects
+For instructions on how to start using the project type in existing projects there is the [setup guide](./SETUP.md).
+Note: for switching back to the awscdk-app-ts projen project type also see the [setup guide](./SETUP.md).
+
+
+## Properties overview
+There are a number of relevant properties that are provided by projen
+| Property             | Default      | Explanation                                                               |
+| -------------------- | ------------ | ------------------------------------------------------------------------- |
+| cdkVersion           | '2.1.0'      | Minimum version of the cdk to use (upgraded using projen upgrade task)    |
+| defaultReleaseBranch | 'main'       | Should be set to acceptance                                               |
+| name                 | project name | Sets the project name                                                     |
+| gitignore            |              | A number of default ignored files are set specific to our projects        |
+| scripts              |              | The cfn-lint script is added to the list of scripts configured            |
+| license              | EUPL-1.2     | The defult license used by us                                             |
+| depsUpgradeOptions   |              | Upgrade workflow configuration (branch: `acceptance`, labels: `cfn-diff`) |
+
+
+The project type in this npm package provides some additional configuration options:
+| Property                    | Default | Explanation                                                                                 |
+| --------------------------- | ------- | ------------------------------------------------------------------------------------------- |
+| enableCfnLintOnGithub       | true    | Enable step in the Github build workflow that runs cfn-lint                                 |
+| enableEmergencyProcedure    | true    | Adds the emergency procedure workflow to Github workflows                                   |
+| enableAutoMergeDependencies | true    | Adds the auto-merge workflow for PR's to acceptance (from upgrade workflow)                 |
+
+
+## Upgrade dependencies
+De upgrade dependencies task en Github workflow zijn standaard enabled. Deze task zal de laatste versies van de dependencies zoeken (volgens [semantic versionioning](https://semver.org/lang/nl/)) en upgraden in de `package.json`.
+
+Dit project type zet de default branch voor het uitvoeren van de workflow op `acceptance`.
+De Github workflow voert de upgrade dependencies taak uit en maakt een PR naar `acceptance` en geeft het PR een label `cfn-diff` en `auto-merge`.
+
+### Automerge workflow
+De automerge workflow gaat af als een PR `acceptance` als base heeft en het label `auto-merge` heeft. Deze probeert het PR te mergen met de auto-merge
+feature van Github. Hiervoor moet in het Github-project automerge aan staan. **NB**: Zorg dat branch protection aan staat voor acceptance, met de eis dat aan
+alle voorwaarden voldaan is. Anders kan de auto-merge worden uitgevoerd voordat de build succesvol is.
+
+### CDK upgrade
+De upgrade dependencies taak in projen is inclusief de CDK versie. Hiervoor wordt de minimum versie in de `.projenrc.js` van een project ingesteeld.
+
+Dit betekent dat:
+- Wanneer `cdkVersion: '2.1.0` gebruikt wordt in de `.projenrc.js` dit in de `package.json` wordt geimporteerd als `"aws-cdk-lib": "^2.1.0"`
+- Wanneer de upgrade dependencies taak draait de `package.json` wordt geupdate naar bijv: `"aws-cdk-lib": "^2.31.0"`
+- Semantic versioning zorgt er voor dat er nooit een major upgrade wordt gedaan omdat deze braking changes kan hebben.
+
+### Projen upgrade
+De projen versie wordt ook geupgrade in de upgrade dependencies task.
+
 # API Reference <a name="API Reference" id="api-reference"></a>
 
 
@@ -138,6 +214,7 @@ const gemeenteNijmegenCdkAppOptions: GemeenteNijmegenCdkAppOptions = { ... }
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkAppOptions.property.workflowGitIdentity">workflowGitIdentity</a></code> | <code>projen.github.GitIdentity</code> | The git identity to use in workflows. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkAppOptions.property.workflowNodeVersion">workflowNodeVersion</a></code> | <code>string</code> | The node version to use in GitHub workflows. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkAppOptions.property.disableTsconfig">disableTsconfig</a></code> | <code>boolean</code> | Do not generate a `tsconfig.json` file (used by jsii projects since tsconfig.json is generated by the jsii compiler). |
+| <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkAppOptions.property.disableTsconfigDev">disableTsconfigDev</a></code> | <code>boolean</code> | Do not generate a `tsconfig.dev.json` file. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkAppOptions.property.docgen">docgen</a></code> | <code>boolean</code> | Docgen by Typedoc. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkAppOptions.property.docsDirectory">docsDirectory</a></code> | <code>string</code> | Docs directory. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkAppOptions.property.entrypointTypes">entrypointTypes</a></code> | <code>string</code> | The .d.ts file that includes the type declarations for this module. |
@@ -1091,7 +1168,9 @@ Options for privately hosted scoped packages.
 
 ---
 
-##### `scripts`<sup>Optional</sup> <a name="scripts" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkAppOptions.property.scripts"></a>
+##### ~~`scripts`~~<sup>Optional</sup> <a name="scripts" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkAppOptions.property.scripts"></a>
+
+- *Deprecated:* use `project.addTask()` or `package.setScript()`
 
 ```typescript
 public readonly scripts: {[ key: string ]: string};
@@ -1104,6 +1183,7 @@ npm scripts to include.
 
 If a script has the same name as a standard script,
 the standard script will be overwritten.
+Also adds the script as a task.
 
 ---
 
@@ -1905,6 +1985,19 @@ Do not generate a `tsconfig.json` file (used by jsii projects since tsconfig.jso
 
 ---
 
+##### `disableTsconfigDev`<sup>Optional</sup> <a name="disableTsconfigDev" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkAppOptions.property.disableTsconfigDev"></a>
+
+```typescript
+public readonly disableTsconfigDev: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Do not generate a `tsconfig.dev.json` file.
+
+---
+
 ##### `docgen`<sup>Optional</sup> <a name="docgen" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkAppOptions.property.docgen"></a>
 
 ```typescript
@@ -2595,6 +2688,7 @@ const gemeenteNijmegenCdkLibOptions: GemeenteNijmegenCdkLibOptions = { ... }
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLibOptions.property.workflowGitIdentity">workflowGitIdentity</a></code> | <code>projen.github.GitIdentity</code> | The git identity to use in workflows. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLibOptions.property.workflowNodeVersion">workflowNodeVersion</a></code> | <code>string</code> | The node version to use in GitHub workflows. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLibOptions.property.disableTsconfig">disableTsconfig</a></code> | <code>boolean</code> | Do not generate a `tsconfig.json` file (used by jsii projects since tsconfig.json is generated by the jsii compiler). |
+| <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLibOptions.property.disableTsconfigDev">disableTsconfigDev</a></code> | <code>boolean</code> | Do not generate a `tsconfig.dev.json` file. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLibOptions.property.docgen">docgen</a></code> | <code>boolean</code> | Docgen by Typedoc. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLibOptions.property.docsDirectory">docsDirectory</a></code> | <code>string</code> | Docs directory. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLibOptions.property.entrypointTypes">entrypointTypes</a></code> | <code>string</code> | The .d.ts file that includes the type declarations for this module. |
@@ -3556,7 +3650,9 @@ Options for privately hosted scoped packages.
 
 ---
 
-##### `scripts`<sup>Optional</sup> <a name="scripts" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLibOptions.property.scripts"></a>
+##### ~~`scripts`~~<sup>Optional</sup> <a name="scripts" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLibOptions.property.scripts"></a>
+
+- *Deprecated:* use `project.addTask()` or `package.setScript()`
 
 ```typescript
 public readonly scripts: {[ key: string ]: string};
@@ -3569,6 +3665,7 @@ npm scripts to include.
 
 If a script has the same name as a standard script,
 the standard script will be overwritten.
+Also adds the script as a task.
 
 ---
 
@@ -4367,6 +4464,19 @@ public readonly disableTsconfig: boolean;
 - *Default:* false
 
 Do not generate a `tsconfig.json` file (used by jsii projects since tsconfig.json is generated by the jsii compiler).
+
+---
+
+##### `disableTsconfigDev`<sup>Optional</sup> <a name="disableTsconfigDev" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLibOptions.property.disableTsconfigDev"></a>
+
+```typescript
+public readonly disableTsconfigDev: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Do not generate a `tsconfig.dev.json` file.
 
 ---
 
@@ -5182,6 +5292,7 @@ const gemeenteNijmegenJsiiOptions: GemeenteNijmegenJsiiOptions = { ... }
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsiiOptions.property.workflowGitIdentity">workflowGitIdentity</a></code> | <code>projen.github.GitIdentity</code> | The git identity to use in workflows. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsiiOptions.property.workflowNodeVersion">workflowNodeVersion</a></code> | <code>string</code> | The node version to use in GitHub workflows. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsiiOptions.property.disableTsconfig">disableTsconfig</a></code> | <code>boolean</code> | Do not generate a `tsconfig.json` file (used by jsii projects since tsconfig.json is generated by the jsii compiler). |
+| <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsiiOptions.property.disableTsconfigDev">disableTsconfigDev</a></code> | <code>boolean</code> | Do not generate a `tsconfig.dev.json` file. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsiiOptions.property.docgen">docgen</a></code> | <code>boolean</code> | Docgen by Typedoc. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsiiOptions.property.docsDirectory">docsDirectory</a></code> | <code>string</code> | Docs directory. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsiiOptions.property.entrypointTypes">entrypointTypes</a></code> | <code>string</code> | The .d.ts file that includes the type declarations for this module. |
@@ -6129,7 +6240,9 @@ Options for privately hosted scoped packages.
 
 ---
 
-##### `scripts`<sup>Optional</sup> <a name="scripts" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsiiOptions.property.scripts"></a>
+##### ~~`scripts`~~<sup>Optional</sup> <a name="scripts" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsiiOptions.property.scripts"></a>
+
+- *Deprecated:* use `project.addTask()` or `package.setScript()`
 
 ```typescript
 public readonly scripts: {[ key: string ]: string};
@@ -6142,6 +6255,7 @@ npm scripts to include.
 
 If a script has the same name as a standard script,
 the standard script will be overwritten.
+Also adds the script as a task.
 
 ---
 
@@ -6943,6 +7057,19 @@ Do not generate a `tsconfig.json` file (used by jsii projects since tsconfig.jso
 
 ---
 
+##### `disableTsconfigDev`<sup>Optional</sup> <a name="disableTsconfigDev" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsiiOptions.property.disableTsconfigDev"></a>
+
+```typescript
+public readonly disableTsconfigDev: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Do not generate a `tsconfig.dev.json` file.
+
+---
+
 ##### `docgen`<sup>Optional</sup> <a name="docgen" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsiiOptions.property.docgen"></a>
 
 ```typescript
@@ -7605,6 +7732,7 @@ const gemeenteNijmegenTsPackageOptions: GemeenteNijmegenTsPackageOptions = { ...
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackageOptions.property.workflowGitIdentity">workflowGitIdentity</a></code> | <code>projen.github.GitIdentity</code> | The git identity to use in workflows. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackageOptions.property.workflowNodeVersion">workflowNodeVersion</a></code> | <code>string</code> | The node version to use in GitHub workflows. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackageOptions.property.disableTsconfig">disableTsconfig</a></code> | <code>boolean</code> | Do not generate a `tsconfig.json` file (used by jsii projects since tsconfig.json is generated by the jsii compiler). |
+| <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackageOptions.property.disableTsconfigDev">disableTsconfigDev</a></code> | <code>boolean</code> | Do not generate a `tsconfig.dev.json` file. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackageOptions.property.docgen">docgen</a></code> | <code>boolean</code> | Docgen by Typedoc. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackageOptions.property.docsDirectory">docsDirectory</a></code> | <code>string</code> | Docs directory. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackageOptions.property.entrypointTypes">entrypointTypes</a></code> | <code>string</code> | The .d.ts file that includes the type declarations for this module. |
@@ -8536,7 +8664,9 @@ Options for privately hosted scoped packages.
 
 ---
 
-##### `scripts`<sup>Optional</sup> <a name="scripts" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackageOptions.property.scripts"></a>
+##### ~~`scripts`~~<sup>Optional</sup> <a name="scripts" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackageOptions.property.scripts"></a>
+
+- *Deprecated:* use `project.addTask()` or `package.setScript()`
 
 ```typescript
 public readonly scripts: {[ key: string ]: string};
@@ -8549,6 +8679,7 @@ npm scripts to include.
 
 If a script has the same name as a standard script,
 the standard script will be overwritten.
+Also adds the script as a task.
 
 ---
 
@@ -9350,6 +9481,19 @@ Do not generate a `tsconfig.json` file (used by jsii projects since tsconfig.jso
 
 ---
 
+##### `disableTsconfigDev`<sup>Optional</sup> <a name="disableTsconfigDev" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackageOptions.property.disableTsconfigDev"></a>
+
+```typescript
+public readonly disableTsconfigDev: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Do not generate a `tsconfig.dev.json` file.
+
+---
+
 ##### `docgen`<sup>Optional</sup> <a name="docgen" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackageOptions.property.docgen"></a>
 
 ```typescript
@@ -9648,6 +9792,7 @@ new GemeenteNijmegenCdkApp(options: GemeenteNijmegenCdkAppOptions)
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkApp.addFields">addFields</a></code> | Directly set fields in `package.json`. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkApp.addKeywords">addKeywords</a></code> | Adds keywords to package.json (deduplicated). |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkApp.addPeerDeps">addPeerDeps</a></code> | Defines peer dependencies. |
+| <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkApp.addScripts">addScripts</a></code> | Replaces the contents of multiple npm package.json scripts. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkApp.addTestCommand">addTestCommand</a></code> | DEPRECATED. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkApp.hasScript">hasScript</a></code> | Indicates if a script by the name name is defined. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkApp.removeScript">removeScript</a></code> | Removes the npm script (always successful). |
@@ -10066,6 +10211,22 @@ add/upgrade`. If you wish to specify a version range use this syntax:
 
 ---
 
+##### `addScripts` <a name="addScripts" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkApp.addScripts"></a>
+
+```typescript
+public addScripts(scripts: {[ key: string ]: string}): void
+```
+
+Replaces the contents of multiple npm package.json scripts.
+
+###### `scripts`<sup>Required</sup> <a name="scripts" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkApp.addScripts.parameter.scripts"></a>
+
+- *Type:* {[ key: string ]: string}
+
+The scripts to set.
+
+---
+
 ##### ~~`addTestCommand`~~ <a name="addTestCommand" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkApp.addTestCommand"></a>
 
 ```typescript
@@ -10080,7 +10241,7 @@ DEPRECATED.
 
 ---
 
-##### `hasScript` <a name="hasScript" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkApp.hasScript"></a>
+##### ~~`hasScript`~~ <a name="hasScript" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkApp.hasScript"></a>
 
 ```typescript
 public hasScript(name: string): boolean
@@ -11088,6 +11249,7 @@ new GemeenteNijmegenCdkLib(options: GemeenteNijmegenCdkLibOptions)
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLib.addFields">addFields</a></code> | Directly set fields in `package.json`. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLib.addKeywords">addKeywords</a></code> | Adds keywords to package.json (deduplicated). |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLib.addPeerDeps">addPeerDeps</a></code> | Defines peer dependencies. |
+| <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLib.addScripts">addScripts</a></code> | Replaces the contents of multiple npm package.json scripts. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLib.addTestCommand">addTestCommand</a></code> | DEPRECATED. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLib.hasScript">hasScript</a></code> | Indicates if a script by the name name is defined. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLib.removeScript">removeScript</a></code> | Removes the npm script (always successful). |
@@ -11507,6 +11669,22 @@ add/upgrade`. If you wish to specify a version range use this syntax:
 
 ---
 
+##### `addScripts` <a name="addScripts" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLib.addScripts"></a>
+
+```typescript
+public addScripts(scripts: {[ key: string ]: string}): void
+```
+
+Replaces the contents of multiple npm package.json scripts.
+
+###### `scripts`<sup>Required</sup> <a name="scripts" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLib.addScripts.parameter.scripts"></a>
+
+- *Type:* {[ key: string ]: string}
+
+The scripts to set.
+
+---
+
 ##### ~~`addTestCommand`~~ <a name="addTestCommand" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLib.addTestCommand"></a>
 
 ```typescript
@@ -11521,7 +11699,7 @@ DEPRECATED.
 
 ---
 
-##### `hasScript` <a name="hasScript" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLib.hasScript"></a>
+##### ~~`hasScript`~~ <a name="hasScript" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenCdkLib.hasScript"></a>
 
 ```typescript
 public hasScript(name: string): boolean
@@ -12521,6 +12699,7 @@ new GemeenteNijmegenJsii(options: GemeenteNijmegenJsiiOptions)
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsii.addFields">addFields</a></code> | Directly set fields in `package.json`. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsii.addKeywords">addKeywords</a></code> | Adds keywords to package.json (deduplicated). |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsii.addPeerDeps">addPeerDeps</a></code> | Defines peer dependencies. |
+| <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsii.addScripts">addScripts</a></code> | Replaces the contents of multiple npm package.json scripts. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsii.addTestCommand">addTestCommand</a></code> | DEPRECATED. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsii.hasScript">hasScript</a></code> | Indicates if a script by the name name is defined. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsii.removeScript">removeScript</a></code> | Removes the npm script (always successful). |
@@ -12938,6 +13117,22 @@ add/upgrade`. If you wish to specify a version range use this syntax:
 
 ---
 
+##### `addScripts` <a name="addScripts" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsii.addScripts"></a>
+
+```typescript
+public addScripts(scripts: {[ key: string ]: string}): void
+```
+
+Replaces the contents of multiple npm package.json scripts.
+
+###### `scripts`<sup>Required</sup> <a name="scripts" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsii.addScripts.parameter.scripts"></a>
+
+- *Type:* {[ key: string ]: string}
+
+The scripts to set.
+
+---
+
 ##### ~~`addTestCommand`~~ <a name="addTestCommand" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsii.addTestCommand"></a>
 
 ```typescript
@@ -12952,7 +13147,7 @@ DEPRECATED.
 
 ---
 
-##### `hasScript` <a name="hasScript" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsii.hasScript"></a>
+##### ~~`hasScript`~~ <a name="hasScript" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenJsii.hasScript"></a>
 
 ```typescript
 public hasScript(name: string): boolean
@@ -13881,6 +14076,7 @@ new GemeenteNijmegenTsPackage(options: GemeenteNijmegenTsPackageOptions)
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackage.addFields">addFields</a></code> | Directly set fields in `package.json`. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackage.addKeywords">addKeywords</a></code> | Adds keywords to package.json (deduplicated). |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackage.addPeerDeps">addPeerDeps</a></code> | Defines peer dependencies. |
+| <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackage.addScripts">addScripts</a></code> | Replaces the contents of multiple npm package.json scripts. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackage.addTestCommand">addTestCommand</a></code> | DEPRECATED. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackage.hasScript">hasScript</a></code> | Indicates if a script by the name name is defined. |
 | <code><a href="#@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackage.removeScript">removeScript</a></code> | Removes the npm script (always successful). |
@@ -14298,6 +14494,22 @@ add/upgrade`. If you wish to specify a version range use this syntax:
 
 ---
 
+##### `addScripts` <a name="addScripts" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackage.addScripts"></a>
+
+```typescript
+public addScripts(scripts: {[ key: string ]: string}): void
+```
+
+Replaces the contents of multiple npm package.json scripts.
+
+###### `scripts`<sup>Required</sup> <a name="scripts" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackage.addScripts.parameter.scripts"></a>
+
+- *Type:* {[ key: string ]: string}
+
+The scripts to set.
+
+---
+
 ##### ~~`addTestCommand`~~ <a name="addTestCommand" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackage.addTestCommand"></a>
 
 ```typescript
@@ -14312,7 +14524,7 @@ DEPRECATED.
 
 ---
 
-##### `hasScript` <a name="hasScript" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackage.hasScript"></a>
+##### ~~`hasScript`~~ <a name="hasScript" id="@gemeentenijmegen/projen-project-type.GemeenteNijmegenTsPackage.hasScript"></a>
 
 ```typescript
 public hasScript(name: string): boolean
