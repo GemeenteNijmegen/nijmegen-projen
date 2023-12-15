@@ -152,7 +152,7 @@ export function setupDefaultCdkOptions<T extends CombinedProjectOptions>(options
    */
   options = {
     lambdaOptions: {
-      runtime: LambdaRuntime.NODEJS_18_X,
+      runtime: LambdaRuntime.NODEJS_20_X,
     },
     ...options,
   };
