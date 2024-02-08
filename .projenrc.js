@@ -18,7 +18,6 @@ const project = new cdk.JsiiProject({
   devDeps: [
     '@types/jest@28.1.1', // Pin and exclude as jsii complains about dependencies otherwise...
   ],
-  deps: ['projen'],
   peerDeps: [
     'projen',
     'constructs',

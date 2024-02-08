@@ -58,9 +58,6 @@
     "constructs": "^10.3.0",
     "projen": "^0.79.9"
   },
-  "dependencies": {
-    "projen": "^0.79.9"
-  },
   "resolutions": {
     "@types/babel__traverse": "7.18.2",
     "@types/prettier": "2.6.0"
