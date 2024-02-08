@@ -9,7 +9,6 @@ const PULL_REQUEST_REF = '${{ github.event.pull_request.head.ref }}';
 const PULL_REQUEST_REPOSITORY = '${{ github.event.pull_request.head.repo.full_name }}';
 
 const SLACK_INFORM_PAYLOAD = `{
-    "text": "EMERGENCY wijziging naar PRODUCTION door: \${{ github.actor }}\n\${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
     "blocks": [
       {
         "type": "section",

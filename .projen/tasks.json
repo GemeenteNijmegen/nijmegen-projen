@@ -135,7 +135,7 @@
       "name": "extract",
       "steps": [
         {
-          "exec": "cd dist/js && rm -rf package && tar -xzvf modules-projen@*"
+          "exec": "cd dist/js && rm -rf package && tar -xzvf projen-project-type@*"
         }
       ]
     },
@@ -205,7 +205,8 @@
       "name": "release",
       "description": "Prepare a release from \"main\" branch",
       "env": {
-        "RELEASE": "true"
+        "RELEASE": "true",
+        "MAJOR": "1"
       },
       "steps": [
         {
