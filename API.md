@@ -1,5 +1,1675 @@
+# GemeenteNijmegen projen project type
+This repository contains an NPM package that can be used to create a new Projen AWS CDK App project.
+
+The project type `GemeenteNijmegenCdkApp` provides a number of default configurations and provides features used within our organization. There are:
+- Comments with CloudFormation template diffs on PRs
+- Cfn-lint Github wrokflow
+- Defautl configuration values
+
+## Github secrets
+This project type relies on Github secrets to be set in order for all its Github workflows to work.
+| Environment variable | Explanation                                                                            |
+| -------------------- | -------------------------------------------------------------------------------------- |
+| GITHUB_PROJEN_TOKEN  | [Projen Github personal access token](https://projen.io/github.html#github-api-access) |
+| SLACK_WEBHOOK_URL    | This is the url used for the emergency workflow to publish to slack                    |
+
+
+## Using this project type
+
+### For new projects
+```bash
+npx projen new --from @gemeentenijmegen/modules-projen
+```
+
+### For existing projects
+For instructions on how to start using the project type in existing projects there is the [setup guide](./SETUP.md).
+Note: for switching back to the awscdk-app-ts projen project type also see the [setup guide](./SETUP.md).
+
+
+## Properties overview
+There are a number of relevant properties that are provided by projen
+| Property             | Default      | Explanation                                                               |
+| -------------------- | ------------ | ------------------------------------------------------------------------- |
+| cdkVersion           | '2.1.0'      | Minimum version of the cdk to use (upgraded using projen upgrade task)    |
+| defaultReleaseBranch | 'main'       | Should be set to acceptance                                               |
+| name                 | project name | Sets the project name                                                     |
+| gitignore            |              | A number of default ignored files are set specific to our projects        |
+| scripts              |              | The cfn-lint script is added to the list of scripts configured            |
+| license              | EUPL-1.2     | The defult license used by us                                             |
+| depsUpgradeOptions   |              | Upgrade workflow configuration (branch: `acceptance`, labels: `cfn-diff`) |
+
+
+The project type in this npm package provides some additional configuration options:
+| Property                    | Default | Explanation                                                                                 |
+| --------------------------- | ------- | ------------------------------------------------------------------------------------------- |
+| enableCfnLintOnGithub       | true    | Enable step in the Github build workflow that runs cfn-lint                                 |
+| enableCfnDiffWorkflow       | false   | Enable job in the Github build workflow that checks for changes in CloudFormation templates |
+| enableEmergencyProcedure    | true    | Adds the emergency procedure workflow to Github workflows                                   |
+| enableAutoMergeDependencies | true    | Adds the auto-merge workflow for PR's to acceptance (from upgrade workflow)                 |
+
+
+## Upgrade dependencies
+De upgrade dependencies task en Github workflow zijn standaard enabled. Deze task zal de laatste versies van de dependencies zoeken (volgens [semantic versionioning](https://semver.org/lang/nl/)) en upgraden in de `package.json`.
+
+Dit project type zet de default branch voor het uitvoeren van de workflow op `acceptance`.
+De Github workflow voert de upgrade dependencies taak uit en maakt een PR naar `acceptance` en geeft het PR een label `cfn-diff` en `auto-merge`.
+
+### Automerge workflow
+De automerge workflow gaat af als een PR `acceptance` als base heeft en het label `auto-merge` heeft. Deze probeert het PR te mergen met de auto-merge
+feature van Github. Hiervoor moet in het Github-project automerge aan staan. **NB**: Zorg dat branch protection aan staat voor acceptance, met de eis dat aan
+alle voorwaarden voldaan is. Anders kan de auto-merge worden uitgevoerd voordat de build succesvol is.
+
+### CDK upgrade
+De upgrade dependencies taak in projen is inclusief de CDK versie. Hiervoor wordt de minimum versie in de `.projenrc.js` van een project ingesteeld.
+
+Dit betekent dat:
+- Wanneer `cdkVersion: '2.1.0` gebruikt wordt in de `.projenrc.js` dit in de `package.json` wordt geimporteerd als `"aws-cdk-lib": "^2.1.0"`
+- Wanneer de upgrade dependencies taak draait de `package.json` wordt geupdate naar bijv: `"aws-cdk-lib": "^2.31.0"`
+- Semantic versioning zorgt er voor dat er nooit een major upgrade wordt gedaan omdat deze braking changes kan hebben.
+
+### Projen upgrade
+De projen versie wordt ook geupgrade in de upgrade dependencies task.
+
+
+## CloudFormation diff
+- Deze workflow kan worden enabled in de `.projenrc.js` met de property `enableCfnDiffWorkflow: true`.
+- Draait alleen op PRs met het label `cfn-diff`.
+
 # API Reference <a name="API Reference" id="api-reference"></a>
 
+## Constructs <a name="Constructs" id="Constructs"></a>
+
+### GemeenteNijmegenCdkApp <a name="GemeenteNijmegenCdkApp" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp"></a>
+
+GemeenteNijmegenCdkApp projen project type for Gemeente Nijmegen CDK apps.
+
+#### Initializers <a name="Initializers" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.Initializer"></a>
+
+```typescript
+import { GemeenteNijmegenCdkApp } from '@gemeentenijmegen/modules-projen'
+
+new GemeenteNijmegenCdkApp(options: GemeenteNijmegenCdkAppOptions)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.Initializer.parameter.options">options</a></code> | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions">GemeenteNijmegenCdkAppOptions</a></code> | *No description.* |
+
+---
+
+##### `options`<sup>Required</sup> <a name="options" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.Initializer.parameter.options"></a>
+
+- *Type:* <a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions">GemeenteNijmegenCdkAppOptions</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.toString">toString</a></code> | Returns a string representation of this construct. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addExcludeFromCleanup">addExcludeFromCleanup</a></code> | Exclude the matching files from pre-synth cleanup. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addGitIgnore">addGitIgnore</a></code> | Adds a .gitignore pattern. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addPackageIgnore">addPackageIgnore</a></code> | Adds patterns to be ignored by npm. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addTask">addTask</a></code> | Adds a new task to this project. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addTip">addTip</a></code> | Prints a "tip" message during synthesis. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.annotateGenerated">annotateGenerated</a></code> | Marks the provided file(s) as being generated. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.postSynthesize">postSynthesize</a></code> | Called after all components are synthesized. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.preSynthesize">preSynthesize</a></code> | Called before all components are synthesized. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.removeTask">removeTask</a></code> | Removes a task from a project. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.runTaskCommand">runTaskCommand</a></code> | Returns the shell command to execute in order to run a task. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.synth">synth</a></code> | Synthesize all project files into `outdir`. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryFindFile">tryFindFile</a></code> | Finds a file at the specified relative path within this project and all its subprojects. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryFindJsonFile">tryFindJsonFile</a></code> | Finds a json file by name. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryFindObjectFile">tryFindObjectFile</a></code> | Finds an object file (like JsonFile, YamlFile, etc.) by name. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryRemoveFile">tryRemoveFile</a></code> | Finds a file at the specified relative path within this project and removes it. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addBins">addBins</a></code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addBundledDeps">addBundledDeps</a></code> | Defines bundled dependencies. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addCompileCommand">addCompileCommand</a></code> | DEPRECATED. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addDeps">addDeps</a></code> | Defines normal dependencies. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addDevDeps">addDevDeps</a></code> | Defines development/test dependencies. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addFields">addFields</a></code> | Directly set fields in `package.json`. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addKeywords">addKeywords</a></code> | Adds keywords to package.json (deduplicated). |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addPeerDeps">addPeerDeps</a></code> | Defines peer dependencies. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addScripts">addScripts</a></code> | Replaces the contents of multiple npm package.json scripts. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addTestCommand">addTestCommand</a></code> | DEPRECATED. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.hasScript">hasScript</a></code> | Indicates if a script by the name name is defined. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.removeScript">removeScript</a></code> | Removes the npm script (always successful). |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.renderWorkflowSetup">renderWorkflowSetup</a></code> | Returns the set of workflow steps which should be executed to bootstrap a workflow. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.setScript">setScript</a></code> | Replaces the contents of an npm package.json script. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addCdkDependency">addCdkDependency</a></code> | Adds an AWS CDK module dependencies. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.enableCfnDiffWorkflow">enableCfnDiffWorkflow</a></code> | A job to build the base branch and execute a diff on the build cdk.out and base branch cdk.out. A comment is added to the PR indicating if there are differences in the CloudFormation templates. |
+
+---
+
+##### `toString` <a name="toString" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+##### `addExcludeFromCleanup` <a name="addExcludeFromCleanup" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addExcludeFromCleanup"></a>
+
+```typescript
+public addExcludeFromCleanup(globs: string): void
+```
+
+Exclude the matching files from pre-synth cleanup.
+
+Can be used when, for example, some
+source files include the projen marker and we don't want them to be erased during synth.
+
+###### `globs`<sup>Required</sup> <a name="globs" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addExcludeFromCleanup.parameter.globs"></a>
+
+- *Type:* string
+
+The glob patterns to match.
+
+---
+
+##### `addGitIgnore` <a name="addGitIgnore" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addGitIgnore"></a>
+
+```typescript
+public addGitIgnore(pattern: string): void
+```
+
+Adds a .gitignore pattern.
+
+###### `pattern`<sup>Required</sup> <a name="pattern" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addGitIgnore.parameter.pattern"></a>
+
+- *Type:* string
+
+The glob pattern to ignore.
+
+---
+
+##### `addPackageIgnore` <a name="addPackageIgnore" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addPackageIgnore"></a>
+
+```typescript
+public addPackageIgnore(pattern: string): void
+```
+
+Adds patterns to be ignored by npm.
+
+###### `pattern`<sup>Required</sup> <a name="pattern" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addPackageIgnore.parameter.pattern"></a>
+
+- *Type:* string
+
+The pattern to ignore.
+
+---
+
+##### `addTask` <a name="addTask" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addTask"></a>
+
+```typescript
+public addTask(name: string, props?: TaskOptions): Task
+```
+
+Adds a new task to this project.
+
+This will fail if the project already has
+a task with this name.
+
+###### `name`<sup>Required</sup> <a name="name" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addTask.parameter.name"></a>
+
+- *Type:* string
+
+The task name to add.
+
+---
+
+###### `props`<sup>Optional</sup> <a name="props" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addTask.parameter.props"></a>
+
+- *Type:* projen.TaskOptions
+
+Task properties.
+
+---
+
+##### ~~`addTip`~~ <a name="addTip" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addTip"></a>
+
+```typescript
+public addTip(message: string): void
+```
+
+Prints a "tip" message during synthesis.
+
+###### `message`<sup>Required</sup> <a name="message" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addTip.parameter.message"></a>
+
+- *Type:* string
+
+The message.
+
+---
+
+##### `annotateGenerated` <a name="annotateGenerated" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.annotateGenerated"></a>
+
+```typescript
+public annotateGenerated(glob: string): void
+```
+
+Marks the provided file(s) as being generated.
+
+This is achieved using the
+github-linguist attributes. Generated files do not count against the
+repository statistics and language breakdown.
+
+> [https://github.com/github/linguist/blob/master/docs/overrides.md](https://github.com/github/linguist/blob/master/docs/overrides.md)
+
+###### `glob`<sup>Required</sup> <a name="glob" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.annotateGenerated.parameter.glob"></a>
+
+- *Type:* string
+
+the glob pattern to match (could be a file path).
+
+---
+
+##### `postSynthesize` <a name="postSynthesize" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.postSynthesize"></a>
+
+```typescript
+public postSynthesize(): void
+```
+
+Called after all components are synthesized.
+
+Order is *not* guaranteed.
+
+##### `preSynthesize` <a name="preSynthesize" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.preSynthesize"></a>
+
+```typescript
+public preSynthesize(): void
+```
+
+Called before all components are synthesized.
+
+##### `removeTask` <a name="removeTask" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.removeTask"></a>
+
+```typescript
+public removeTask(name: string): Task
+```
+
+Removes a task from a project.
+
+###### `name`<sup>Required</sup> <a name="name" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.removeTask.parameter.name"></a>
+
+- *Type:* string
+
+The name of the task to remove.
+
+---
+
+##### `runTaskCommand` <a name="runTaskCommand" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.runTaskCommand"></a>
+
+```typescript
+public runTaskCommand(task: Task): string
+```
+
+Returns the shell command to execute in order to run a task.
+
+This will
+typically be `npx projen TASK`.
+
+###### `task`<sup>Required</sup> <a name="task" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.runTaskCommand.parameter.task"></a>
+
+- *Type:* projen.Task
+
+The task for which the command is required.
+
+---
+
+##### `synth` <a name="synth" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.synth"></a>
+
+```typescript
+public synth(): void
+```
+
+Synthesize all project files into `outdir`.
+
+1. Call "this.preSynthesize()"
+2. Delete all generated files
+3. Synthesize all subprojects
+4. Synthesize all components of this project
+5. Call "postSynthesize()" for all components of this project
+6. Call "this.postSynthesize()"
+
+##### `tryFindFile` <a name="tryFindFile" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryFindFile"></a>
+
+```typescript
+public tryFindFile(filePath: string): FileBase
+```
+
+Finds a file at the specified relative path within this project and all its subprojects.
+
+###### `filePath`<sup>Required</sup> <a name="filePath" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryFindFile.parameter.filePath"></a>
+
+- *Type:* string
+
+The file path.
+
+If this path is relative, it will be resolved
+from the root of _this_ project.
+
+---
+
+##### ~~`tryFindJsonFile`~~ <a name="tryFindJsonFile" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryFindJsonFile"></a>
+
+```typescript
+public tryFindJsonFile(filePath: string): JsonFile
+```
+
+Finds a json file by name.
+
+###### `filePath`<sup>Required</sup> <a name="filePath" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryFindJsonFile.parameter.filePath"></a>
+
+- *Type:* string
+
+The file path.
+
+---
+
+##### `tryFindObjectFile` <a name="tryFindObjectFile" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryFindObjectFile"></a>
+
+```typescript
+public tryFindObjectFile(filePath: string): ObjectFile
+```
+
+Finds an object file (like JsonFile, YamlFile, etc.) by name.
+
+###### `filePath`<sup>Required</sup> <a name="filePath" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryFindObjectFile.parameter.filePath"></a>
+
+- *Type:* string
+
+The file path.
+
+---
+
+##### `tryRemoveFile` <a name="tryRemoveFile" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryRemoveFile"></a>
+
+```typescript
+public tryRemoveFile(filePath: string): FileBase
+```
+
+Finds a file at the specified relative path within this project and removes it.
+
+###### `filePath`<sup>Required</sup> <a name="filePath" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryRemoveFile.parameter.filePath"></a>
+
+- *Type:* string
+
+The file path.
+
+If this path is relative, it will be
+resolved from the root of _this_ project.
+
+---
+
+##### `addBins` <a name="addBins" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addBins"></a>
+
+```typescript
+public addBins(bins: {[ key: string ]: string}): void
+```
+
+###### `bins`<sup>Required</sup> <a name="bins" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addBins.parameter.bins"></a>
+
+- *Type:* {[ key: string ]: string}
+
+---
+
+##### `addBundledDeps` <a name="addBundledDeps" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addBundledDeps"></a>
+
+```typescript
+public addBundledDeps(deps: string): void
+```
+
+Defines bundled dependencies.
+
+Bundled dependencies will be added as normal dependencies as well as to the
+`bundledDependencies` section of your `package.json`.
+
+###### `deps`<sup>Required</sup> <a name="deps" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addBundledDeps.parameter.deps"></a>
+
+- *Type:* string
+
+Names modules to install.
+
+By default, the the dependency will
+be installed in the next `npx projen` run and the version will be recorded
+in your `package.json` file. You can upgrade manually or using `yarn
+add/upgrade`. If you wish to specify a version range use this syntax:
+`module@^7`.
+
+---
+
+##### ~~`addCompileCommand`~~ <a name="addCompileCommand" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addCompileCommand"></a>
+
+```typescript
+public addCompileCommand(commands: string): void
+```
+
+DEPRECATED.
+
+###### `commands`<sup>Required</sup> <a name="commands" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addCompileCommand.parameter.commands"></a>
+
+- *Type:* string
+
+---
+
+##### `addDeps` <a name="addDeps" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addDeps"></a>
+
+```typescript
+public addDeps(deps: string): void
+```
+
+Defines normal dependencies.
+
+###### `deps`<sup>Required</sup> <a name="deps" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addDeps.parameter.deps"></a>
+
+- *Type:* string
+
+Names modules to install.
+
+By default, the the dependency will
+be installed in the next `npx projen` run and the version will be recorded
+in your `package.json` file. You can upgrade manually or using `yarn
+add/upgrade`. If you wish to specify a version range use this syntax:
+`module@^7`.
+
+---
+
+##### `addDevDeps` <a name="addDevDeps" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addDevDeps"></a>
+
+```typescript
+public addDevDeps(deps: string): void
+```
+
+Defines development/test dependencies.
+
+###### `deps`<sup>Required</sup> <a name="deps" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addDevDeps.parameter.deps"></a>
+
+- *Type:* string
+
+Names modules to install.
+
+By default, the the dependency will
+be installed in the next `npx projen` run and the version will be recorded
+in your `package.json` file. You can upgrade manually or using `yarn
+add/upgrade`. If you wish to specify a version range use this syntax:
+`module@^7`.
+
+---
+
+##### `addFields` <a name="addFields" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addFields"></a>
+
+```typescript
+public addFields(fields: {[ key: string ]: any}): void
+```
+
+Directly set fields in `package.json`.
+
+###### `fields`<sup>Required</sup> <a name="fields" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addFields.parameter.fields"></a>
+
+- *Type:* {[ key: string ]: any}
+
+The fields to set.
+
+---
+
+##### `addKeywords` <a name="addKeywords" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addKeywords"></a>
+
+```typescript
+public addKeywords(keywords: string): void
+```
+
+Adds keywords to package.json (deduplicated).
+
+###### `keywords`<sup>Required</sup> <a name="keywords" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addKeywords.parameter.keywords"></a>
+
+- *Type:* string
+
+The keywords to add.
+
+---
+
+##### `addPeerDeps` <a name="addPeerDeps" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addPeerDeps"></a>
+
+```typescript
+public addPeerDeps(deps: string): void
+```
+
+Defines peer dependencies.
+
+When adding peer dependencies, a devDependency will also be added on the
+pinned version of the declared peer. This will ensure that you are testing
+your code against the minimum version required from your consumers.
+
+###### `deps`<sup>Required</sup> <a name="deps" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addPeerDeps.parameter.deps"></a>
+
+- *Type:* string
+
+Names modules to install.
+
+By default, the the dependency will
+be installed in the next `npx projen` run and the version will be recorded
+in your `package.json` file. You can upgrade manually or using `yarn
+add/upgrade`. If you wish to specify a version range use this syntax:
+`module@^7`.
+
+---
+
+##### `addScripts` <a name="addScripts" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addScripts"></a>
+
+```typescript
+public addScripts(scripts: {[ key: string ]: string}): void
+```
+
+Replaces the contents of multiple npm package.json scripts.
+
+###### `scripts`<sup>Required</sup> <a name="scripts" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addScripts.parameter.scripts"></a>
+
+- *Type:* {[ key: string ]: string}
+
+The scripts to set.
+
+---
+
+##### ~~`addTestCommand`~~ <a name="addTestCommand" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addTestCommand"></a>
+
+```typescript
+public addTestCommand(commands: string): void
+```
+
+DEPRECATED.
+
+###### `commands`<sup>Required</sup> <a name="commands" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addTestCommand.parameter.commands"></a>
+
+- *Type:* string
+
+---
+
+##### ~~`hasScript`~~ <a name="hasScript" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.hasScript"></a>
+
+```typescript
+public hasScript(name: string): boolean
+```
+
+Indicates if a script by the name name is defined.
+
+###### `name`<sup>Required</sup> <a name="name" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.hasScript.parameter.name"></a>
+
+- *Type:* string
+
+The name of the script.
+
+---
+
+##### `removeScript` <a name="removeScript" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.removeScript"></a>
+
+```typescript
+public removeScript(name: string): void
+```
+
+Removes the npm script (always successful).
+
+###### `name`<sup>Required</sup> <a name="name" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.removeScript.parameter.name"></a>
+
+- *Type:* string
+
+The name of the script.
+
+---
+
+##### `renderWorkflowSetup` <a name="renderWorkflowSetup" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.renderWorkflowSetup"></a>
+
+```typescript
+public renderWorkflowSetup(options?: RenderWorkflowSetupOptions): JobStep[]
+```
+
+Returns the set of workflow steps which should be executed to bootstrap a workflow.
+
+###### `options`<sup>Optional</sup> <a name="options" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.renderWorkflowSetup.parameter.options"></a>
+
+- *Type:* projen.javascript.RenderWorkflowSetupOptions
+
+Options.
+
+---
+
+##### `setScript` <a name="setScript" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.setScript"></a>
+
+```typescript
+public setScript(name: string, command: string): void
+```
+
+Replaces the contents of an npm package.json script.
+
+###### `name`<sup>Required</sup> <a name="name" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.setScript.parameter.name"></a>
+
+- *Type:* string
+
+The script name.
+
+---
+
+###### `command`<sup>Required</sup> <a name="command" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.setScript.parameter.command"></a>
+
+- *Type:* string
+
+The command to execute.
+
+---
+
+##### `addCdkDependency` <a name="addCdkDependency" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addCdkDependency"></a>
+
+```typescript
+public addCdkDependency(modules: string): void
+```
+
+Adds an AWS CDK module dependencies.
+
+###### `modules`<sup>Required</sup> <a name="modules" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addCdkDependency.parameter.modules"></a>
+
+- *Type:* string
+
+The list of modules to depend on.
+
+---
+
+##### `enableCfnDiffWorkflow` <a name="enableCfnDiffWorkflow" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.enableCfnDiffWorkflow"></a>
+
+```typescript
+public enableCfnDiffWorkflow(): void
+```
+
+A job to build the base branch and execute a diff on the build cdk.out and base branch cdk.out. A comment is added to the PR indicating if there are differences in the CloudFormation templates.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.isProject">isProject</a></code> | Test whether the given construct is a project. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.of">of</a></code> | Find the closest ancestor project for given construct. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.isConstruct"></a>
+
+```typescript
+import { GemeenteNijmegenCdkApp } from '@gemeentenijmegen/modules-projen'
+
+GemeenteNijmegenCdkApp.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+##### `isProject` <a name="isProject" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.isProject"></a>
+
+```typescript
+import { GemeenteNijmegenCdkApp } from '@gemeentenijmegen/modules-projen'
+
+GemeenteNijmegenCdkApp.isProject(x: any)
+```
+
+Test whether the given construct is a project.
+
+###### `x`<sup>Required</sup> <a name="x" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.isProject.parameter.x"></a>
+
+- *Type:* any
+
+---
+
+##### `of` <a name="of" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.of"></a>
+
+```typescript
+import { GemeenteNijmegenCdkApp } from '@gemeentenijmegen/modules-projen'
+
+GemeenteNijmegenCdkApp.of(construct: IConstruct)
+```
+
+Find the closest ancestor project for given construct.
+
+When given a project, this it the project itself.
+
+###### `construct`<sup>Required</sup> <a name="construct" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.of.parameter.construct"></a>
+
+- *Type:* constructs.IConstruct
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.buildTask">buildTask</a></code> | <code>projen.Task</code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.commitGenerated">commitGenerated</a></code> | <code>boolean</code> | Whether to commit the managed files by default. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.compileTask">compileTask</a></code> | <code>projen.Task</code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.components">components</a></code> | <code>projen.Component[]</code> | Returns all the components within this project. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.deps">deps</a></code> | <code>projen.Dependencies</code> | Project dependencies. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.ejected">ejected</a></code> | <code>boolean</code> | Whether or not the project is being ejected. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.files">files</a></code> | <code>projen.FileBase[]</code> | All files in this project. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.gitattributes">gitattributes</a></code> | <code>projen.GitAttributesFile</code> | The .gitattributes file for this repository. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.gitignore">gitignore</a></code> | <code>projen.IgnoreFile</code> | .gitignore. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.logger">logger</a></code> | <code>projen.Logger</code> | Logging utilities. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.name">name</a></code> | <code>string</code> | Project name. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.outdir">outdir</a></code> | <code>string</code> | Absolute output directory of this project. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.packageTask">packageTask</a></code> | <code>projen.Task</code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.postCompileTask">postCompileTask</a></code> | <code>projen.Task</code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.preCompileTask">preCompileTask</a></code> | <code>projen.Task</code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.projectBuild">projectBuild</a></code> | <code>projen.ProjectBuild</code> | Manages the build process of the project. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.projenCommand">projenCommand</a></code> | <code>string</code> | The command to use in order to run the projen CLI. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.root">root</a></code> | <code>projen.Project</code> | The root project. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.subprojects">subprojects</a></code> | <code>projen.Project[]</code> | Returns all the subprojects within this project. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.tasks">tasks</a></code> | <code>projen.Tasks</code> | Project tasks. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.testTask">testTask</a></code> | <code>projen.Task</code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.defaultTask">defaultTask</a></code> | <code>projen.Task</code> | This is the "default" task, the one that executes "projen". |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.initProject">initProject</a></code> | <code>projen.InitProject</code> | The options used when this project is bootstrapped via `projen new`. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.parent">parent</a></code> | <code>projen.Project</code> | A parent project. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.projectType">projectType</a></code> | <code>projen.ProjectType</code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.autoApprove">autoApprove</a></code> | <code>projen.github.AutoApprove</code> | Auto approve set up for this project. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.devContainer">devContainer</a></code> | <code>projen.vscode.DevContainer</code> | Access for .devcontainer.json (used for GitHub Codespaces). |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.github">github</a></code> | <code>projen.github.GitHub</code> | Access all github components. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.gitpod">gitpod</a></code> | <code>projen.Gitpod</code> | Access for Gitpod. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.vscode">vscode</a></code> | <code>projen.vscode.VsCode</code> | Access all VSCode components. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.allowLibraryDependencies">allowLibraryDependencies</a></code> | <code>boolean</code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.artifactsDirectory">artifactsDirectory</a></code> | <code>string</code> | The build output directory. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.artifactsJavascriptDirectory">artifactsJavascriptDirectory</a></code> | <code>string</code> | The location of the npm tarball after build (`${artifactsDirectory}/js`). |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.bundler">bundler</a></code> | <code>projen.javascript.Bundler</code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.entrypoint">entrypoint</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.manifest">manifest</a></code> | <code>any</code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.npmrc">npmrc</a></code> | <code>projen.javascript.NpmConfig</code> | The .npmrc file. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.package">package</a></code> | <code>projen.javascript.NodePackage</code> | API for managing the node package. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.packageManager">packageManager</a></code> | <code>projen.javascript.NodePackageManager</code> | The package manager to use. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.runScriptCommand">runScriptCommand</a></code> | <code>string</code> | The command to use to run scripts (e.g. `yarn run` or `npm run` depends on the package manager). |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.autoMerge">autoMerge</a></code> | <code>projen.github.AutoMerge</code> | Component that sets up mergify for merging approved pull requests. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.buildWorkflow">buildWorkflow</a></code> | <code>projen.build.BuildWorkflow</code> | The PR build GitHub workflow. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.buildWorkflowJobId">buildWorkflowJobId</a></code> | <code>string</code> | The job ID of the build workflow. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.jest">jest</a></code> | <code>projen.javascript.Jest</code> | The Jest configuration (if enabled). |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.maxNodeVersion">maxNodeVersion</a></code> | <code>string</code> | Maximum node version required by this package. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.minNodeVersion">minNodeVersion</a></code> | <code>string</code> | Minimum node.js version required by this package. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.npmignore">npmignore</a></code> | <code>projen.IgnoreFile</code> | The .npmignore file. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.prettier">prettier</a></code> | <code>projen.javascript.Prettier</code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.publisher">publisher</a></code> | <code>projen.release.Publisher</code> | Package publisher. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.release">release</a></code> | <code>projen.release.Release</code> | Release management. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.upgradeWorkflow">upgradeWorkflow</a></code> | <code>projen.javascript.UpgradeDependencies</code> | The upgrade workflow. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.docsDirectory">docsDirectory</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.libdir">libdir</a></code> | <code>string</code> | The directory in which compiled .js files reside. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.srcdir">srcdir</a></code> | <code>string</code> | The directory in which the .ts sources reside. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.testdir">testdir</a></code> | <code>string</code> | The directory in which tests reside. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.tsconfigDev">tsconfigDev</a></code> | <code>projen.javascript.TypescriptConfig</code> | A typescript configuration file which covers all files (sources, tests, projen). |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.watchTask">watchTask</a></code> | <code>projen.Task</code> | The "watch" task. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.docgen">docgen</a></code> | <code>boolean</code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.eslint">eslint</a></code> | <code>projen.javascript.Eslint</code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.tsconfig">tsconfig</a></code> | <code>projen.javascript.TypescriptConfig</code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.tsconfigEslint">tsconfigEslint</a></code> | <code>projen.javascript.TypescriptConfig</code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.appEntrypoint">appEntrypoint</a></code> | <code>string</code> | The CDK app entrypoint. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.cdkConfig">cdkConfig</a></code> | <code>projen.awscdk.CdkConfig</code> | cdk.json configuration. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.cdkDeps">cdkDeps</a></code> | <code>projen.awscdk.AwsCdkDeps</code> | *No description.* |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.cdkTasks">cdkTasks</a></code> | <code>projen.awscdk.CdkTasks</code> | Common CDK tasks. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.cdkVersion">cdkVersion</a></code> | <code>string</code> | The CDK version this app is using. |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+##### `buildTask`<sup>Required</sup> <a name="buildTask" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.buildTask"></a>
+
+```typescript
+public readonly buildTask: Task;
+```
+
+- *Type:* projen.Task
+
+---
+
+##### `commitGenerated`<sup>Required</sup> <a name="commitGenerated" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.commitGenerated"></a>
+
+```typescript
+public readonly commitGenerated: boolean;
+```
+
+- *Type:* boolean
+
+Whether to commit the managed files by default.
+
+---
+
+##### `compileTask`<sup>Required</sup> <a name="compileTask" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.compileTask"></a>
+
+```typescript
+public readonly compileTask: Task;
+```
+
+- *Type:* projen.Task
+
+---
+
+##### `components`<sup>Required</sup> <a name="components" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.components"></a>
+
+```typescript
+public readonly components: Component[];
+```
+
+- *Type:* projen.Component[]
+
+Returns all the components within this project.
+
+---
+
+##### `deps`<sup>Required</sup> <a name="deps" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.deps"></a>
+
+```typescript
+public readonly deps: Dependencies;
+```
+
+- *Type:* projen.Dependencies
+
+Project dependencies.
+
+---
+
+##### `ejected`<sup>Required</sup> <a name="ejected" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.ejected"></a>
+
+```typescript
+public readonly ejected: boolean;
+```
+
+- *Type:* boolean
+
+Whether or not the project is being ejected.
+
+---
+
+##### `files`<sup>Required</sup> <a name="files" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.files"></a>
+
+```typescript
+public readonly files: FileBase[];
+```
+
+- *Type:* projen.FileBase[]
+
+All files in this project.
+
+---
+
+##### `gitattributes`<sup>Required</sup> <a name="gitattributes" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.gitattributes"></a>
+
+```typescript
+public readonly gitattributes: GitAttributesFile;
+```
+
+- *Type:* projen.GitAttributesFile
+
+The .gitattributes file for this repository.
+
+---
+
+##### `gitignore`<sup>Required</sup> <a name="gitignore" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.gitignore"></a>
+
+```typescript
+public readonly gitignore: IgnoreFile;
+```
+
+- *Type:* projen.IgnoreFile
+
+.gitignore.
+
+---
+
+##### `logger`<sup>Required</sup> <a name="logger" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.logger"></a>
+
+```typescript
+public readonly logger: Logger;
+```
+
+- *Type:* projen.Logger
+
+Logging utilities.
+
+---
+
+##### `name`<sup>Required</sup> <a name="name" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.name"></a>
+
+```typescript
+public readonly name: string;
+```
+
+- *Type:* string
+
+Project name.
+
+---
+
+##### `outdir`<sup>Required</sup> <a name="outdir" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.outdir"></a>
+
+```typescript
+public readonly outdir: string;
+```
+
+- *Type:* string
+
+Absolute output directory of this project.
+
+---
+
+##### `packageTask`<sup>Required</sup> <a name="packageTask" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.packageTask"></a>
+
+```typescript
+public readonly packageTask: Task;
+```
+
+- *Type:* projen.Task
+
+---
+
+##### `postCompileTask`<sup>Required</sup> <a name="postCompileTask" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.postCompileTask"></a>
+
+```typescript
+public readonly postCompileTask: Task;
+```
+
+- *Type:* projen.Task
+
+---
+
+##### `preCompileTask`<sup>Required</sup> <a name="preCompileTask" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.preCompileTask"></a>
+
+```typescript
+public readonly preCompileTask: Task;
+```
+
+- *Type:* projen.Task
+
+---
+
+##### `projectBuild`<sup>Required</sup> <a name="projectBuild" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.projectBuild"></a>
+
+```typescript
+public readonly projectBuild: ProjectBuild;
+```
+
+- *Type:* projen.ProjectBuild
+
+Manages the build process of the project.
+
+---
+
+##### `projenCommand`<sup>Required</sup> <a name="projenCommand" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.projenCommand"></a>
+
+```typescript
+public readonly projenCommand: string;
+```
+
+- *Type:* string
+
+The command to use in order to run the projen CLI.
+
+---
+
+##### `root`<sup>Required</sup> <a name="root" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.root"></a>
+
+```typescript
+public readonly root: Project;
+```
+
+- *Type:* projen.Project
+
+The root project.
+
+---
+
+##### `subprojects`<sup>Required</sup> <a name="subprojects" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.subprojects"></a>
+
+```typescript
+public readonly subprojects: Project[];
+```
+
+- *Type:* projen.Project[]
+
+Returns all the subprojects within this project.
+
+---
+
+##### `tasks`<sup>Required</sup> <a name="tasks" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.tasks"></a>
+
+```typescript
+public readonly tasks: Tasks;
+```
+
+- *Type:* projen.Tasks
+
+Project tasks.
+
+---
+
+##### `testTask`<sup>Required</sup> <a name="testTask" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.testTask"></a>
+
+```typescript
+public readonly testTask: Task;
+```
+
+- *Type:* projen.Task
+
+---
+
+##### `defaultTask`<sup>Optional</sup> <a name="defaultTask" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.defaultTask"></a>
+
+```typescript
+public readonly defaultTask: Task;
+```
+
+- *Type:* projen.Task
+
+This is the "default" task, the one that executes "projen".
+
+Undefined if
+the project is being ejected.
+
+---
+
+##### `initProject`<sup>Optional</sup> <a name="initProject" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.initProject"></a>
+
+```typescript
+public readonly initProject: InitProject;
+```
+
+- *Type:* projen.InitProject
+
+The options used when this project is bootstrapped via `projen new`.
+
+It
+includes the original set of options passed to the CLI and also the JSII
+FQN of the project type.
+
+---
+
+##### `parent`<sup>Optional</sup> <a name="parent" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.parent"></a>
+
+```typescript
+public readonly parent: Project;
+```
+
+- *Type:* projen.Project
+
+A parent project.
+
+If undefined, this is the root project.
+
+---
+
+##### `projectType`<sup>Required</sup> <a name="projectType" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.projectType"></a>
+
+```typescript
+public readonly projectType: ProjectType;
+```
+
+- *Type:* projen.ProjectType
+
+---
+
+##### `autoApprove`<sup>Optional</sup> <a name="autoApprove" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.autoApprove"></a>
+
+```typescript
+public readonly autoApprove: AutoApprove;
+```
+
+- *Type:* projen.github.AutoApprove
+
+Auto approve set up for this project.
+
+---
+
+##### `devContainer`<sup>Optional</sup> <a name="devContainer" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.devContainer"></a>
+
+```typescript
+public readonly devContainer: DevContainer;
+```
+
+- *Type:* projen.vscode.DevContainer
+
+Access for .devcontainer.json (used for GitHub Codespaces).
+
+This will be `undefined` if devContainer boolean is false
+
+---
+
+##### `github`<sup>Optional</sup> <a name="github" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.github"></a>
+
+```typescript
+public readonly github: GitHub;
+```
+
+- *Type:* projen.github.GitHub
+
+Access all github components.
+
+This will be `undefined` for subprojects.
+
+---
+
+##### `gitpod`<sup>Optional</sup> <a name="gitpod" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.gitpod"></a>
+
+```typescript
+public readonly gitpod: Gitpod;
+```
+
+- *Type:* projen.Gitpod
+
+Access for Gitpod.
+
+This will be `undefined` if gitpod boolean is false
+
+---
+
+##### `vscode`<sup>Optional</sup> <a name="vscode" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.vscode"></a>
+
+```typescript
+public readonly vscode: VsCode;
+```
+
+- *Type:* projen.vscode.VsCode
+
+Access all VSCode components.
+
+This will be `undefined` for subprojects.
+
+---
+
+##### ~~`allowLibraryDependencies`~~<sup>Required</sup> <a name="allowLibraryDependencies" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.allowLibraryDependencies"></a>
+
+- *Deprecated:* use `package.allowLibraryDependencies`
+
+```typescript
+public readonly allowLibraryDependencies: boolean;
+```
+
+- *Type:* boolean
+
+---
+
+##### `artifactsDirectory`<sup>Required</sup> <a name="artifactsDirectory" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.artifactsDirectory"></a>
+
+```typescript
+public readonly artifactsDirectory: string;
+```
+
+- *Type:* string
+
+The build output directory.
+
+An npm tarball will be created under the `js`
+subdirectory. For example, if this is set to `dist` (the default), the npm
+tarball will be placed under `dist/js/boom-boom-1.2.3.tg`.
+
+---
+
+##### `artifactsJavascriptDirectory`<sup>Required</sup> <a name="artifactsJavascriptDirectory" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.artifactsJavascriptDirectory"></a>
+
+```typescript
+public readonly artifactsJavascriptDirectory: string;
+```
+
+- *Type:* string
+
+The location of the npm tarball after build (`${artifactsDirectory}/js`).
+
+---
+
+##### `bundler`<sup>Required</sup> <a name="bundler" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.bundler"></a>
+
+```typescript
+public readonly bundler: Bundler;
+```
+
+- *Type:* projen.javascript.Bundler
+
+---
+
+##### ~~`entrypoint`~~<sup>Required</sup> <a name="entrypoint" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.entrypoint"></a>
+
+- *Deprecated:* use `package.entrypoint`
+
+```typescript
+public readonly entrypoint: string;
+```
+
+- *Type:* string
+
+---
+
+##### ~~`manifest`~~<sup>Required</sup> <a name="manifest" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.manifest"></a>
+
+- *Deprecated:* use `package.addField(x, y)`
+
+```typescript
+public readonly manifest: any;
+```
+
+- *Type:* any
+
+---
+
+##### `npmrc`<sup>Required</sup> <a name="npmrc" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.npmrc"></a>
+
+```typescript
+public readonly npmrc: NpmConfig;
+```
+
+- *Type:* projen.javascript.NpmConfig
+
+The .npmrc file.
+
+---
+
+##### `package`<sup>Required</sup> <a name="package" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.package"></a>
+
+```typescript
+public readonly package: NodePackage;
+```
+
+- *Type:* projen.javascript.NodePackage
+
+API for managing the node package.
+
+---
+
+##### ~~`packageManager`~~<sup>Required</sup> <a name="packageManager" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.packageManager"></a>
+
+- *Deprecated:* use `package.packageManager`
+
+```typescript
+public readonly packageManager: NodePackageManager;
+```
+
+- *Type:* projen.javascript.NodePackageManager
+
+The package manager to use.
+
+---
+
+##### `runScriptCommand`<sup>Required</sup> <a name="runScriptCommand" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.runScriptCommand"></a>
+
+```typescript
+public readonly runScriptCommand: string;
+```
+
+- *Type:* string
+
+The command to use to run scripts (e.g. `yarn run` or `npm run` depends on the package manager).
+
+---
+
+##### `autoMerge`<sup>Optional</sup> <a name="autoMerge" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.autoMerge"></a>
+
+```typescript
+public readonly autoMerge: AutoMerge;
+```
+
+- *Type:* projen.github.AutoMerge
+
+Component that sets up mergify for merging approved pull requests.
+
+---
+
+##### `buildWorkflow`<sup>Optional</sup> <a name="buildWorkflow" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.buildWorkflow"></a>
+
+```typescript
+public readonly buildWorkflow: BuildWorkflow;
+```
+
+- *Type:* projen.build.BuildWorkflow
+
+The PR build GitHub workflow.
+
+`undefined` if `buildWorkflow` is disabled.
+
+---
+
+##### `buildWorkflowJobId`<sup>Optional</sup> <a name="buildWorkflowJobId" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.buildWorkflowJobId"></a>
+
+```typescript
+public readonly buildWorkflowJobId: string;
+```
+
+- *Type:* string
+
+The job ID of the build workflow.
+
+---
+
+##### `jest`<sup>Optional</sup> <a name="jest" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.jest"></a>
+
+```typescript
+public readonly jest: Jest;
+```
+
+- *Type:* projen.javascript.Jest
+
+The Jest configuration (if enabled).
+
+---
+
+##### `maxNodeVersion`<sup>Optional</sup> <a name="maxNodeVersion" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.maxNodeVersion"></a>
+
+```typescript
+public readonly maxNodeVersion: string;
+```
+
+- *Type:* string
+
+Maximum node version required by this package.
+
+---
+
+##### `minNodeVersion`<sup>Optional</sup> <a name="minNodeVersion" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.minNodeVersion"></a>
+
+```typescript
+public readonly minNodeVersion: string;
+```
+
+- *Type:* string
+
+Minimum node.js version required by this package.
+
+---
+
+##### `npmignore`<sup>Optional</sup> <a name="npmignore" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.npmignore"></a>
+
+```typescript
+public readonly npmignore: IgnoreFile;
+```
+
+- *Type:* projen.IgnoreFile
+
+The .npmignore file.
+
+---
+
+##### `prettier`<sup>Optional</sup> <a name="prettier" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.prettier"></a>
+
+```typescript
+public readonly prettier: Prettier;
+```
+
+- *Type:* projen.javascript.Prettier
+
+---
+
+##### ~~`publisher`~~<sup>Optional</sup> <a name="publisher" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.publisher"></a>
+
+- *Deprecated:* use `release.publisher`.
+
+```typescript
+public readonly publisher: Publisher;
+```
+
+- *Type:* projen.release.Publisher
+
+Package publisher.
+
+This will be `undefined` if the project does not have a
+release workflow.
+
+---
+
+##### `release`<sup>Optional</sup> <a name="release" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.release"></a>
+
+```typescript
+public readonly release: Release;
+```
+
+- *Type:* projen.release.Release
+
+Release management.
+
+---
+
+##### `upgradeWorkflow`<sup>Optional</sup> <a name="upgradeWorkflow" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.upgradeWorkflow"></a>
+
+```typescript
+public readonly upgradeWorkflow: UpgradeDependencies;
+```
+
+- *Type:* projen.javascript.UpgradeDependencies
+
+The upgrade workflow.
+
+---
+
+##### `docsDirectory`<sup>Required</sup> <a name="docsDirectory" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.docsDirectory"></a>
+
+```typescript
+public readonly docsDirectory: string;
+```
+
+- *Type:* string
+
+---
+
+##### `libdir`<sup>Required</sup> <a name="libdir" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.libdir"></a>
+
+```typescript
+public readonly libdir: string;
+```
+
+- *Type:* string
+
+The directory in which compiled .js files reside.
+
+---
+
+##### `srcdir`<sup>Required</sup> <a name="srcdir" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.srcdir"></a>
+
+```typescript
+public readonly srcdir: string;
+```
+
+- *Type:* string
+
+The directory in which the .ts sources reside.
+
+---
+
+##### `testdir`<sup>Required</sup> <a name="testdir" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.testdir"></a>
+
+```typescript
+public readonly testdir: string;
+```
+
+- *Type:* string
+
+The directory in which tests reside.
+
+---
+
+##### `tsconfigDev`<sup>Required</sup> <a name="tsconfigDev" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.tsconfigDev"></a>
+
+```typescript
+public readonly tsconfigDev: TypescriptConfig;
+```
+
+- *Type:* projen.javascript.TypescriptConfig
+
+A typescript configuration file which covers all files (sources, tests, projen).
+
+---
+
+##### `watchTask`<sup>Required</sup> <a name="watchTask" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.watchTask"></a>
+
+```typescript
+public readonly watchTask: Task;
+```
+
+- *Type:* projen.Task
+
+The "watch" task.
+
+---
+
+##### `docgen`<sup>Optional</sup> <a name="docgen" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.docgen"></a>
+
+```typescript
+public readonly docgen: boolean;
+```
+
+- *Type:* boolean
+
+---
+
+##### `eslint`<sup>Optional</sup> <a name="eslint" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.eslint"></a>
+
+```typescript
+public readonly eslint: Eslint;
+```
+
+- *Type:* projen.javascript.Eslint
+
+---
+
+##### `tsconfig`<sup>Optional</sup> <a name="tsconfig" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.tsconfig"></a>
+
+```typescript
+public readonly tsconfig: TypescriptConfig;
+```
+
+- *Type:* projen.javascript.TypescriptConfig
+
+---
+
+##### `tsconfigEslint`<sup>Optional</sup> <a name="tsconfigEslint" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.tsconfigEslint"></a>
+
+```typescript
+public readonly tsconfigEslint: TypescriptConfig;
+```
+
+- *Type:* projen.javascript.TypescriptConfig
+
+---
+
+##### `appEntrypoint`<sup>Required</sup> <a name="appEntrypoint" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.appEntrypoint"></a>
+
+```typescript
+public readonly appEntrypoint: string;
+```
+
+- *Type:* string
+
+The CDK app entrypoint.
+
+---
+
+##### `cdkConfig`<sup>Required</sup> <a name="cdkConfig" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.cdkConfig"></a>
+
+```typescript
+public readonly cdkConfig: CdkConfig;
+```
+
+- *Type:* projen.awscdk.CdkConfig
+
+cdk.json configuration.
+
+---
+
+##### `cdkDeps`<sup>Required</sup> <a name="cdkDeps" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.cdkDeps"></a>
+
+```typescript
+public readonly cdkDeps: AwsCdkDeps;
+```
+
+- *Type:* projen.awscdk.AwsCdkDeps
+
+---
+
+##### `cdkTasks`<sup>Required</sup> <a name="cdkTasks" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.cdkTasks"></a>
+
+```typescript
+public readonly cdkTasks: CdkTasks;
+```
+
+- *Type:* projen.awscdk.CdkTasks
+
+Common CDK tasks.
+
+---
+
+##### `cdkVersion`<sup>Required</sup> <a name="cdkVersion" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.cdkVersion"></a>
+
+```typescript
+public readonly cdkVersion: string;
+```
+
+- *Type:* string
+
+The CDK version this app is using.
+
+---
+
+#### Constants <a name="Constants" id="Constants"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.DEFAULT_TASK">DEFAULT_TASK</a></code> | <code>string</code> | The name of the default task (the task executed when `projen` is run without arguments). |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.DEFAULT_TS_JEST_TRANFORM_PATTERN">DEFAULT_TS_JEST_TRANFORM_PATTERN</a></code> | <code>string</code> | *No description.* |
+
+---
+
+##### `DEFAULT_TASK`<sup>Required</sup> <a name="DEFAULT_TASK" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.DEFAULT_TASK"></a>
+
+```typescript
+public readonly DEFAULT_TASK: string;
+```
+
+- *Type:* string
+
+The name of the default task (the task executed when `projen` is run without arguments).
+
+Normally
+this task should synthesize the project files.
+
+---
+
+##### `DEFAULT_TS_JEST_TRANFORM_PATTERN`<sup>Required</sup> <a name="DEFAULT_TS_JEST_TRANFORM_PATTERN" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.DEFAULT_TS_JEST_TRANFORM_PATTERN"></a>
+
+```typescript
+public readonly DEFAULT_TS_JEST_TRANFORM_PATTERN: string;
+```
+
+- *Type:* string
+
+---
 
 ## Structs <a name="Structs" id="Structs"></a>
 
@@ -19,12 +1689,14 @@ const gemeenteNijmegenCdkAppOptions: GemeenteNijmegenCdkAppOptions = { ... }
 | --- | --- | --- |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.name">name</a></code> | <code>string</code> | This is the name of your project. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.commitGenerated">commitGenerated</a></code> | <code>boolean</code> | Whether to commit the managed files by default. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.gitIgnoreOptions">gitIgnoreOptions</a></code> | <code>projen.IgnoreFileOptions</code> | Configuration options for .gitignore file. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.gitOptions">gitOptions</a></code> | <code>projen.GitOptions</code> | Configuration options for git. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.logging">logging</a></code> | <code>projen.LoggerOptions</code> | Configure logging options such as verbosity. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.outdir">outdir</a></code> | <code>string</code> | The root directory of the project. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.parent">parent</a></code> | <code>projen.Project</code> | The parent project, if this project is part of a bigger project. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.projenCommand">projenCommand</a></code> | <code>string</code> | The shell command to use in order to run the projen CLI. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.projenrcJson">projenrcJson</a></code> | <code>boolean</code> | Generate (once) .projenrc.json (in JSON). Set to `false` in order to disable .projenrc.json generation. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.projenrcJsonOptions">projenrcJsonOptions</a></code> | <code>projen.ProjenrcOptions</code> | Options for .projenrc.json. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.projenrcJsonOptions">projenrcJsonOptions</a></code> | <code>projen.ProjenrcJsonOptions</code> | Options for .projenrc.json. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.renovatebot">renovatebot</a></code> | <code>boolean</code> | Use renovatebot to handle dependency upgrades. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.renovatebotOptions">renovatebotOptions</a></code> | <code>projen.RenovatebotOptions</code> | Options for renovatebot. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.autoApproveOptions">autoApproveOptions</a></code> | <code>projen.github.AutoApproveOptions</code> | Enable and configure the 'auto approve' workflow. |
@@ -73,11 +1745,13 @@ const gemeenteNijmegenCdkAppOptions: GemeenteNijmegenCdkAppOptions = { ... }
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.packageName">packageName</a></code> | <code>string</code> | The "name" in package.json. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.peerDependencyOptions">peerDependencyOptions</a></code> | <code>projen.javascript.PeerDependencyOptions</code> | Options for `peerDeps`. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.peerDeps">peerDeps</a></code> | <code>string[]</code> | Peer dependencies for this module. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.pnpmVersion">pnpmVersion</a></code> | <code>string</code> | The version of PNPM to use if using PNPM as a package manager. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.repository">repository</a></code> | <code>string</code> | The repository is the location where the actual code for your package lives. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.repositoryDirectory">repositoryDirectory</a></code> | <code>string</code> | If the package.json for your package is not in the root directory (for example if it is part of a monorepo), you can specify the directory in which it lives. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.scopedPackagesOptions">scopedPackagesOptions</a></code> | <code>projen.javascript.ScopedPackagesOptions[]</code> | Options for privately hosted scoped packages. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.scripts">scripts</a></code> | <code>{[ key: string ]: string}</code> | npm scripts to include. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.stability">stability</a></code> | <code>string</code> | Package's Stability. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.yarnBerryOptions">yarnBerryOptions</a></code> | <code>projen.javascript.YarnBerryOptions</code> | Options for Yarn Berry. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.jsiiReleaseVersion">jsiiReleaseVersion</a></code> | <code>string</code> | Version requirement of `publib` which is used to publish modules to npm. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.majorVersion">majorVersion</a></code> | <code>number</code> | Major version to release from the default branch. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.minMajorVersion">minMajorVersion</a></code> | <code>number</code> | Minimal Major version to release. |
@@ -86,6 +1760,7 @@ const gemeenteNijmegenCdkAppOptions: GemeenteNijmegenCdkAppOptions = { ... }
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.prerelease">prerelease</a></code> | <code>string</code> | Bump versions from the default branch as pre-releases (e.g. "beta", "alpha", "pre"). |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.publishDryRun">publishDryRun</a></code> | <code>boolean</code> | Instead of actually publishing to package managers, just print the publishing command. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.publishTasks">publishTasks</a></code> | <code>boolean</code> | Define publishing tasks that can be executed manually as well as workflows. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.releasableCommits">releasableCommits</a></code> | <code>projen.ReleasableCommits</code> | Find commits that should be considered releasable Used to decide if a release is required. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.releaseBranches">releaseBranches</a></code> | <code>{[ key: string ]: projen.release.BranchOptions}</code> | Defines additional release branches. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.releaseEveryCommit">releaseEveryCommit</a></code> | <code>boolean</code> | Automatically release new versions every commit to one of branches in `releaseBranches`. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.releaseFailureIssue">releaseFailureIssue</a></code> | <code>boolean</code> | Create a github issue on every failed publishing task. |
@@ -98,19 +1773,21 @@ const gemeenteNijmegenCdkAppOptions: GemeenteNijmegenCdkAppOptions = { ... }
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.versionrcOptions">versionrcOptions</a></code> | <code>{[ key: string ]: any}</code> | Custom configuration used when creating changelog with standard-version package. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.workflowContainerImage">workflowContainerImage</a></code> | <code>string</code> | Container image to use for GitHub workflows. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.workflowRunsOn">workflowRunsOn</a></code> | <code>string[]</code> | Github Runner selection labels. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.workflowRunsOnGroup">workflowRunsOnGroup</a></code> | <code>projen.GroupRunnerOptions</code> | Github Runner Group selection options. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.defaultReleaseBranch">defaultReleaseBranch</a></code> | <code>string</code> | The name of the main release branch. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.artifactsDirectory">artifactsDirectory</a></code> | <code>string</code> | A directory which will contain build artifacts. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.autoApproveUpgrades">autoApproveUpgrades</a></code> | <code>boolean</code> | Automatically approve deps upgrade PRs, allowing them to be merged by mergify (if configued). |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.buildWorkflow">buildWorkflow</a></code> | <code>boolean</code> | Define a GitHub workflow for building PRs. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.buildWorkflowTriggers">buildWorkflowTriggers</a></code> | <code>projen.github.workflows.Triggers</code> | Build workflow triggers. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.bundlerOptions">bundlerOptions</a></code> | <code>projen.javascript.BundlerOptions</code> | Options for `Bundler`. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.codeCov">codeCov</a></code> | <code>boolean</code> | Define a GitHub workflow step for sending code coverage metrics to https://codecov.io/ Uses codecov/codecov-action@v3 A secret is required for private repos. Configured with @codeCovTokenSecret. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.checkLicenses">checkLicenses</a></code> | <code>projen.javascript.LicenseCheckerOptions</code> | Configure which licenses should be deemed acceptable for use by dependencies. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.codeCov">codeCov</a></code> | <code>boolean</code> | Define a GitHub workflow step for sending code coverage metrics to https://codecov.io/ Uses codecov/codecov-action@v3 A secret is required for private repos. Configured with `@codeCovTokenSecret`. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.codeCovTokenSecret">codeCovTokenSecret</a></code> | <code>string</code> | Define the secret name for a specified https://codecov.io/ token A secret is required to send coverage for private repositories. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.copyrightOwner">copyrightOwner</a></code> | <code>string</code> | License copyright owner. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.copyrightPeriod">copyrightPeriod</a></code> | <code>string</code> | The copyright years to put in the LICENSE file. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.dependabot">dependabot</a></code> | <code>boolean</code> | Use dependabot to handle dependency upgrades. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.dependabotOptions">dependabotOptions</a></code> | <code>projen.github.DependabotOptions</code> | Options for dependabot. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.depsUpgrade">depsUpgrade</a></code> | <code>boolean</code> | Use github workflows to handle dependency upgrades. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.depsUpgrade">depsUpgrade</a></code> | <code>boolean</code> | Use tasks and github workflows to handle dependency upgrades. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.depsUpgradeOptions">depsUpgradeOptions</a></code> | <code>projen.javascript.UpgradeDependenciesOptions</code> | Options for `UpgradeDependencies`. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.gitignore">gitignore</a></code> | <code>string[]</code> | Additional entries to .gitignore. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.jest">jest</a></code> | <code>boolean</code> | Setup jest unit tests. |
@@ -118,6 +1795,7 @@ const gemeenteNijmegenCdkAppOptions: GemeenteNijmegenCdkAppOptions = { ... }
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.mutableBuild">mutableBuild</a></code> | <code>boolean</code> | Automatically update files modified during builds to pull-request branches. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.npmignore">npmignore</a></code> | <code>string[]</code> | Additional entries to .npmignore. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.npmignoreEnabled">npmignoreEnabled</a></code> | <code>boolean</code> | Defines an .npmignore file. Normally this is only needed for libraries that are packaged as tarballs. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.npmIgnoreOptions">npmIgnoreOptions</a></code> | <code>projen.IgnoreFileOptions</code> | Configuration options for .npmignore file. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.package">package</a></code> | <code>boolean</code> | Defines a `package` task that will produce an npm tarball under the artifacts directory (e.g. `dist`). |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.prettier">prettier</a></code> | <code>boolean</code> | Setup prettier. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.prettierOptions">prettierOptions</a></code> | <code>projen.javascript.PrettierOptions</code> | Prettier options. |
@@ -133,7 +1811,9 @@ const gemeenteNijmegenCdkAppOptions: GemeenteNijmegenCdkAppOptions = { ... }
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.workflowBootstrapSteps">workflowBootstrapSteps</a></code> | <code>projen.github.workflows.JobStep[]</code> | Workflow steps to use in order to bootstrap this repo. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.workflowGitIdentity">workflowGitIdentity</a></code> | <code>projen.github.GitIdentity</code> | The git identity to use in workflows. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.workflowNodeVersion">workflowNodeVersion</a></code> | <code>string</code> | The node version to use in GitHub workflows. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.workflowPackageCache">workflowPackageCache</a></code> | <code>boolean</code> | Enable Node.js package cache in GitHub workflows. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.disableTsconfig">disableTsconfig</a></code> | <code>boolean</code> | Do not generate a `tsconfig.json` file (used by jsii projects since tsconfig.json is generated by the jsii compiler). |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.disableTsconfigDev">disableTsconfigDev</a></code> | <code>boolean</code> | Do not generate a `tsconfig.dev.json` file. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.docgen">docgen</a></code> | <code>boolean</code> | Docgen by Typedoc. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.docsDirectory">docsDirectory</a></code> | <code>string</code> | Docs directory. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.entrypointTypes">entrypointTypes</a></code> | <code>string</code> | The .d.ts file that includes the type declarations for this module. |
@@ -148,6 +1828,7 @@ const gemeenteNijmegenCdkAppOptions: GemeenteNijmegenCdkAppOptions = { ... }
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.tsconfig">tsconfig</a></code> | <code>projen.javascript.TypescriptConfigOptions</code> | Custom TSConfig. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.tsconfigDev">tsconfigDev</a></code> | <code>projen.javascript.TypescriptConfigOptions</code> | Custom tsconfig options for the development tsconfig.json file (used for testing). |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.tsconfigDevFile">tsconfigDevFile</a></code> | <code>string</code> | The name of the development tsconfig.json file. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.tsJestOptions">tsJestOptions</a></code> | <code>projen.typescript.TsJestOptions</code> | Options for ts-jest. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.typescriptVersion">typescriptVersion</a></code> | <code>string</code> | TypeScript version to use. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.buildCommand">buildCommand</a></code> | <code>string</code> | A command to execute before synthesis. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.cdkout">cdkout</a></code> | <code>string</code> | cdk.out directory. |
@@ -166,6 +1847,7 @@ const gemeenteNijmegenCdkAppOptions: GemeenteNijmegenCdkAppOptions = { ... }
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.constructsVersion">constructsVersion</a></code> | <code>string</code> | Minimum version of the `constructs` library to depend on. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.appEntrypoint">appEntrypoint</a></code> | <code>string</code> | The CDK app's entrypoint (relative to the source directory, which is "src" by default). |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.edgeLambdaAutoDiscover">edgeLambdaAutoDiscover</a></code> | <code>boolean</code> | Automatically adds an `cloudfront.experimental.EdgeFunction` for each `.edge-lambda.ts` handler in your source tree. If this is disabled, you can manually add an `awscdk.AutoDiscover` component to your project. |
+| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.experimentalIntegRunner">experimentalIntegRunner</a></code> | <code>boolean</code> | Enable experimental support for the AWS CDK integ-runner. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.integrationTestAutoDiscover">integrationTestAutoDiscover</a></code> | <code>boolean</code> | Automatically discovers and creates integration tests for each `.integ.ts` file in under your test directory. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.lambdaAutoDiscover">lambdaAutoDiscover</a></code> | <code>boolean</code> | Automatically adds an `awscdk.LambdaFunction` for each `.lambda.ts` handler in your source tree. If this is disabled, you can manually add an `awscdk.AutoDiscover` component to your project. |
 | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.lambdaExtensionAutoDiscover">lambdaExtensionAutoDiscover</a></code> | <code>boolean</code> | Automatically adds an `awscdk.LambdaExtension` for each `.lambda-extension.ts` entrypoint in your source tree. If this is disabled, you can manually add an `awscdk.AutoDiscover` component to your project. |
@@ -203,6 +1885,30 @@ Whether to commit the managed files by default.
 
 ---
 
+##### `gitIgnoreOptions`<sup>Optional</sup> <a name="gitIgnoreOptions" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.gitIgnoreOptions"></a>
+
+```typescript
+public readonly gitIgnoreOptions: IgnoreFileOptions;
+```
+
+- *Type:* projen.IgnoreFileOptions
+
+Configuration options for .gitignore file.
+
+---
+
+##### `gitOptions`<sup>Optional</sup> <a name="gitOptions" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.gitOptions"></a>
+
+```typescript
+public readonly gitOptions: GitOptions;
+```
+
+- *Type:* projen.GitOptions
+
+Configuration options for git.
+
+---
+
 ##### `logging`<sup>Optional</sup> <a name="logging" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.logging"></a>
 
 ```typescript
@@ -231,7 +1937,7 @@ Relative to this directory, all files are synthesized.
 
 If this project has a parent, this directory is relative to the parent
 directory and it cannot be the same as the parent or any of it's other
-sub-projects.
+subprojects.
 
 ---
 
@@ -278,10 +1984,10 @@ Generate (once) .projenrc.json (in JSON). Set to `false` in order to disable .pr
 ##### `projenrcJsonOptions`<sup>Optional</sup> <a name="projenrcJsonOptions" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.projenrcJsonOptions"></a>
 
 ```typescript
-public readonly projenrcJsonOptions: ProjenrcOptions;
+public readonly projenrcJsonOptions: ProjenrcJsonOptions;
 ```
 
-- *Type:* projen.ProjenrcOptions
+- *Type:* projen.ProjenrcJsonOptions
 - *Default:* default options
 
 Options for .projenrc.json.
@@ -366,7 +2072,7 @@ public readonly clobber: boolean;
 ```
 
 - *Type:* boolean
-- *Default:* true
+- *Default:* true, but false for subprojects
 
 Add a `clobber` task which resets the repo to origin.
 
@@ -953,7 +2659,7 @@ public readonly packageManager: NodePackageManager;
 ```
 
 - *Type:* projen.javascript.NodePackageManager
-- *Default:* NodePackageManager.YARN
+- *Default:* NodePackageManager.YARN_CLASSIC
 
 The Node Package Manager used to execute scripts.
 
@@ -1011,6 +2717,19 @@ test your module against the lowest peer version required.
 
 ---
 
+##### `pnpmVersion`<sup>Optional</sup> <a name="pnpmVersion" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.pnpmVersion"></a>
+
+```typescript
+public readonly pnpmVersion: string;
+```
+
+- *Type:* string
+- *Default:* "7"
+
+The version of PNPM to use if using PNPM as a package manager.
+
+---
+
 ##### `repository`<sup>Optional</sup> <a name="repository" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.repository"></a>
 
 ```typescript
@@ -1050,7 +2769,9 @@ Options for privately hosted scoped packages.
 
 ---
 
-##### `scripts`<sup>Optional</sup> <a name="scripts" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.scripts"></a>
+##### ~~`scripts`~~<sup>Optional</sup> <a name="scripts" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.scripts"></a>
+
+- *Deprecated:* use `project.addTask()` or `package.setScript()`
 
 ```typescript
 public readonly scripts: {[ key: string ]: string};
@@ -1063,6 +2784,7 @@ npm scripts to include.
 
 If a script has the same name as a standard script,
 the standard script will be overwritten.
+Also adds the script as a task.
 
 ---
 
@@ -1075,6 +2797,19 @@ public readonly stability: string;
 - *Type:* string
 
 Package's Stability.
+
+---
+
+##### `yarnBerryOptions`<sup>Optional</sup> <a name="yarnBerryOptions" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.yarnBerryOptions"></a>
+
+```typescript
+public readonly yarnBerryOptions: YarnBerryOptions;
+```
+
+- *Type:* projen.javascript.YarnBerryOptions
+- *Default:* Yarn Berry v4 with all default options
+
+Options for Yarn Berry.
 
 ---
 
@@ -1196,6 +2931,19 @@ in order to create a publishing task for each publishing activity.
 
 ---
 
+##### `releasableCommits`<sup>Optional</sup> <a name="releasableCommits" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.releasableCommits"></a>
+
+```typescript
+public readonly releasableCommits: ReleasableCommits;
+```
+
+- *Type:* projen.ReleasableCommits
+- *Default:* ReleasableCommits.everyCommit()
+
+Find commits that should be considered releasable Used to decide if a release is required.
+
+---
+
 ##### `releaseBranches`<sup>Optional</sup> <a name="releaseBranches" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.releaseBranches"></a>
 
 ```typescript
@@ -1312,7 +3060,7 @@ public readonly releaseWorkflowName: string;
 ```
 
 - *Type:* string
-- *Default:* "Release"
+- *Default:* "release"
 
 The name of the default release workflow.
 
@@ -1368,6 +3116,18 @@ public readonly workflowRunsOn: string[];
 - *Default:* ["ubuntu-latest"]
 
 Github Runner selection labels.
+
+---
+
+##### `workflowRunsOnGroup`<sup>Optional</sup> <a name="workflowRunsOnGroup" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.workflowRunsOnGroup"></a>
+
+```typescript
+public readonly workflowRunsOnGroup: GroupRunnerOptions;
+```
+
+- *Type:* projen.GroupRunnerOptions
+
+Github Runner Group selection options.
 
 ---
 
@@ -1450,6 +3210,21 @@ Options for `Bundler`.
 
 ---
 
+##### `checkLicenses`<sup>Optional</sup> <a name="checkLicenses" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.checkLicenses"></a>
+
+```typescript
+public readonly checkLicenses: LicenseCheckerOptions;
+```
+
+- *Type:* projen.javascript.LicenseCheckerOptions
+- *Default:* no license checks are run during the build and all licenses will be accepted
+
+Configure which licenses should be deemed acceptable for use by dependencies.
+
+This setting will cause the build to fail, if any prohibited or not allowed licenses ares encountered.
+
+---
+
 ##### `codeCov`<sup>Optional</sup> <a name="codeCov" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.codeCov"></a>
 
 ```typescript
@@ -1459,7 +3234,7 @@ public readonly codeCov: boolean;
 - *Type:* boolean
 - *Default:* false
 
-Define a GitHub workflow step for sending code coverage metrics to https://codecov.io/ Uses codecov/codecov-action@v3 A secret is required for private repos. Configured with @codeCovTokenSecret.
+Define a GitHub workflow step for sending code coverage metrics to https://codecov.io/ Uses codecov/codecov-action@v3 A secret is required for private repos. Configured with `@codeCovTokenSecret`.
 
 ---
 
@@ -1539,7 +3314,7 @@ public readonly depsUpgrade: boolean;
 - *Type:* boolean
 - *Default:* true
 
-Use github workflows to handle dependency upgrades.
+Use tasks and github workflows to handle dependency upgrades.
 
 Cannot be used in conjunction with `dependabot`.
 
@@ -1639,6 +3414,18 @@ public readonly npmignoreEnabled: boolean;
 - *Default:* true
 
 Defines an .npmignore file. Normally this is only needed for libraries that are packaged as tarballs.
+
+---
+
+##### `npmIgnoreOptions`<sup>Optional</sup> <a name="npmIgnoreOptions" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.npmIgnoreOptions"></a>
+
+```typescript
+public readonly npmIgnoreOptions: IgnoreFileOptions;
+```
+
+- *Type:* projen.IgnoreFileOptions
+
+Configuration options for .npmignore file.
 
 ---
 
@@ -1839,6 +3626,19 @@ The node version to use in GitHub workflows.
 
 ---
 
+##### `workflowPackageCache`<sup>Optional</sup> <a name="workflowPackageCache" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.workflowPackageCache"></a>
+
+```typescript
+public readonly workflowPackageCache: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Enable Node.js package cache in GitHub workflows.
+
+---
+
 ##### `disableTsconfig`<sup>Optional</sup> <a name="disableTsconfig" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.disableTsconfig"></a>
 
 ```typescript
@@ -1849,6 +3649,19 @@ public readonly disableTsconfig: boolean;
 - *Default:* false
 
 Do not generate a `tsconfig.json` file (used by jsii projects since tsconfig.json is generated by the jsii compiler).
+
+---
+
+##### `disableTsconfigDev`<sup>Optional</sup> <a name="disableTsconfigDev" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.disableTsconfigDev"></a>
+
+```typescript
+public readonly disableTsconfigDev: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Do not generate a `tsconfig.dev.json` file.
 
 ---
 
@@ -2038,6 +3851,18 @@ The name of the development tsconfig.json file.
 
 ---
 
+##### `tsJestOptions`<sup>Optional</sup> <a name="tsJestOptions" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.tsJestOptions"></a>
+
+```typescript
+public readonly tsJestOptions: TsJestOptions;
+```
+
+- *Type:* projen.typescript.TsJestOptions
+
+Options for ts-jest.
+
+---
+
 ##### `typescriptVersion`<sup>Optional</sup> <a name="typescriptVersion" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.typescriptVersion"></a>
 
 ```typescript
@@ -2175,7 +4000,7 @@ public readonly cdkAssert: boolean;
 
 Warning: NodeJS only.
 
-Install the @aws-cdk/assert library?
+Install the
 
 ---
 
@@ -2299,6 +4124,19 @@ Automatically adds an `cloudfront.experimental.EdgeFunction` for each `.edge-lam
 
 ---
 
+##### `experimentalIntegRunner`<sup>Optional</sup> <a name="experimentalIntegRunner" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.experimentalIntegRunner"></a>
+
+```typescript
+public readonly experimentalIntegRunner: boolean;
+```
+
+- *Type:* boolean
+- *Default:* false
+
+Enable experimental support for the AWS CDK integ-runner.
+
+---
+
 ##### `integrationTestAutoDiscover`<sup>Optional</sup> <a name="integrationTestAutoDiscover" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions.property.integrationTestAutoDiscover"></a>
 
 ```typescript
@@ -2406,1448 +4244,5 @@ Enable an additional workflow that allows branch protection bypass and will info
 
 ---
 
-## Classes <a name="Classes" id="Classes"></a>
-
-### GemeenteNijmegenCdkApp <a name="GemeenteNijmegenCdkApp" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp"></a>
-
-GemeenteNijmegenCdkApp projen project type for Gemeente Nijmegen CDK apps.
-
-#### Initializers <a name="Initializers" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.Initializer"></a>
-
-```typescript
-import { GemeenteNijmegenCdkApp } from '@gemeentenijmegen/modules-projen'
-
-new GemeenteNijmegenCdkApp(options: GemeenteNijmegenCdkAppOptions)
-```
-
-| **Name** | **Type** | **Description** |
-| --- | --- | --- |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.Initializer.parameter.options">options</a></code> | <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions">GemeenteNijmegenCdkAppOptions</a></code> | *No description.* |
-
----
-
-##### `options`<sup>Required</sup> <a name="options" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.Initializer.parameter.options"></a>
-
-- *Type:* <a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkAppOptions">GemeenteNijmegenCdkAppOptions</a>
-
----
-
-#### Methods <a name="Methods" id="Methods"></a>
-
-| **Name** | **Description** |
-| --- | --- |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addExcludeFromCleanup">addExcludeFromCleanup</a></code> | Exclude the matching files from pre-synth cleanup. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addGitIgnore">addGitIgnore</a></code> | Adds a .gitignore pattern. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addPackageIgnore">addPackageIgnore</a></code> | Exclude these files from the bundled package. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addTask">addTask</a></code> | Adds a new task to this project. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addTip">addTip</a></code> | Prints a "tip" message during synthesis. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.annotateGenerated">annotateGenerated</a></code> | Marks the provided file(s) as being generated. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.postSynthesize">postSynthesize</a></code> | Called after all components are synthesized. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.preSynthesize">preSynthesize</a></code> | Called before all components are synthesized. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.removeTask">removeTask</a></code> | Removes a task from a project. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.runTaskCommand">runTaskCommand</a></code> | Returns the shell command to execute in order to run a task. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.synth">synth</a></code> | Synthesize all project files into `outdir`. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryFindFile">tryFindFile</a></code> | Finds a file at the specified relative path within this project and all its subprojects. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryFindJsonFile">tryFindJsonFile</a></code> | Finds a json file by name. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryFindObjectFile">tryFindObjectFile</a></code> | Finds an object file (like JsonFile, YamlFile, etc.) by name. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryRemoveFile">tryRemoveFile</a></code> | Finds a file at the specified relative path within this project and removes it. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addBins">addBins</a></code> | *No description.* |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addBundledDeps">addBundledDeps</a></code> | Defines bundled dependencies. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addCompileCommand">addCompileCommand</a></code> | DEPRECATED. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addDeps">addDeps</a></code> | Defines normal dependencies. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addDevDeps">addDevDeps</a></code> | Defines development/test dependencies. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addFields">addFields</a></code> | Directly set fields in `package.json`. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addKeywords">addKeywords</a></code> | Adds keywords to package.json (deduplicated). |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addPeerDeps">addPeerDeps</a></code> | Defines peer dependencies. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addTestCommand">addTestCommand</a></code> | DEPRECATED. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.hasScript">hasScript</a></code> | Indicates if a script by the name name is defined. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.removeScript">removeScript</a></code> | Removes the npm script (always successful). |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.renderWorkflowSetup">renderWorkflowSetup</a></code> | Returns the set of workflow steps which should be executed to bootstrap a workflow. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.setScript">setScript</a></code> | Replaces the contents of an npm package.json script. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addCdkDependency">addCdkDependency</a></code> | Adds an AWS CDK module dependencies. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.enableCfnDiffWorkflow">enableCfnDiffWorkflow</a></code> | A job to build the base branch and execute a diff on the build cdk.out and base branch cdk.out. A comment is added to the PR indicating if there are differences in the CloudFormation templates. |
-
----
-
-##### `addExcludeFromCleanup` <a name="addExcludeFromCleanup" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addExcludeFromCleanup"></a>
-
-```typescript
-public addExcludeFromCleanup(globs: string): void
-```
-
-Exclude the matching files from pre-synth cleanup.
-
-Can be used when, for example, some
-source files include the projen marker and we don't want them to be erased during synth.
-
-###### `globs`<sup>Required</sup> <a name="globs" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addExcludeFromCleanup.parameter.globs"></a>
-
-- *Type:* string
-
-The glob patterns to match.
-
----
-
-##### `addGitIgnore` <a name="addGitIgnore" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addGitIgnore"></a>
-
-```typescript
-public addGitIgnore(pattern: string): void
-```
-
-Adds a .gitignore pattern.
-
-###### `pattern`<sup>Required</sup> <a name="pattern" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addGitIgnore.parameter.pattern"></a>
-
-- *Type:* string
-
-The glob pattern to ignore.
-
----
-
-##### `addPackageIgnore` <a name="addPackageIgnore" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addPackageIgnore"></a>
-
-```typescript
-public addPackageIgnore(pattern: string): void
-```
-
-Exclude these files from the bundled package.
-
-Implemented by project types based on the
-packaging mechanism. For example, `NodeProject` delegates this to `.npmignore`.
-
-###### `pattern`<sup>Required</sup> <a name="pattern" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addPackageIgnore.parameter.pattern"></a>
-
-- *Type:* string
-
----
-
-##### `addTask` <a name="addTask" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addTask"></a>
-
-```typescript
-public addTask(name: string, props?: TaskOptions): Task
-```
-
-Adds a new task to this project.
-
-This will fail if the project already has
-a task with this name.
-
-###### `name`<sup>Required</sup> <a name="name" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addTask.parameter.name"></a>
-
-- *Type:* string
-
-The task name to add.
-
----
-
-###### `props`<sup>Optional</sup> <a name="props" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addTask.parameter.props"></a>
-
-- *Type:* projen.TaskOptions
-
-Task properties.
-
----
-
-##### ~~`addTip`~~ <a name="addTip" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addTip"></a>
-
-```typescript
-public addTip(message: string): void
-```
-
-Prints a "tip" message during synthesis.
-
-###### `message`<sup>Required</sup> <a name="message" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addTip.parameter.message"></a>
-
-- *Type:* string
-
-The message.
-
----
-
-##### `annotateGenerated` <a name="annotateGenerated" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.annotateGenerated"></a>
-
-```typescript
-public annotateGenerated(glob: string): void
-```
-
-Marks the provided file(s) as being generated.
-
-This is achieved using the
-github-linguist attributes. Generated files do not count against the
-repository statistics and language breakdown.
-
-> [https://github.com/github/linguist/blob/master/docs/overrides.md](https://github.com/github/linguist/blob/master/docs/overrides.md)
-
-###### `glob`<sup>Required</sup> <a name="glob" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.annotateGenerated.parameter.glob"></a>
-
-- *Type:* string
-
-the glob pattern to match (could be a file path).
-
----
-
-##### `postSynthesize` <a name="postSynthesize" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.postSynthesize"></a>
-
-```typescript
-public postSynthesize(): void
-```
-
-Called after all components are synthesized.
-
-Order is *not* guaranteed.
-
-##### `preSynthesize` <a name="preSynthesize" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.preSynthesize"></a>
-
-```typescript
-public preSynthesize(): void
-```
-
-Called before all components are synthesized.
-
-##### `removeTask` <a name="removeTask" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.removeTask"></a>
-
-```typescript
-public removeTask(name: string): Task
-```
-
-Removes a task from a project.
-
-###### `name`<sup>Required</sup> <a name="name" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.removeTask.parameter.name"></a>
-
-- *Type:* string
-
-The name of the task to remove.
-
----
-
-##### `runTaskCommand` <a name="runTaskCommand" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.runTaskCommand"></a>
-
-```typescript
-public runTaskCommand(task: Task): string
-```
-
-Returns the shell command to execute in order to run a task.
-
-This will
-typically be `npx projen TASK`.
-
-###### `task`<sup>Required</sup> <a name="task" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.runTaskCommand.parameter.task"></a>
-
-- *Type:* projen.Task
-
-The task for which the command is required.
-
----
-
-##### `synth` <a name="synth" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.synth"></a>
-
-```typescript
-public synth(): void
-```
-
-Synthesize all project files into `outdir`.
-
-1. Call "this.preSynthesize()"
-2. Delete all generated files
-3. Synthesize all sub-projects
-4. Synthesize all components of this project
-5. Call "postSynthesize()" for all components of this project
-6. Call "this.postSynthesize()"
-
-##### `tryFindFile` <a name="tryFindFile" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryFindFile"></a>
-
-```typescript
-public tryFindFile(filePath: string): FileBase
-```
-
-Finds a file at the specified relative path within this project and all its subprojects.
-
-###### `filePath`<sup>Required</sup> <a name="filePath" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryFindFile.parameter.filePath"></a>
-
-- *Type:* string
-
-The file path.
-
-If this path is relative, it will be resolved
-from the root of _this_ project.
-
----
-
-##### ~~`tryFindJsonFile`~~ <a name="tryFindJsonFile" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryFindJsonFile"></a>
-
-```typescript
-public tryFindJsonFile(filePath: string): JsonFile
-```
-
-Finds a json file by name.
-
-###### `filePath`<sup>Required</sup> <a name="filePath" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryFindJsonFile.parameter.filePath"></a>
-
-- *Type:* string
-
-The file path.
-
----
-
-##### `tryFindObjectFile` <a name="tryFindObjectFile" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryFindObjectFile"></a>
-
-```typescript
-public tryFindObjectFile(filePath: string): ObjectFile
-```
-
-Finds an object file (like JsonFile, YamlFile, etc.) by name.
-
-###### `filePath`<sup>Required</sup> <a name="filePath" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryFindObjectFile.parameter.filePath"></a>
-
-- *Type:* string
-
-The file path.
-
----
-
-##### `tryRemoveFile` <a name="tryRemoveFile" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryRemoveFile"></a>
-
-```typescript
-public tryRemoveFile(filePath: string): FileBase
-```
-
-Finds a file at the specified relative path within this project and removes it.
-
-###### `filePath`<sup>Required</sup> <a name="filePath" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.tryRemoveFile.parameter.filePath"></a>
-
-- *Type:* string
-
-The file path.
-
-If this path is relative, it will be
-resolved from the root of _this_ project.
-
----
-
-##### `addBins` <a name="addBins" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addBins"></a>
-
-```typescript
-public addBins(bins: {[ key: string ]: string}): void
-```
-
-###### `bins`<sup>Required</sup> <a name="bins" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addBins.parameter.bins"></a>
-
-- *Type:* {[ key: string ]: string}
-
----
-
-##### `addBundledDeps` <a name="addBundledDeps" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addBundledDeps"></a>
-
-```typescript
-public addBundledDeps(deps: string): void
-```
-
-Defines bundled dependencies.
-
-Bundled dependencies will be added as normal dependencies as well as to the
-`bundledDependencies` section of your `package.json`.
-
-###### `deps`<sup>Required</sup> <a name="deps" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addBundledDeps.parameter.deps"></a>
-
-- *Type:* string
-
-Names modules to install.
-
-By default, the the dependency will
-be installed in the next `npx projen` run and the version will be recorded
-in your `package.json` file. You can upgrade manually or using `yarn
-add/upgrade`. If you wish to specify a version range use this syntax:
-`module@^7`.
-
----
-
-##### ~~`addCompileCommand`~~ <a name="addCompileCommand" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addCompileCommand"></a>
-
-```typescript
-public addCompileCommand(commands: string): void
-```
-
-DEPRECATED.
-
-###### `commands`<sup>Required</sup> <a name="commands" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addCompileCommand.parameter.commands"></a>
-
-- *Type:* string
-
----
-
-##### `addDeps` <a name="addDeps" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addDeps"></a>
-
-```typescript
-public addDeps(deps: string): void
-```
-
-Defines normal dependencies.
-
-###### `deps`<sup>Required</sup> <a name="deps" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addDeps.parameter.deps"></a>
-
-- *Type:* string
-
-Names modules to install.
-
-By default, the the dependency will
-be installed in the next `npx projen` run and the version will be recorded
-in your `package.json` file. You can upgrade manually or using `yarn
-add/upgrade`. If you wish to specify a version range use this syntax:
-`module@^7`.
-
----
-
-##### `addDevDeps` <a name="addDevDeps" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addDevDeps"></a>
-
-```typescript
-public addDevDeps(deps: string): void
-```
-
-Defines development/test dependencies.
-
-###### `deps`<sup>Required</sup> <a name="deps" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addDevDeps.parameter.deps"></a>
-
-- *Type:* string
-
-Names modules to install.
-
-By default, the the dependency will
-be installed in the next `npx projen` run and the version will be recorded
-in your `package.json` file. You can upgrade manually or using `yarn
-add/upgrade`. If you wish to specify a version range use this syntax:
-`module@^7`.
-
----
-
-##### `addFields` <a name="addFields" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addFields"></a>
-
-```typescript
-public addFields(fields: {[ key: string ]: any}): void
-```
-
-Directly set fields in `package.json`.
-
-###### `fields`<sup>Required</sup> <a name="fields" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addFields.parameter.fields"></a>
-
-- *Type:* {[ key: string ]: any}
-
-The fields to set.
-
----
-
-##### `addKeywords` <a name="addKeywords" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addKeywords"></a>
-
-```typescript
-public addKeywords(keywords: string): void
-```
-
-Adds keywords to package.json (deduplicated).
-
-###### `keywords`<sup>Required</sup> <a name="keywords" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addKeywords.parameter.keywords"></a>
-
-- *Type:* string
-
-The keywords to add.
-
----
-
-##### `addPeerDeps` <a name="addPeerDeps" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addPeerDeps"></a>
-
-```typescript
-public addPeerDeps(deps: string): void
-```
-
-Defines peer dependencies.
-
-When adding peer dependencies, a devDependency will also be added on the
-pinned version of the declared peer. This will ensure that you are testing
-your code against the minimum version required from your consumers.
-
-###### `deps`<sup>Required</sup> <a name="deps" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addPeerDeps.parameter.deps"></a>
-
-- *Type:* string
-
-Names modules to install.
-
-By default, the the dependency will
-be installed in the next `npx projen` run and the version will be recorded
-in your `package.json` file. You can upgrade manually or using `yarn
-add/upgrade`. If you wish to specify a version range use this syntax:
-`module@^7`.
-
----
-
-##### ~~`addTestCommand`~~ <a name="addTestCommand" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addTestCommand"></a>
-
-```typescript
-public addTestCommand(commands: string): void
-```
-
-DEPRECATED.
-
-###### `commands`<sup>Required</sup> <a name="commands" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addTestCommand.parameter.commands"></a>
-
-- *Type:* string
-
----
-
-##### `hasScript` <a name="hasScript" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.hasScript"></a>
-
-```typescript
-public hasScript(name: string): boolean
-```
-
-Indicates if a script by the name name is defined.
-
-###### `name`<sup>Required</sup> <a name="name" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.hasScript.parameter.name"></a>
-
-- *Type:* string
-
-The name of the script.
-
----
-
-##### `removeScript` <a name="removeScript" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.removeScript"></a>
-
-```typescript
-public removeScript(name: string): void
-```
-
-Removes the npm script (always successful).
-
-###### `name`<sup>Required</sup> <a name="name" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.removeScript.parameter.name"></a>
-
-- *Type:* string
-
-The name of the script.
-
----
-
-##### `renderWorkflowSetup` <a name="renderWorkflowSetup" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.renderWorkflowSetup"></a>
-
-```typescript
-public renderWorkflowSetup(options?: RenderWorkflowSetupOptions): JobStep[]
-```
-
-Returns the set of workflow steps which should be executed to bootstrap a workflow.
-
-###### `options`<sup>Optional</sup> <a name="options" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.renderWorkflowSetup.parameter.options"></a>
-
-- *Type:* projen.javascript.RenderWorkflowSetupOptions
-
-Options.
-
----
-
-##### `setScript` <a name="setScript" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.setScript"></a>
-
-```typescript
-public setScript(name: string, command: string): void
-```
-
-Replaces the contents of an npm package.json script.
-
-###### `name`<sup>Required</sup> <a name="name" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.setScript.parameter.name"></a>
-
-- *Type:* string
-
-The script name.
-
----
-
-###### `command`<sup>Required</sup> <a name="command" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.setScript.parameter.command"></a>
-
-- *Type:* string
-
-The command to execute.
-
----
-
-##### `addCdkDependency` <a name="addCdkDependency" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addCdkDependency"></a>
-
-```typescript
-public addCdkDependency(modules: string): void
-```
-
-Adds an AWS CDK module dependencies.
-
-###### `modules`<sup>Required</sup> <a name="modules" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.addCdkDependency.parameter.modules"></a>
-
-- *Type:* string
-
-The list of modules to depend on.
-
----
-
-##### `enableCfnDiffWorkflow` <a name="enableCfnDiffWorkflow" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.enableCfnDiffWorkflow"></a>
-
-```typescript
-public enableCfnDiffWorkflow(): void
-```
-
-A job to build the base branch and execute a diff on the build cdk.out and base branch cdk.out. A comment is added to the PR indicating if there are differences in the CloudFormation templates.
-
-
-#### Properties <a name="Properties" id="Properties"></a>
-
-| **Name** | **Type** | **Description** |
-| --- | --- | --- |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.buildTask">buildTask</a></code> | <code>projen.Task</code> | *No description.* |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.commitGenerated">commitGenerated</a></code> | <code>boolean</code> | Whether to commit the managed files by default. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.compileTask">compileTask</a></code> | <code>projen.Task</code> | *No description.* |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.components">components</a></code> | <code>projen.Component[]</code> | Returns all the components within this project. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.deps">deps</a></code> | <code>projen.Dependencies</code> | Project dependencies. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.ejected">ejected</a></code> | <code>boolean</code> | Whether or not the project is being ejected. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.files">files</a></code> | <code>projen.FileBase[]</code> | All files in this project. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.gitattributes">gitattributes</a></code> | <code>projen.GitAttributesFile</code> | The .gitattributes file for this repository. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.gitignore">gitignore</a></code> | <code>projen.IgnoreFile</code> | .gitignore. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.logger">logger</a></code> | <code>projen.Logger</code> | Logging utilities. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.name">name</a></code> | <code>string</code> | Project name. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.outdir">outdir</a></code> | <code>string</code> | Absolute output directory of this project. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.packageTask">packageTask</a></code> | <code>projen.Task</code> | *No description.* |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.postCompileTask">postCompileTask</a></code> | <code>projen.Task</code> | *No description.* |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.preCompileTask">preCompileTask</a></code> | <code>projen.Task</code> | *No description.* |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.projectBuild">projectBuild</a></code> | <code>projen.ProjectBuild</code> | Manages the build process of the project. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.projenCommand">projenCommand</a></code> | <code>string</code> | The command to use in order to run the projen CLI. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.root">root</a></code> | <code>projen.Project</code> | The root project. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.tasks">tasks</a></code> | <code>projen.Tasks</code> | Project tasks. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.testTask">testTask</a></code> | <code>projen.Task</code> | *No description.* |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.defaultTask">defaultTask</a></code> | <code>projen.Task</code> | This is the "default" task, the one that executes "projen". |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.initProject">initProject</a></code> | <code>projen.InitProject</code> | The options used when this project is bootstrapped via `projen new`. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.parent">parent</a></code> | <code>projen.Project</code> | A parent project. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.projectType">projectType</a></code> | <code>projen.ProjectType</code> | *No description.* |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.autoApprove">autoApprove</a></code> | <code>projen.github.AutoApprove</code> | Auto approve set up for this project. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.devContainer">devContainer</a></code> | <code>projen.vscode.DevContainer</code> | Access for .devcontainer.json (used for GitHub Codespaces). |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.github">github</a></code> | <code>projen.github.GitHub</code> | Access all github components. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.gitpod">gitpod</a></code> | <code>projen.Gitpod</code> | Access for Gitpod. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.vscode">vscode</a></code> | <code>projen.vscode.VsCode</code> | Access all VSCode components. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.allowLibraryDependencies">allowLibraryDependencies</a></code> | <code>boolean</code> | *No description.* |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.artifactsDirectory">artifactsDirectory</a></code> | <code>string</code> | The build output directory. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.artifactsJavascriptDirectory">artifactsJavascriptDirectory</a></code> | <code>string</code> | The location of the npm tarball after build (`${artifactsDirectory}/js`). |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.bundler">bundler</a></code> | <code>projen.javascript.Bundler</code> | *No description.* |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.entrypoint">entrypoint</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.manifest">manifest</a></code> | <code>any</code> | *No description.* |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.package">package</a></code> | <code>projen.javascript.NodePackage</code> | API for managing the node package. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.packageManager">packageManager</a></code> | <code>projen.javascript.NodePackageManager</code> | The package manager to use. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.runScriptCommand">runScriptCommand</a></code> | <code>string</code> | The command to use to run scripts (e.g. `yarn run` or `npm run` depends on the package manager). |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.autoMerge">autoMerge</a></code> | <code>projen.github.AutoMerge</code> | Component that sets up mergify for merging approved pull requests. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.buildWorkflow">buildWorkflow</a></code> | <code>projen.build.BuildWorkflow</code> | The PR build GitHub workflow. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.buildWorkflowJobId">buildWorkflowJobId</a></code> | <code>string</code> | The job ID of the build workflow. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.jest">jest</a></code> | <code>projen.javascript.Jest</code> | The Jest configuration (if enabled). |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.maxNodeVersion">maxNodeVersion</a></code> | <code>string</code> | Maximum node version required by this pacakge. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.minNodeVersion">minNodeVersion</a></code> | <code>string</code> | Minimum node.js version required by this package. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.npmignore">npmignore</a></code> | <code>projen.IgnoreFile</code> | The .npmignore file. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.prettier">prettier</a></code> | <code>projen.javascript.Prettier</code> | *No description.* |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.publisher">publisher</a></code> | <code>projen.release.Publisher</code> | Package publisher. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.release">release</a></code> | <code>projen.release.Release</code> | Release management. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.upgradeWorkflow">upgradeWorkflow</a></code> | <code>projen.javascript.UpgradeDependencies</code> | The upgrade workflow. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.docsDirectory">docsDirectory</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.libdir">libdir</a></code> | <code>string</code> | The directory in which compiled .js files reside. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.srcdir">srcdir</a></code> | <code>string</code> | The directory in which the .ts sources reside. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.testdir">testdir</a></code> | <code>string</code> | The directory in which tests reside. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.tsconfigDev">tsconfigDev</a></code> | <code>projen.javascript.TypescriptConfig</code> | A typescript configuration file which covers all files (sources, tests, projen). |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.watchTask">watchTask</a></code> | <code>projen.Task</code> | The "watch" task. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.docgen">docgen</a></code> | <code>boolean</code> | *No description.* |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.eslint">eslint</a></code> | <code>projen.javascript.Eslint</code> | *No description.* |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.tsconfig">tsconfig</a></code> | <code>projen.javascript.TypescriptConfig</code> | *No description.* |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.tsconfigEslint">tsconfigEslint</a></code> | <code>projen.javascript.TypescriptConfig</code> | *No description.* |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.appEntrypoint">appEntrypoint</a></code> | <code>string</code> | The CDK app entrypoint. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.cdkConfig">cdkConfig</a></code> | <code>projen.awscdk.CdkConfig</code> | cdk.json configuration. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.cdkDeps">cdkDeps</a></code> | <code>projen.awscdk.AwsCdkDeps</code> | *No description.* |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.cdkTasks">cdkTasks</a></code> | <code>projen.awscdk.CdkTasks</code> | Common CDK tasks. |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.cdkVersion">cdkVersion</a></code> | <code>string</code> | The CDK version this app is using. |
-
----
-
-##### `buildTask`<sup>Required</sup> <a name="buildTask" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.buildTask"></a>
-
-```typescript
-public readonly buildTask: Task;
-```
-
-- *Type:* projen.Task
-
----
-
-##### `commitGenerated`<sup>Required</sup> <a name="commitGenerated" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.commitGenerated"></a>
-
-```typescript
-public readonly commitGenerated: boolean;
-```
-
-- *Type:* boolean
-
-Whether to commit the managed files by default.
-
----
-
-##### `compileTask`<sup>Required</sup> <a name="compileTask" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.compileTask"></a>
-
-```typescript
-public readonly compileTask: Task;
-```
-
-- *Type:* projen.Task
-
----
-
-##### `components`<sup>Required</sup> <a name="components" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.components"></a>
-
-```typescript
-public readonly components: Component[];
-```
-
-- *Type:* projen.Component[]
-
-Returns all the components within this project.
-
----
-
-##### `deps`<sup>Required</sup> <a name="deps" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.deps"></a>
-
-```typescript
-public readonly deps: Dependencies;
-```
-
-- *Type:* projen.Dependencies
-
-Project dependencies.
-
----
-
-##### `ejected`<sup>Required</sup> <a name="ejected" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.ejected"></a>
-
-```typescript
-public readonly ejected: boolean;
-```
-
-- *Type:* boolean
-
-Whether or not the project is being ejected.
-
----
-
-##### `files`<sup>Required</sup> <a name="files" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.files"></a>
-
-```typescript
-public readonly files: FileBase[];
-```
-
-- *Type:* projen.FileBase[]
-
-All files in this project.
-
----
-
-##### `gitattributes`<sup>Required</sup> <a name="gitattributes" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.gitattributes"></a>
-
-```typescript
-public readonly gitattributes: GitAttributesFile;
-```
-
-- *Type:* projen.GitAttributesFile
-
-The .gitattributes file for this repository.
-
----
-
-##### `gitignore`<sup>Required</sup> <a name="gitignore" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.gitignore"></a>
-
-```typescript
-public readonly gitignore: IgnoreFile;
-```
-
-- *Type:* projen.IgnoreFile
-
-.gitignore.
-
----
-
-##### `logger`<sup>Required</sup> <a name="logger" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.logger"></a>
-
-```typescript
-public readonly logger: Logger;
-```
-
-- *Type:* projen.Logger
-
-Logging utilities.
-
----
-
-##### `name`<sup>Required</sup> <a name="name" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.name"></a>
-
-```typescript
-public readonly name: string;
-```
-
-- *Type:* string
-
-Project name.
-
----
-
-##### `outdir`<sup>Required</sup> <a name="outdir" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.outdir"></a>
-
-```typescript
-public readonly outdir: string;
-```
-
-- *Type:* string
-
-Absolute output directory of this project.
-
----
-
-##### `packageTask`<sup>Required</sup> <a name="packageTask" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.packageTask"></a>
-
-```typescript
-public readonly packageTask: Task;
-```
-
-- *Type:* projen.Task
-
----
-
-##### `postCompileTask`<sup>Required</sup> <a name="postCompileTask" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.postCompileTask"></a>
-
-```typescript
-public readonly postCompileTask: Task;
-```
-
-- *Type:* projen.Task
-
----
-
-##### `preCompileTask`<sup>Required</sup> <a name="preCompileTask" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.preCompileTask"></a>
-
-```typescript
-public readonly preCompileTask: Task;
-```
-
-- *Type:* projen.Task
-
----
-
-##### `projectBuild`<sup>Required</sup> <a name="projectBuild" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.projectBuild"></a>
-
-```typescript
-public readonly projectBuild: ProjectBuild;
-```
-
-- *Type:* projen.ProjectBuild
-
-Manages the build process of the project.
-
----
-
-##### `projenCommand`<sup>Required</sup> <a name="projenCommand" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.projenCommand"></a>
-
-```typescript
-public readonly projenCommand: string;
-```
-
-- *Type:* string
-
-The command to use in order to run the projen CLI.
-
----
-
-##### `root`<sup>Required</sup> <a name="root" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.root"></a>
-
-```typescript
-public readonly root: Project;
-```
-
-- *Type:* projen.Project
-
-The root project.
-
----
-
-##### `tasks`<sup>Required</sup> <a name="tasks" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.tasks"></a>
-
-```typescript
-public readonly tasks: Tasks;
-```
-
-- *Type:* projen.Tasks
-
-Project tasks.
-
----
-
-##### `testTask`<sup>Required</sup> <a name="testTask" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.testTask"></a>
-
-```typescript
-public readonly testTask: Task;
-```
-
-- *Type:* projen.Task
-
----
-
-##### `defaultTask`<sup>Optional</sup> <a name="defaultTask" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.defaultTask"></a>
-
-```typescript
-public readonly defaultTask: Task;
-```
-
-- *Type:* projen.Task
-
-This is the "default" task, the one that executes "projen".
-
-Undefined if
-the project is being ejected.
-
----
-
-##### `initProject`<sup>Optional</sup> <a name="initProject" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.initProject"></a>
-
-```typescript
-public readonly initProject: InitProject;
-```
-
-- *Type:* projen.InitProject
-
-The options used when this project is bootstrapped via `projen new`.
-
-It
-includes the original set of options passed to the CLI and also the JSII
-FQN of the project type.
-
----
-
-##### `parent`<sup>Optional</sup> <a name="parent" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.parent"></a>
-
-```typescript
-public readonly parent: Project;
-```
-
-- *Type:* projen.Project
-
-A parent project.
-
-If undefined, this is the root project.
-
----
-
-##### `projectType`<sup>Required</sup> <a name="projectType" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.projectType"></a>
-
-```typescript
-public readonly projectType: ProjectType;
-```
-
-- *Type:* projen.ProjectType
-
----
-
-##### `autoApprove`<sup>Optional</sup> <a name="autoApprove" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.autoApprove"></a>
-
-```typescript
-public readonly autoApprove: AutoApprove;
-```
-
-- *Type:* projen.github.AutoApprove
-
-Auto approve set up for this project.
-
----
-
-##### `devContainer`<sup>Optional</sup> <a name="devContainer" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.devContainer"></a>
-
-```typescript
-public readonly devContainer: DevContainer;
-```
-
-- *Type:* projen.vscode.DevContainer
-
-Access for .devcontainer.json (used for GitHub Codespaces).
-
-This will be `undefined` if devContainer boolean is false
-
----
-
-##### `github`<sup>Optional</sup> <a name="github" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.github"></a>
-
-```typescript
-public readonly github: GitHub;
-```
-
-- *Type:* projen.github.GitHub
-
-Access all github components.
-
-This will be `undefined` for subprojects.
-
----
-
-##### `gitpod`<sup>Optional</sup> <a name="gitpod" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.gitpod"></a>
-
-```typescript
-public readonly gitpod: Gitpod;
-```
-
-- *Type:* projen.Gitpod
-
-Access for Gitpod.
-
-This will be `undefined` if gitpod boolean is false
-
----
-
-##### `vscode`<sup>Optional</sup> <a name="vscode" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.vscode"></a>
-
-```typescript
-public readonly vscode: VsCode;
-```
-
-- *Type:* projen.vscode.VsCode
-
-Access all VSCode components.
-
-This will be `undefined` for subprojects.
-
----
-
-##### ~~`allowLibraryDependencies`~~<sup>Required</sup> <a name="allowLibraryDependencies" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.allowLibraryDependencies"></a>
-
-- *Deprecated:* use `package.allowLibraryDependencies`
-
-```typescript
-public readonly allowLibraryDependencies: boolean;
-```
-
-- *Type:* boolean
-
----
-
-##### `artifactsDirectory`<sup>Required</sup> <a name="artifactsDirectory" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.artifactsDirectory"></a>
-
-```typescript
-public readonly artifactsDirectory: string;
-```
-
-- *Type:* string
-
-The build output directory.
-
-An npm tarball will be created under the `js`
-subdirectory. For example, if this is set to `dist` (the default), the npm
-tarball will be placed under `dist/js/boom-boom-1.2.3.tg`.
-
----
-
-##### `artifactsJavascriptDirectory`<sup>Required</sup> <a name="artifactsJavascriptDirectory" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.artifactsJavascriptDirectory"></a>
-
-```typescript
-public readonly artifactsJavascriptDirectory: string;
-```
-
-- *Type:* string
-
-The location of the npm tarball after build (`${artifactsDirectory}/js`).
-
----
-
-##### `bundler`<sup>Required</sup> <a name="bundler" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.bundler"></a>
-
-```typescript
-public readonly bundler: Bundler;
-```
-
-- *Type:* projen.javascript.Bundler
-
----
-
-##### ~~`entrypoint`~~<sup>Required</sup> <a name="entrypoint" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.entrypoint"></a>
-
-- *Deprecated:* use `package.entrypoint`
-
-```typescript
-public readonly entrypoint: string;
-```
-
-- *Type:* string
-
----
-
-##### ~~`manifest`~~<sup>Required</sup> <a name="manifest" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.manifest"></a>
-
-- *Deprecated:* use `package.addField(x, y)`
-
-```typescript
-public readonly manifest: any;
-```
-
-- *Type:* any
-
----
-
-##### `package`<sup>Required</sup> <a name="package" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.package"></a>
-
-```typescript
-public readonly package: NodePackage;
-```
-
-- *Type:* projen.javascript.NodePackage
-
-API for managing the node package.
-
----
-
-##### ~~`packageManager`~~<sup>Required</sup> <a name="packageManager" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.packageManager"></a>
-
-- *Deprecated:* use `package.packageManager`
-
-```typescript
-public readonly packageManager: NodePackageManager;
-```
-
-- *Type:* projen.javascript.NodePackageManager
-
-The package manager to use.
-
----
-
-##### `runScriptCommand`<sup>Required</sup> <a name="runScriptCommand" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.runScriptCommand"></a>
-
-```typescript
-public readonly runScriptCommand: string;
-```
-
-- *Type:* string
-
-The command to use to run scripts (e.g. `yarn run` or `npm run` depends on the package manager).
-
----
-
-##### `autoMerge`<sup>Optional</sup> <a name="autoMerge" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.autoMerge"></a>
-
-```typescript
-public readonly autoMerge: AutoMerge;
-```
-
-- *Type:* projen.github.AutoMerge
-
-Component that sets up mergify for merging approved pull requests.
-
----
-
-##### `buildWorkflow`<sup>Optional</sup> <a name="buildWorkflow" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.buildWorkflow"></a>
-
-```typescript
-public readonly buildWorkflow: BuildWorkflow;
-```
-
-- *Type:* projen.build.BuildWorkflow
-
-The PR build GitHub workflow.
-
-`undefined` if `buildWorkflow` is disabled.
-
----
-
-##### `buildWorkflowJobId`<sup>Optional</sup> <a name="buildWorkflowJobId" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.buildWorkflowJobId"></a>
-
-```typescript
-public readonly buildWorkflowJobId: string;
-```
-
-- *Type:* string
-
-The job ID of the build workflow.
-
----
-
-##### `jest`<sup>Optional</sup> <a name="jest" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.jest"></a>
-
-```typescript
-public readonly jest: Jest;
-```
-
-- *Type:* projen.javascript.Jest
-
-The Jest configuration (if enabled).
-
----
-
-##### `maxNodeVersion`<sup>Optional</sup> <a name="maxNodeVersion" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.maxNodeVersion"></a>
-
-```typescript
-public readonly maxNodeVersion: string;
-```
-
-- *Type:* string
-
-Maximum node version required by this pacakge.
-
----
-
-##### `minNodeVersion`<sup>Optional</sup> <a name="minNodeVersion" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.minNodeVersion"></a>
-
-```typescript
-public readonly minNodeVersion: string;
-```
-
-- *Type:* string
-
-Minimum node.js version required by this package.
-
----
-
-##### `npmignore`<sup>Optional</sup> <a name="npmignore" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.npmignore"></a>
-
-```typescript
-public readonly npmignore: IgnoreFile;
-```
-
-- *Type:* projen.IgnoreFile
-
-The .npmignore file.
-
----
-
-##### `prettier`<sup>Optional</sup> <a name="prettier" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.prettier"></a>
-
-```typescript
-public readonly prettier: Prettier;
-```
-
-- *Type:* projen.javascript.Prettier
-
----
-
-##### ~~`publisher`~~<sup>Optional</sup> <a name="publisher" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.publisher"></a>
-
-- *Deprecated:* use `release.publisher`.
-
-```typescript
-public readonly publisher: Publisher;
-```
-
-- *Type:* projen.release.Publisher
-
-Package publisher.
-
-This will be `undefined` if the project does not have a
-release workflow.
-
----
-
-##### `release`<sup>Optional</sup> <a name="release" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.release"></a>
-
-```typescript
-public readonly release: Release;
-```
-
-- *Type:* projen.release.Release
-
-Release management.
-
----
-
-##### `upgradeWorkflow`<sup>Optional</sup> <a name="upgradeWorkflow" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.upgradeWorkflow"></a>
-
-```typescript
-public readonly upgradeWorkflow: UpgradeDependencies;
-```
-
-- *Type:* projen.javascript.UpgradeDependencies
-
-The upgrade workflow.
-
----
-
-##### `docsDirectory`<sup>Required</sup> <a name="docsDirectory" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.docsDirectory"></a>
-
-```typescript
-public readonly docsDirectory: string;
-```
-
-- *Type:* string
-
----
-
-##### `libdir`<sup>Required</sup> <a name="libdir" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.libdir"></a>
-
-```typescript
-public readonly libdir: string;
-```
-
-- *Type:* string
-
-The directory in which compiled .js files reside.
-
----
-
-##### `srcdir`<sup>Required</sup> <a name="srcdir" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.srcdir"></a>
-
-```typescript
-public readonly srcdir: string;
-```
-
-- *Type:* string
-
-The directory in which the .ts sources reside.
-
----
-
-##### `testdir`<sup>Required</sup> <a name="testdir" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.testdir"></a>
-
-```typescript
-public readonly testdir: string;
-```
-
-- *Type:* string
-
-The directory in which tests reside.
-
----
-
-##### `tsconfigDev`<sup>Required</sup> <a name="tsconfigDev" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.tsconfigDev"></a>
-
-```typescript
-public readonly tsconfigDev: TypescriptConfig;
-```
-
-- *Type:* projen.javascript.TypescriptConfig
-
-A typescript configuration file which covers all files (sources, tests, projen).
-
----
-
-##### `watchTask`<sup>Required</sup> <a name="watchTask" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.watchTask"></a>
-
-```typescript
-public readonly watchTask: Task;
-```
-
-- *Type:* projen.Task
-
-The "watch" task.
-
----
-
-##### `docgen`<sup>Optional</sup> <a name="docgen" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.docgen"></a>
-
-```typescript
-public readonly docgen: boolean;
-```
-
-- *Type:* boolean
-
----
-
-##### `eslint`<sup>Optional</sup> <a name="eslint" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.eslint"></a>
-
-```typescript
-public readonly eslint: Eslint;
-```
-
-- *Type:* projen.javascript.Eslint
-
----
-
-##### `tsconfig`<sup>Optional</sup> <a name="tsconfig" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.tsconfig"></a>
-
-```typescript
-public readonly tsconfig: TypescriptConfig;
-```
-
-- *Type:* projen.javascript.TypescriptConfig
-
----
-
-##### `tsconfigEslint`<sup>Optional</sup> <a name="tsconfigEslint" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.tsconfigEslint"></a>
-
-```typescript
-public readonly tsconfigEslint: TypescriptConfig;
-```
-
-- *Type:* projen.javascript.TypescriptConfig
-
----
-
-##### `appEntrypoint`<sup>Required</sup> <a name="appEntrypoint" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.appEntrypoint"></a>
-
-```typescript
-public readonly appEntrypoint: string;
-```
-
-- *Type:* string
-
-The CDK app entrypoint.
-
----
-
-##### `cdkConfig`<sup>Required</sup> <a name="cdkConfig" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.cdkConfig"></a>
-
-```typescript
-public readonly cdkConfig: CdkConfig;
-```
-
-- *Type:* projen.awscdk.CdkConfig
-
-cdk.json configuration.
-
----
-
-##### `cdkDeps`<sup>Required</sup> <a name="cdkDeps" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.cdkDeps"></a>
-
-```typescript
-public readonly cdkDeps: AwsCdkDeps;
-```
-
-- *Type:* projen.awscdk.AwsCdkDeps
-
----
-
-##### `cdkTasks`<sup>Required</sup> <a name="cdkTasks" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.cdkTasks"></a>
-
-```typescript
-public readonly cdkTasks: CdkTasks;
-```
-
-- *Type:* projen.awscdk.CdkTasks
-
-Common CDK tasks.
-
----
-
-##### `cdkVersion`<sup>Required</sup> <a name="cdkVersion" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.cdkVersion"></a>
-
-```typescript
-public readonly cdkVersion: string;
-```
-
-- *Type:* string
-
-The CDK version this app is using.
-
----
-
-#### Constants <a name="Constants" id="Constants"></a>
-
-| **Name** | **Type** | **Description** |
-| --- | --- | --- |
-| <code><a href="#@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.DEFAULT_TASK">DEFAULT_TASK</a></code> | <code>string</code> | The name of the default task (the task executed when `projen` is run without arguments). |
-
----
-
-##### `DEFAULT_TASK`<sup>Required</sup> <a name="DEFAULT_TASK" id="@gemeentenijmegen/modules-projen.GemeenteNijmegenCdkApp.property.DEFAULT_TASK"></a>
-
-```typescript
-public readonly DEFAULT_TASK: string;
-```
-
-- *Type:* string
-
-The name of the default task (the task executed when `projen` is run without arguments).
-
-Normally
-this task should synthesize the project files.
-
----
 
 
