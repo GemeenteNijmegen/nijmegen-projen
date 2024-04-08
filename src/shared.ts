@@ -69,14 +69,14 @@ export function setDefaultValues<T extends CombinedProjectOptions>(options: T) :
   };
 
   /**
-   * Set default github options (Adds docs: as acceptable prefix for PR linting)
+   * Set default github options (Adds docs: and test: as acceptable prefix for PR linting)
    */
   options = {
     githubOptions: {
       mergify: false,
       pullRequestLintOptions: {
         semanticTitleOptions: {
-          types: ['fix', 'feat', 'chore', 'docs'],
+          types: ['fix', 'feat', 'chore', 'docs', 'test'],
         },
       },
     },
