@@ -76,7 +76,7 @@ export function setDefaultValues<T extends CombinedProjectOptions>(options: T) :
       mergify: false,
       pullRequestLintOptions: {
         semanticTitleOptions: {
-          types: ['fix', 'feat', 'chore', 'docs'],
+          types: ['fix', 'feat', 'chore', 'docs', 'test'],
         },
       },
     },
