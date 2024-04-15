@@ -101,7 +101,26 @@ describe('NijmegenProject auto-merge workflow', () => {
 
     const snapshot = synthSnapshot(project)['.github/workflows/auto-merge.yml'];
     expect(snapshot).toContain(
-      'if: contains(github.event.pull_request.labels.*.name, \'auto-merge\') && github.base_ref == \'acceptance\'',
+      'if: contains(github.event.pull_request.labels.*.name, \'auto-merge\') && (github.base_ref == \'acceptance\')',
+    );
+  });
+
+  test('Contains automerge workflow on multiple branches', () => {
+    const project = new GemeenteNijmegenCdkApp({
+      cdkVersion: '2.51.0',
+      defaultReleaseBranch: 'main',
+      name: 'test project',
+      depsUpgradeOptions: {
+        workflowOptions: {
+          labels: ['auto-merge'],
+          branches: ['acceptance', 'development'],
+        },
+      },
+    });
+
+    const snapshot = synthSnapshot(project)['.github/workflows/auto-merge.yml'];
+    expect(snapshot).toContain(
+      'if: contains(github.event.pull_request.labels.*.name, \'auto-merge\') && (github.base_ref == \'acceptance\' || github.base_ref == \'development\')',
     );
   });
 
