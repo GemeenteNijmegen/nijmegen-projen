@@ -2,14 +2,15 @@ import { Project } from 'projen';
 import { GitHub, GithubWorkflow } from 'projen/lib/github';
 import { Job, JobPermission } from 'projen/lib/github/workflows-model';
 
-export function addMergeJob(project: Project, baseBranch: string) {
+export function addMergeJob(project: Project, upgradeBranches: string[]) {
+  const condition = upgradeBranches.map(branch => `github.base_ref == '${branch}'`).join(' || ');
   const mergeJob: Job = {
     runsOn: ['ubuntu-latest'],
     permissions: {
       pullRequests: JobPermission.WRITE,
       contents: JobPermission.WRITE,
     },
-    if: `contains(github.event.pull_request.labels.*.name, 'auto-merge') && github.base_ref == '${baseBranch}'`,
+    if: `contains(github.event.pull_request.labels.*.name, 'auto-merge') && (${condition})`,
     steps: [
       {
         run: 'gh pr merge --auto --merge "$PR_URL"',

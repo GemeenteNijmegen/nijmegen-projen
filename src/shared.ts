@@ -132,8 +132,9 @@ export function setupSharedConfiguration(
   /**
    * Enable auto-merging dependency updates
    */
-  if (enableAutoMergeDependencies) {
-    addMergeJob(project, acceptanceBranchName);
+  const upgradeBranches = options.depsUpgradeOptions?.workflowOptions?.branches;
+  if (enableAutoMergeDependencies && upgradeBranches) {
+    addMergeJob(project, upgradeBranches);
   }
 
   /**
