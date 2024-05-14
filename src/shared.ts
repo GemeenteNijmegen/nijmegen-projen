@@ -103,8 +103,11 @@ export function setDefaultValues<T extends CombinedProjectOptions>(options: T) :
 
 export function setDefaultValuesNpmPublish<T extends CombinedProjectOptions>(options: T) : T {
   // Set defaults for publishing to npm.js
+  if (!options.repository) {
+    throw Error('Repository must be set to Github repo for succesfull NPM publishing');
+  }
+
   options = {
-    repository: 'https://github.com/GemeenteNijmegen',
     release: true,
     releaseToNpm: true,
     npmAccess: NpmAccess.PUBLIC,
