@@ -2,13 +2,15 @@ import { LambdaRuntime } from 'projen/lib/awscdk';
 import { synthSnapshot } from 'projen/lib/util/synth';
 import { GemeenteNijmegenCdkApp, GemeenteNijmegenCdkLib, GemeenteNijmegenJsii, GemeenteNijmegenTsPackage } from '../src';
 
+const repository = 'https://github.com/GemeenteNijmegen/test';
+
 beforeAll(() => {
   process.env.DO_NOT_GENERATE_FILES_IN_TEST = 'true';
 });
 
 describe('NijmegenProject Defaults', () => {
 
-  const project = new GemeenteNijmegenTsPackage({ defaultReleaseBranch: 'main', name: 'test project' });
+  const project = new GemeenteNijmegenTsPackage({ defaultReleaseBranch: 'main', name: 'test project', repository });
   const snapshot = synthSnapshot(project);
 
   test('EUPL-1.2 license default', () => {
@@ -67,6 +69,7 @@ describe('NijmegenProject NPM', () => {
       author: 'test',
       authorAddress: 'test@example.com',
       repositoryUrl: 'github.com',
+      repository,
     });
     const snapshot = synthSnapshot(project);
     expect(snapshot['.github/workflows/release.yml']).toContain('Publish to npm');
@@ -76,6 +79,7 @@ describe('NijmegenProject NPM', () => {
     const project = new GemeenteNijmegenTsPackage({
       defaultReleaseBranch: 'main',
       name: 'test project',
+      repository,
     });
     const snapshot = synthSnapshot(project);
     expect(snapshot['.github/workflows/release.yml']).toContain('Publish to npm');
@@ -88,6 +92,7 @@ describe('NijmegenProject NPM', () => {
       author: 'test',
       authorAddress: 'test@example.com',
       repositoryUrl: 'github.com',
+      repository,
     });
     const snapshot = synthSnapshot(project);
     expect(snapshot['.github/workflows/release.yml']).toContain('Publish to npm');
@@ -142,8 +147,25 @@ describe('Default lambda runtime for CDK app and lib', () => {
   });
 
   test('CDK lib has default lambda runtime', () => {
-    const project = new GemeenteNijmegenCdkLib({ cdkVersion: '2.51.0', defaultReleaseBranch: 'main', name: 'test project', author: 'test', authorAddress: '', repositoryUrl: '' });
+    const project = new GemeenteNijmegenCdkLib({ cdkVersion: '2.51.0', defaultReleaseBranch: 'main', name: 'test project', author: 'test', authorAddress: '', repositoryUrl: '', repository });
     expect(project.configuredOptions().lambdaOptions?.runtime).toBe(LambdaRuntime.NODEJS_20_X);
+  });
+
+});
+
+describe('Error on no repository', () => {
+
+  test('CDK lib throws error on no repository', () => {
+    expect(() => {
+      new GemeenteNijmegenCdkLib({
+        cdkVersion: '2.51.0',
+        defaultReleaseBranch: 'main',
+        name: 'test project',
+        author: 'test',
+        authorAddress: '',
+        repositoryUrl: '',
+      });
+    }).toThrow();
   });
 
 });
@@ -197,6 +219,7 @@ describe('NijmegenProject repo conf validation workflow', () => {
     const project = new GemeenteNijmegenTsPackage({
       defaultReleaseBranch: 'main',
       name: 'test project',
+      repository,
     });
 
     synthSnapshot(project);
@@ -214,6 +237,7 @@ describe('NijmegenProject repo conf validation workflow', () => {
       enableEmergencyProcedure: false,
       releaseToNpm: false,
       depsUpgrade: false,
+      repository,
     });
 
     synthSnapshot(project);
@@ -228,6 +252,7 @@ describe('NijmegenProject repo conf validation workflow', () => {
       defaultReleaseBranch: 'main',
       name: 'test project',
       enableRepositoryValidation: false,
+      repository,
     });
 
     synthSnapshot(project);
