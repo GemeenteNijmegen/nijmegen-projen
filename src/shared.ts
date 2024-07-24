@@ -104,7 +104,7 @@ export function setDefaultValues<T extends CombinedProjectOptions>(options: T) :
 export function setDefaultValuesNpmPublish<T extends CombinedProjectOptions>(options: T) : T {
   // Set defaults for publishing to npm.js
   if (!options.repository) {
-    throw Error('Repository must be set to Github repo for succesfull NPM publishing');
+    throw Error('Repository must be set to Github repo for succesfull NPM publishing. Add the `--repository` parameter when creating a new ts-lib project.');
   }
 
   options = {
