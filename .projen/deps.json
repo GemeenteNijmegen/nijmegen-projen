@@ -1,6 +1,10 @@
 {
   "dependencies": [
     {
+      "name": "@glen/jest-raw-loader",
+      "type": "build"
+    },
+    {
       "name": "@types/jest",
       "version": "^27",
       "type": "build"
@@ -72,6 +76,10 @@
     },
     {
       "name": "projen",
+      "type": "build"
+    },
+    {
+      "name": "raw-loader",
       "type": "build"
     },
     {

@@ -1,5 +1,6 @@
 import { AwsCdkTypeScriptApp, AwsCdkTypeScriptAppOptions } from 'projen/lib/awscdk';
 import combine from './combine';
+import { createGemeenteNijmegenBoilerplate } from './createGemeenteNijmegenBoilerplate';
 import { GemeenteNijmegenOptions, setDefaultValues, setupDefaultCdkOptions, setupSharedConfiguration } from './shared';
 
 export interface GemeenteNijmegenCdkAppOptions extends AwsCdkTypeScriptAppOptions, GemeenteNijmegenOptions {
@@ -79,6 +80,11 @@ export class GemeenteNijmegenCdkApp extends AwsCdkTypeScriptApp {
      * emergency workflow.
      */
     setupSharedConfiguration(this, options);
+
+    /**
+     * Create all boilerplate code for the cdk app
+     */
+    createGemeenteNijmegenBoilerplate(this);
 
     this.options = options;
   }
